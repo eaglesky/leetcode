@@ -10,8 +10,9 @@ vector<int> twoSum(vector<int> &numbers, int target) {
         
         for (int i = 0; i < numbers.size(); ++i)
         {
-            unordered_map<int, vector<int> >::iterator it;
-            if ((it = map.find(numbers[i])) != map.end()) {
+            //unordered_map<int, vector<int> >::iterator it;
+            auto it = map.find(numbers[i]);
+            if (it != map.end()) {
                 (it->second).push_back(i);
             } else {
                 vector<int> posVec {i};
