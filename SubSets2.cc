@@ -28,6 +28,38 @@ vector<vector<int> > subsetsWithDup0(vector<int> &S) {
     return result;
 }
 
+//Recursive solution
+void findSubsets(vector<int>& S, int i,  vector<int>& curSubset, vector<vector<int> >& result)
+{
+    if (i == S.size()) {
+        result.push_back(curSubset);
+        return;
+    }
+
+    curSubset.push_back(S[i]);
+    findSubsets(S, i+1, curSubset, result);
+    curSubset.pop_back();
+
+    if (i < S.size() - 1) {
+
+        while (S[i] == S[i+1]) {
+            i++;
+        }
+    }
+    findSubsets(S, i+1, curSubset, result);
+}
+
+
+vector<vector<int> > subsetsWithDup(vector<int> &S) {
+    vector<int> sortedS = S;
+    sort(sortedS.begin(), sortedS.end());
+    vector<int> curSubset;
+    vector<vector<int> > result;
+    findSubsets(sortedS, 0, curSubset, result);
+    return result;
+}
+
+
 //Recursive solution 2 (Tricky!)
 void  findSubSets2(vector<int>& S, int start, vector<int>& curSet, vector<vector<int> >& result)
 {
@@ -44,7 +76,7 @@ void  findSubSets2(vector<int>& S, int start, vector<int>& curSet, vector<vector
     }
 }
 
-vector<vector<int> > subsetsWithDup(vector<int> &S) {
+vector<vector<int> > subsetsWithDup2(vector<int> &S) {
     vector<int> curSet;
     vector<vector<int> > result;
     vector<int> sortedS = S;
