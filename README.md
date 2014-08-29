@@ -13,3 +13,6 @@ MergeKSortedLists.cc: Usage of priority queue. Pay attention to the customized
 compare structure, which actually implements the "greater" function.
 
 Combinations.cc: Backtracking solution.
+
+SudokuSolver.cc: Fill a two-dimensional array with the same value; DFS return
+value; Pass a two-dimensional static array to a function. 
