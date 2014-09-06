@@ -15,6 +15,7 @@ bool cmpIntervals(const Interval& interval1, const Interval& interval2)
     return interval1.start < interval2.start;
 }
 
+//Non-in-place version
 vector<Interval> merge(vector<Interval> &intervals) {
     vector<Interval> sortedIntervals = intervals;
     sort(sortedIntervals.begin(), sortedIntervals.end(), cmpIntervals);
@@ -31,6 +32,9 @@ vector<Interval> merge(vector<Interval> &intervals) {
 
     return result;
 }
+
+//See here: https://oj.leetcode.com/discuss/7415/do-you-have-a-better-solution
+//for in-place version
 
 int main(int argc, char** argv)
 {
