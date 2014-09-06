@@ -15,4 +15,6 @@ compare structure, which actually implements the "greater" function.
 Combinations.cc: Backtracking solution.
 
 SudokuSolver.cc: Fill a two-dimensional array with the same value; DFS return
-value; Pass a two-dimensional static array to a function. 
+value; Pass a two-dimensional static array to a function.
+
+MergeIntervals.cc: Sorting algorithm using customized compare function.
