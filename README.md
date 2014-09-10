@@ -20,3 +20,8 @@ value; Pass a two-dimensional static array to a function.
 MergeIntervals.cc: Sorting algorithm using customized compare function.
 
 MultiplyStrings.cc : Big number multiplication
+
+DivideIntegers.cc: Throw an exception in a function; Judge signs of two numbers
+
+MaxPoints.cc : Unordered map use double as key; numeric
+limits<double>::infinity() 
