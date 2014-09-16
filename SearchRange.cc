@@ -2,6 +2,53 @@
 #include <vector>
 using namespace std;
 
+
+    int searchLeftBoundary(int A[], int n, int target)
+    {
+        int left = 0;
+        int right = n-1;
+        
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (target <= A[mid]) {
+                right = mid;
+            } else
+                left = mid + 1;
+        }
+        
+        return (A[left] == target) ? left : -1;
+    }
+    
+    int searchRightBoundary(int A[], int n, int target)
+    {
+        int left = 0;
+        int right = n-1;
+        
+        while (left < right - 1) {
+            int mid = left + (right - left) / 2;
+            if (target >= A[mid]) {
+                left = mid;
+            } else
+                right = mid - 1;
+        }
+        
+        if (target == A[right])
+            return right;
+        else if (target == A[left])
+            return left;
+        else
+            return -1;
+    }
+    
+    vector<int> searchRange(int A[], int n, int target) {
+
+        int left = searchLeftBoundary(A, n, target);
+        int right = searchRightBoundary(A, n, target);
+        vector<int> result = {left, right};
+        return result;
+    }
+
+/*
 int searchBoundary(int A[], int n, int target, bool isLower)
 {
     int start = 0;
@@ -40,7 +87,7 @@ vector<int> searchRange(int A[], int n, int target) {
         result.push_back(searchBoundary(A, n, target, false));
     }
     return result;
-}
+}*/
 
 int main(int argc, char** argv)
 {
