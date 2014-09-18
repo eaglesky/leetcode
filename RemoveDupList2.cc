@@ -41,7 +41,7 @@ public:
         return dummy.next;
     }
     
-    ListNode *deleteDuplicates(ListNode *head) {
+    ListNode *deleteDuplicates1(ListNode *head) {
         if (!head)
             return head;
             
@@ -67,4 +67,32 @@ public:
         
         return dummy.next;
     }
+
+	ListNode *deleteDuplicates(ListNode *head) {
+        ListNode dummy(-1);
+        dummy.next = head;
+        ListNode* pre = &dummy;
+        if (!pre->next)
+            return head;
+   
+        while (pre->next) {
+            ListNode* cur = pre->next;
+            while ((cur->next) && (cur->next->val == cur->val)) {
+                pre->next = NULL;
+                ListNode* nextNode = cur->next;
+                delete cur;
+                cur = nextNode;
+            }
+            if (!pre->next) {
+                pre->next = cur->next;
+                delete cur;
+            } else
+                pre = pre->next;
+        
+        }
+        
+      
+        return dummy.next;
+    }
+
 };
