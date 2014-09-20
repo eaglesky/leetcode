@@ -4,7 +4,7 @@
 
 using namespace std;
 
-vector<int> twoSum(vector<int> &numbers, int target) {
+vector<int> twoSum0(vector<int> &numbers, int target) {
         unordered_map<int, vector<int> > map;
         vector<int> res;
         
@@ -47,6 +47,51 @@ vector<int> twoSum(vector<int> &numbers, int target) {
         return res;
     
 }
+
+vector<int> twoSum1(vector<int> &numbers, int target) {
+        unordered_map<int, vector<int> > map;
+        vector<int> result;
+        for (int i = 0; i < numbers.size(); ++i)
+        {
+            if (map.find(numbers[i]) == map.end()) {
+                vector<int> newIndex{i};
+                map[numbers[i]] = newIndex;
+            } else
+                map[numbers[i]].push_back(i);
+        }
+        
+        for (int i = 0; i < numbers.size(); ++i)
+        {
+            int comp = target - numbers[i];
+            if ((comp != numbers[i]) && (map.find(comp) != map.end())) {
+                result.push_back(i+1);
+                result.push_back(map[comp][0]+1);
+                return result;
+            } else if ((comp == numbers[i]) && (map[comp].size() > 1)) {
+                result.push_back(map[comp][0]+1);
+                result.push_back(map[comp][1]+1);
+                return result;
+            }
+        }
+        
+        return result;
+    }
+    
+//Best version!
+//O(n) time and O(n) space
+    vector<int> twoSum(vector<int> &numbers, int target) {
+        unordered_map<int, int> map;
+        vector<int> result;
+        for (int i = 0; i < numbers.size(); ++i)
+        {
+            if (map.find(target-numbers[i]) != map.end()) {
+                result.push_back(map[target-numbers[i]]+1);
+                result.push_back(i+1);
+            }
+            map[numbers[i]] = i;
+        }
+        return result;
+    }
 
 int main(int argc, char** argv)
 {

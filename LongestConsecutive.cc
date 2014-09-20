@@ -4,7 +4,7 @@
 
 using namespace std;
 
-int longestConsecutive(vector<int> &num) {
+int longestConsecutive0(vector<int> &num) {
         unordered_map<int, bool> used;
         for (auto& number : num)
             used[number] = false;
@@ -36,6 +36,36 @@ int longestConsecutive(vector<int> &num) {
         return maxLength;
     }
 
+int longestConsecutive(vector<int> &num) {
+        unordered_map<int, bool> map;
+        int maxLen = 0;
+        for (int i = 0; i < num.size(); ++i)
+        {
+           map[num[i]] = false;
+        }
+        
+        for (auto it = map.begin(); it != map.end(); ++it)
+        {
+            int num = it->first;
+          
+            int curLen = 0;
+            if (!it->second) {
+                int maxNum = num;
+                
+                for (; map.count(maxNum) > 0; maxNum++)
+                    map[maxNum] = true;
+            
+                int minNum = num;
+                for (; map.count(minNum) > 0; minNum--)
+                    map[minNum] = true;
+                
+                maxLen = max(maxLen, maxNum - minNum - 1);
+            
+            }
+        }
+        
+        return maxLen;
+    }
 
 int main(int argc, char** argv)
 {
