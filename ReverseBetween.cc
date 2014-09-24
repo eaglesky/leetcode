@@ -24,7 +24,7 @@
         return dummy->next;
     }
     
-    ListNode *reverseBetween(ListNode *head, int m, int n) {
+    ListNode *reverseBetween1(ListNode *head, int m, int n) {
         ListNode* dummy = new ListNode(-1);
         dummy->next = head;
         
@@ -45,4 +45,23 @@
         }
         
         return dummy->next;
+    }
+
+   ListNode *reverseBetween(ListNode *head, int m, int n) {
+        
+        ListNode dummy(-1);
+        dummy.next = head;
+        head = &dummy;
+        for (int i = 1; i < m; ++i)
+            head = head->next;
+        ListNode* prev = head->next;
+        for (int i = m+1; i <= n; ++i)
+        {
+            ListNode* cur = prev->next;
+            prev->next = cur->next;
+            cur->next = head->next;
+            head->next = cur;
+        }
+        
+        return dummy.next;
     }

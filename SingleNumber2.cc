@@ -2,7 +2,7 @@
 #include <algorithm>
 using namespace std;
 
-int singleNumber(int A[], int n) {
+int singleNumber0(int A[], int n) {
     
         int nbits = sizeof(int)*8;
 
@@ -44,6 +44,23 @@ int singleNumber2(int A[], int n) {
     return one;
 }
 
+//Using high and low to represent the status of each bit.
+   int singleNumber(int A[], int n) {
+
+       int low = 0;
+       int high = 0;
+       
+       for (int i = 0; i < n; ++i)
+       {
+           int lowNext = ~high & ((~low & A[i]) | (low & ~A[i]));
+           int highNext = (~high & low & A[i]) | (high & ~low & ~A[i]);
+           low = lowNext;
+           high = highNext;
+       }
+       
+       return (~high) & low;
+    }
+
 void printBin(int n)
 {
     for (int i = sizeof(int)*8 - 1; i >= 0; --i)
@@ -59,9 +76,7 @@ void printBin(int n)
 
 int main(int argc, char** argv)
 {
-    int test[] = {0,1,0,1,0,1,99};
-    printBin(99);
-    cout << singleNumber(test, 7) << endl;
-    cout << singleNumber2(test, 7) << endl;
+    int test[] = {2, 2, 3, 2};
+    cout << singleNumber(test, sizeof(test)/sizeof(int)) << endl;
     return 0;
 }
