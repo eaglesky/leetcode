@@ -1,97 +1,89 @@
 #include <iostream>
 #include <unordered_map>
+using namespace std;
 
 class LRUCache{
-private:
-    struct CacheNode {
-        int key;
-        int val;
-        CacheNode* prev;
-        CacheNode* next;
-        CacheNode(int k, int v): key(k), val(v), prev(NULL), next(NULL) {}
-    };
     
-    CacheNode* dummyHead;
-    CacheNode* dummyTail;
-    int cacheSize;
-    int itemNum;
-    std::unordered_map<int, CacheNode*> cacheMap;
+private:
+
+struct ListNode {
+    int key;
+    int val;
+    ListNode* prev;
+    ListNode* next;
+    ListNode(int k, int v) : key(k), val(v), prev(NULL), next(NULL){};
+};
+
+    unordered_map<int, ListNode*> map;
+    ListNode* dummyHead;
+    ListNode* dummyTail;
+    int maxSize;
+  
     
 public:
-
     LRUCache(int capacity) {
-        dummyHead = new CacheNode(-1, -1);
-        dummyTail = new CacheNode(-1, -1);
-        dummyHead->next = dummyTail;
-        dummyTail->prev = dummyHead;
-        cacheSize = capacity;
-        itemNum = 0;
-        cacheMap.reserve(capacity);
-    }
-    
-    ~LRUCache() {
-        CacheNode* p = dummyHead;
-        while(p) {
-            CacheNode* temp = p;
-            p = p->next;
-            delete temp;
-        }
+        maxSize = (capacity >= 0) ? capacity : 0;
+        
+        dummyHead = new ListNode(-1, -1);
+        dummyHead->next = new ListNode(-1, -1);
+        dummyHead->next->prev = dummyHead;
+        dummyTail = dummyHead->next;
     }
    
-    void moveToFront(CacheNode* p)
-    {
-        p->prev->next = p->next;
-        p->next->prev = p->prev;
-        p->next = dummyHead->next;
-        dummyHead->next->prev = p;
-        dummyHead->next = p;
-        p->prev = dummyHead;
+    ~LRUCache() {
+        for (ListNode* p = dummyHead; p; )
+        {
+            ListNode* pnext = p->next;
+            delete p;
+            p = pnext;
+        }
+    }
+
+    void printContents() {
+        for (ListNode* p = dummyHead->next; p != dummyTail; p = p->next)
+        {
+            cout <<  p->key << ", " << p->val << endl; 
+        }
     }
 
     int get(int key) {
-        if (cacheMap.find(key) == cacheMap.end())
+        
+        if (map.find(key) == map.end())
             return -1;
             
-        CacheNode* cur = cacheMap[key];
-        moveToFront(cur);
+        ListNode* cur = map[key];
+        cur->prev->next = cur->next;
+        cur->next->prev = cur->prev;
+        cur->next = dummyHead->next;
+        dummyHead->next->prev = cur;
+        dummyHead->next = cur;
+        cur->prev = dummyHead;
 
-        return dummyHead->next->val;
-        
+        return cur->val;
     }
     
     void set(int key, int value) {
-        if (get(key) == -1) {
-            CacheNode* newNode = new CacheNode(key, value);
-            cacheMap[key] = newNode;
+        if (map.find(key) != map.end()) {
+            get(key);
+            map[key]->val = value;
+        }
+        else {
+            ListNode* newNode = new ListNode(key, value);
+            map[key] = newNode;
             newNode->next = dummyHead->next;
             dummyHead->next->prev = newNode;
             dummyHead->next = newNode;
             newNode->prev = dummyHead;
-            if (itemNum < cacheSize) {
-                itemNum++;
-            } else {
-                CacheNode* tail = dummyTail->prev;
-                tail->prev->next = dummyTail;
-                dummyTail->prev = tail->prev;
-
-                int deletedKey = tail->key;
-                delete tail;
-                cacheMap.erase(deletedKey);
+            
+            if (map.size() > maxSize) {
+                ListNode* deleted = dummyTail->prev;
+                int deletedKey = deleted->key;
+                deleted->prev->next = deleted->next;
+                deleted->next->prev = deleted->prev;
+                delete deleted;
+                map.erase(deletedKey);
             }
-        } else {
-            CacheNode* p = cacheMap[key];
-            p->val = value;
-            moveToFront(p);
-
-        } 
-    }
-
-    void printContents() {
-        CacheNode* p = dummyHead->next;
-        while (p != dummyTail) {
-            std::cout << "(" << p->key << ", " << p->val << ")" << std::endl;
-            p = p->next;
+            
         }
-        std::cout << std::endl;
     }
 };
