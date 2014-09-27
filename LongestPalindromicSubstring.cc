@@ -38,6 +38,32 @@ int expand(string s, int& start, int& end)
         return s.substr(maxStart, maxLen);
     }
 
+//Simpler implementation of above solution
+    string longestPalindrome1(string s) {
+        int maxLen = 0;
+        int start = 0;
+        int n = s.size();
+        for (int i = 0; i < n; ++i)
+        {
+            int l;
+            for (l = 1; ((i - l) >= 0) && ((i + l) < n) && (s[i-l] == s[i+l]); ++l);
+            
+            if ((2*l-1) > maxLen) {
+                maxLen = 2*l-1;
+                start = i - l + 1;
+            }
+            
+            for (l = 0; ((i-l) >= 0) && ((i+l+1) < n) && (s[i-l] == s[i+l+1]); ++l);
+            
+            if (2*l > maxLen) {
+                maxLen = 2*l;
+                start = i - l  + 1;
+            }
+        }
+        
+        return s.substr(start, maxLen);
+    }
+
 //Manacher's Algorithm
 //O(N) time, O(N) space
  string longestPalindrome(string s) {
