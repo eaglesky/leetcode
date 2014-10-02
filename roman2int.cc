@@ -2,7 +2,7 @@
 #include <unordered_map>
 using namespace std;
 
-int romanToInt(string s)
+int romanToInt0(string s)
 {
     unordered_map<string, int> symbols = {
         {"M", 1000}, {"CM", 900}, {"D", 500},
@@ -29,6 +29,32 @@ int romanToInt(string s)
     }
     return result;
 }
+
+//Can be imroved to O(1) space by replacing symmap with switch statements
+    int romanToInt(string s) {
+    
+        unordered_map<char, int> symmap= {
+            {'I', 1},
+            {'V', 5},
+            {'X', 10},
+            {'L', 50},
+            {'C', 100},
+            {'D', 500},
+            {'M', 1000}
+        }   ;
+        
+        int result = 0;
+        
+        for (int i = 0; i < s.size(); ++i)
+        {
+            if ((i > 0) && (symmap[s[i]] > symmap[s[i-1]])) {
+                result = result + symmap[s[i]] - 2*symmap[s[i-1]];
+            } else
+                result += symmap[s[i]];
+        }
+        
+        return result;
+    }
 
 int main(int argc, char** argv)
 {

@@ -103,7 +103,7 @@ using namespace std;
     }
     
     
-    bool isNumber(const char *s) {
+    bool isNumber0(const char *s) {
         const char* ePos = strchr(s, 'e');
         const char* start = s;
         const char* end = s;
@@ -112,6 +112,45 @@ using namespace std;
             return checkValidNum(start, end+1, true);
   
         return checkValidNum(start, ePos, true) && checkValidNum(ePos+1, end+1, false);
+    }
+
+//Improved solution
+  bool checkValidNum(string s, bool dotAllowed)
+    {
+        int dotMaxNum = dotAllowed ? 1 : 0;
+        int dotCount = 0;
+        int digCount = 0;
+        for (int i = 0; i < s.size(); ++i)
+        {
+            if (s[i] == '.') {
+                dotCount++;
+                if (dotCount > dotMaxNum)
+                    return false;
+                if (((i == 0) || !isdigit(s[i-1])) && ((i == s.size()-1) || !isdigit(s[i+1])))
+                    return false;
+            } else if (((s[i] == '-') || (s[i] == '+')) && (i == 0))
+                continue;
+            else if (isdigit(s[i]))
+                digCount++;
+            else
+                return false;
+        }
+        return digCount > 0;
+    }
+    
+    bool isNumber(const char *s) {
+        string str(s);
+        int start = str.find_first_not_of(" ");
+        if (start == -1)
+            return false;
+        int end = str.find_last_not_of(" ");
+
+        int epos = str.find("e");
+        if (epos < 0)
+            return checkValidNum(str.substr(start, end-start+1), true);
+            
+        return checkValidNum(str.substr(start, epos-start), true) && checkValidNum(str.substr(epos+1, end-epos), false);
+        
     }
 
 

@@ -2,7 +2,7 @@
 #include <vector>
 using namespace std;
 
-string simplifyPath(string path) {
+string simplifyPath0(string path) {
     vector<string> stack;
     int lastSlash = 0;
     for (int i = 1; i <= path.size(); ++i)
@@ -28,6 +28,36 @@ string simplifyPath(string path) {
     }
     return stack.empty() ? "/" : result;
 }
+
+string simplifyPath(string path) {
+        vector<string> stack;
+        string result;
+        for (int i = 0; i < path.size();)
+        {
+            for (; (i < path.size()) && (path[i] == '/'); ++i);
+            int nextSlash = path.find("/", i);
+            if (nextSlash == -1)
+                nextSlash = path.size();
+                
+            string curStr = path.substr(i, nextSlash-i);
+            if (curStr == "..") {
+                if (!stack.empty())
+                    stack.pop_back();
+            } else if ((curStr != ".") && (curStr != ""))
+                stack.push_back(curStr);
+            
+            i = nextSlash;
+        }
+        
+        for (auto s : stack)
+        {
+            result += "/";
+            result += s;
+        }
+        
+        return result.empty() ? "/" : result;
+    }
+
 
 int main(int argc, char** argv)
 {

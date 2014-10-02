@@ -2,7 +2,7 @@
 #include <unordered_map>
 using namespace std;
 
-string intToRoman(int num) {
+string intToRoman0(int num) {
         int base = 1;
         string result = "";
         unordered_map<int, char> symmap {{1, 'I'} , {5, 'V'}, {10, 'X'}
@@ -31,6 +31,42 @@ string intToRoman(int num) {
         }
         
         return result;
+    }
+
+  string intToRoman(int num) {
+        unordered_map<int, char> symmap {
+            {1, 'I'},
+            {5, 'V'},
+            {10, 'X'},
+            {50, 'L'},
+            {100, 'C'},
+            {500, 'D'},
+            {1000, 'M'}
+        };
+        
+        string result = "";
+        for (int i = 1; num > 0; i *= 10, num /= 10)
+        {
+            string cur = "";
+            int digit = num % 10;
+            if (digit <= 3) {
+                for (int j = 0; j < digit; ++j)
+                    cur += symmap[i];
+            } else if (digit == 4) {
+                cur += symmap[i];
+                cur += symmap[i*5];
+            } else if (digit < 9) {
+                cur += symmap[i*5];
+                for (int j = 0; j < digit-5; ++j)
+                    cur += symmap[i];
+            } else if (digit == 9) {
+                cur += symmap[i];
+                cur += symmap[i*10];
+            }
+            result = cur + result;
+           
+        }
+        return result; 
     }
 
 int main(int argc, char** argv)

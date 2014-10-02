@@ -2,7 +2,7 @@
 using namespace std;
 
 //My version
-int lengthOfLastWord(const char* s) {
+int lengthOfLastWord0(const char* s) {
     const char* post = NULL;
     const char* pre = NULL;
     const char* p = s;
@@ -32,6 +32,21 @@ int lengthOfLastWord2(const char* s) {
             len = 0;
 
     }
+    return len;
+}
+
+//My improved version
+int lengthOfLastWord(const char *s) {
+    int len = 0;
+    while (*s) {
+        while (*s == ' ')
+            s++;
+        if (!*s)
+            break;
+        len = 0;
+        for (; *s && *s != ' '; ++s, len++);
+    }
+    
     return len;
 }
 

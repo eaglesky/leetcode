@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
 
-string countAndSay(int n) {
+string countAndSay0(int n) {
     string result = "1";
     for (int i = 1; i < n; ++i)
     {
@@ -28,6 +28,30 @@ string countAndSay(int n) {
 
     return result;
 }
+
+//The question is asking what the nth string is in the sequence starting with
+//"1"
+ string countAndSay(int n) {
+        
+        string str = "1";
+        for (int i = 1; i < n; ++i)
+        {
+            string nextStr = "";
+            for (int j = 0; j < str.size();)
+            {
+                int t;
+                for (t = j+1; (t < str.size()) && (str[t] == str[j]); ++t);
+                char countChar = (t-j) + '0';
+                
+                nextStr += countChar;
+                nextStr += str[j];
+                j = t;
+            }
+            str = nextStr;
+        }
+        
+        return str;
+    }
 
 int main(int argc, char** argv)
 {
