@@ -2,6 +2,7 @@
 #include <vector>
 using namespace std;
 
+//O(n) time and O(n) space
 int largestRectangleArea(vector<int>& height)
 {
     vector<int> stack;
