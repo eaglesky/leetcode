@@ -45,8 +45,36 @@ int longestValidParentheses0(string s) {
     return ((maxLen & 1) == 0)? maxLen : 0;
 }
 
-// Using a stack. Two passes
+//DP solution improved
 int longestValidParentheses1(string s) {
+    int n = s.size();
+    vector<int> lens(n, 0);
+    for (int i = 0; i < n; ++i)
+    {
+        if ((i > 0) && (s[i] == ')')) {
+          
+            if (s[i-1] == ')') {
+               if ((i-lens[i-1]-1 >= 0) && (s[i-lens[i-1]-1] == '(')) {
+                   lens[i] = lens[i-1] + 2;
+                   if (i-lens[i-1]-2 >= 0)
+                    lens[i] += lens[i-lens[i-1]-2];
+               } 
+            } else {
+                lens[i] = (i >= 2) ? lens[i-2] + 2 : 2;
+            }
+            
+        }
+    }
+    
+    int maxLen = 0;
+    for (int i = 0; i < n; ++i)
+        maxLen = max(maxLen, lens[i]);
+    
+    return maxLen;
+}
+
+// Using a stack. Two passes
+int longestValidParentheses2(string s) {
     vector<int> stack;
     for (int i = 0; i < s.size(); ++i)
     {
@@ -68,7 +96,7 @@ int longestValidParentheses1(string s) {
 }
 
 // Using a stack. One pass
-int longestValidParentheses(string s) {
+int longestValidParentheses3(string s) {
     vector<int> stack;
     int maxLen = 0;
     for (int i = 0; i < s.size(); ++i)
@@ -89,9 +117,80 @@ int longestValidParentheses(string s) {
     }
     return maxLen;
 }
+
+//Another similar one stack one pass solution
+int longestValidParentheses4(string s) {
+    int maxLen = 0;
+    vector<int> stack;
+    int lastRightSlash = -1;
+    for (int i = 0; i < s.size(); ++i)
+    {
+        if (s[i] == '(') {
+            stack.push_back(i);
+        } else {
+            if (!stack.empty()) {
+                stack.pop_back();
+                int lastPos = stack.empty() ? lastRightSlash : stack.back();
+                maxLen = max(maxLen, i-lastPos);
+            } else 
+                lastRightSlash = i;
+        } 
+    }
+
+    return maxLen;
+}
+
+//O(n) time and O(1) space in two passes
+int longestValidParentheses(string s) {
+    int maxLen = 0;
+    int start = -1;
+    int depth = 0;
+    int n = s.size();
+
+    //Find the longest paratheses sequence that the left parentheses before the
+    //right matched parentheses are fewer than the right ones
+    for (int i = 0; i < n; ++i)
+    {
+        if (s[i] == '(')
+            depth++;
+        else {
+            depth--;
+            if (depth == 0) {
+                maxLen = max(maxLen, i-start);
+            } else if (depth < 0) {
+                start = i;
+                depth = 0;
+            }
+        }
+    }
+
+    depth = 0;
+    start = n;
+
+    //Find the longest paratheses sequence that the right parentheses after the
+    //left matched parentheses are fewer than the left ones
+    for (int i = n-1; i >= 0; --i)
+    {
+        if (s[i] == ')')
+            depth++;
+        else {
+            depth--;
+            if (depth == 0) {
+                maxLen = max(maxLen, start-i);
+            } else if (depth < 0) {
+                start = i;
+                depth = 0;
+            }
+        }
+    }
+
+    return maxLen;
+}
+
+
 int main(int argc, char** argv)
 {
-    string test("))");
+    string test("(())()))");
     cout << longestValidParentheses(test) << endl;
     return 0;
 }
