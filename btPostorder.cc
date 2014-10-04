@@ -37,6 +37,38 @@ vector<int> postorderTraversal(TreeNode *root) {
     return result;
 }
 
+//Iterative solution improved
+vector<int> postorderTraversal(TreeNode *root) {
+        
+        vector<TreeNode*> stack{root};
+        
+        vector<int> result;
+        if (!root)
+            return result;
+      
+        TreeNode* prev = NULL;
+        while (!stack.empty()) {
+            
+            TreeNode* cur = stack.back();
+            
+            if (!prev || (prev->left == cur) || (prev->right == cur)) {
+                if (cur->left)
+                    stack.push_back(cur->left);
+                else if (cur->right)
+                    stack.push_back(cur->right);
+            } else if ((cur->left == prev) && (cur->right)){
+                    stack.push_back(cur->right);
+            } else {
+                result.push_back(cur->val);
+                stack.pop_back();
+            }
+            
+            prev = cur;
+        }
+        
+        return result;
+    }
+
 int main(int argc, char** argv)
 {
     TreeNode* test = new TreeNode(1);

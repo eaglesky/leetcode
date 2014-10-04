@@ -43,31 +43,32 @@ vector<int> preorderTraversal1(TreeNode* root) {
     return result;
 }
 
-//Morris preorder traversal, O(n) time and O(1) space
-vector<int> preorderTraversal(TreeNode* root) {
-    vector<int> results;
-    TreeNode* cur = root;
-    while(cur) {
-        if (cur->left == NULL) {
-            results.push_back(cur->val);
-            cur = cur->right;
-        } else {
-            TreeNode* node = cur->left;
-            while (node->right && node->right != cur)
-                node = node->right;
-            if (node->right == NULL) {
-                node->right = cur;
-                results.push_back(cur->val);
-                cur = cur->left;
-            } else if (node->right == cur) {
-                node->right == NULL;
+//Morris Traversal
+   vector<int> preorderTraversal(TreeNode *root) {
+        vector<int> result;
+        TreeNode* cur = root;
+        while (cur) {
+            
+            if (cur->left) {
+                TreeNode* post = cur->left;
+                while ((post->right) && (post->right != cur))
+                    post = post->right;
+                if (post->right == NULL) {
+                    post->right = cur;
+                    result.push_back(cur->val);
+                    cur = cur->left;
+                } else {
+                    post->right = NULL;
+                    cur = cur->right;
+                }
+            } else {
+                result.push_back(cur->val);
                 cur = cur->right;
             }
         }
+        
+        return result;
     }
-
-    return results;
-}
 
 int main(int argc, char** argv)
 {
