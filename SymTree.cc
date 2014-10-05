@@ -59,6 +59,31 @@ bool isSymmetric(TreeNode *root) {
 }
 
 // Improved iterative solution is in the C++ Leetcode Solutions book
+bool isSymmetric(TreeNode *root) {
+    if (!root)
+        return true;
+    vector<TreeNode*> stack;
+    stack.push_back(root->right);
+    stack.push_back(root->left);
+    while (!stack.empty()) {
+        TreeNode* l = stack.back();
+        stack.pop_back();
+        TreeNode* r = stack.back();
+        stack.pop_back();
+        
+        if (!l && !r)
+            continue;
+        else if (l && r && (l->val == r->val)) {
+            stack.push_back(r->right);
+            stack.push_back(l->left);
+            stack.push_back(r->left);
+            stack.push_back(l->right);
+        } else
+            return false;
+    }
+    
+    return true;
+}
 
 int main(int argc, char** argv)
 {

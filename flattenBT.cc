@@ -34,7 +34,7 @@ void flatten0(TreeNode *root) {
 }
 
 //Iterative solution
-void flatten(TreeNode* root) {
+void flatten1(TreeNode* root) {
     vector<TreeNode*> s;
     if(!root)
         return;
@@ -51,6 +51,22 @@ void flatten(TreeNode* root) {
        cur->left = NULL;
        if (!s.empty())
            cur->right = s.back();
+    }
+}
+
+//More straightforward iterative solution
+void flatten(TreeNode *root) {
+    TreeNode* cur = root;
+    while (cur) {
+        if (cur->left) {
+            TreeNode* p = cur->left;
+            while (p->right)
+                p = p->right;
+            p->right = cur->right;
+            cur->right = cur->left;
+            cur->left = NULL;
+        }
+        cur = cur->right;
     }
 }
 

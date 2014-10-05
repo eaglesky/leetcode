@@ -48,6 +48,7 @@ bool isSameTree(TreeNode *p, TreeNode *q) {
     return true;
 }
 
+//Another iterative solution is using BFS.
 int main(int argc, char** argv)
 {
     return 0; 
