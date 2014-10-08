@@ -12,7 +12,7 @@ struct TreeNode {
 
 //Iterative solution. Recursive solution on the book is not as good as this
 //one!
-int minDepth(TreeNode *root) {
+int minDepth0(TreeNode *root) {
     deque<TreeNode*> q;
     if (!root)
         return 0;
@@ -36,6 +36,24 @@ int minDepth(TreeNode *root) {
     }
     return depth;
 }
+
+//My Recursive solution, O(n) time and O(n) space
+int minDepth(TreeNode *root) {
+        if (!root)
+            return 0;
+        
+        int subDepth = 0;
+        if (root->left && root->right)
+            subDepth = min(minDepth(root->left), minDepth(root->right));
+        else if (root->left)
+            subDepth = minDepth(root->left);
+        else if (root->right)
+            subDepth = minDepth(root->right);
+        else
+            subDepth = 0;
+            
+        return subDepth+1;
+    }
 
 int main(int argc, char** argv)
 {
