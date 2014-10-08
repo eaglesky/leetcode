@@ -10,7 +10,7 @@ struct TreeNode {
     TreeNode(int x): val(x), left(NULL), right(NULL){}
 };
 
-// Iterative solution using a stack, O(n) time and O(n) space 
+
 vector<int> inorderTraversal(TreeNode *root) {
     vector<int> result;
     vector<TreeNode*> stack;
@@ -32,7 +32,7 @@ vector<int> inorderTraversal(TreeNode *root) {
 
 
 //Recursive solution. O(n) time and O(n) space
-TreeNode* buildTreeRec(vector<int>& postorder, unordered_map<int, int>& inorderHash, int inStart, int inEnd, int& postId)
+/*TreeNode* buildTreeRec(vector<int>& postorder, unordered_map<int, int>& inorderHash, int inStart, int inEnd, int& postId)
 {
     TreeNode* bt = NULL;
     if ((postId < 0) || (inStart > inEnd))
@@ -66,6 +66,41 @@ TreeNode *buildTree(vector<int> &postorder, vector<int> &inorder) {
         inorderHash[inorder[i]] = i;
     }
     return buildTreeRec(postorder, inorderHash, 0, inorder.size()-1, postId);
+}*/
+
+
+//Another implementation of recursive solution
+TreeNode* buildTreeRec(vector<int>& postorder, unordered_map<int, int>& inorderHash, int& postRoot, int inStart, int inEnd)
+{
+    int inRoot = inorderHash[postorder[postRoot]];
+    TreeNode* rootNode = new TreeNode(postorder[postRoot]);
+    if (postRoot == 0)
+        return rootNode;
+        
+    int inRootNext = inorderHash[postorder[postRoot-1]];
+    
+    if ((inRootNext > inRoot) && (inRootNext <= inEnd)) 
+        rootNode->right = buildTreeRec(postorder, inorderHash, --postRoot, inRoot+1, inEnd);
+        
+    inRootNext = inorderHash[postorder[postRoot-1]];
+    if ((inRootNext < inRoot) && (inRootNext >= inStart))
+        rootNode->left = buildTreeRec(postorder, inorderHash, --postRoot, inStart, inRoot-1);
+    
+    return rootNode;
+}
+
+TreeNode *buildTree(vector<int> &inorder, vector<int> &postorder) {
+    
+    int n = inorder.size();
+    if (n == 0)
+        return NULL;
+        
+    unordered_map<int, int> inorderHash;
+    for (int i = 0; i < n; ++i)
+        inorderHash[inorder[i]] = i;
+    
+    int postRoot = n - 1;
+    return buildTreeRec(postorder, inorderHash, postRoot, 0, n-1);
 }
 
 int main(int argc, char** argv)

@@ -37,23 +37,19 @@ int numTrees0(int n) {
     return result;
 }
 
-//Dynamic Programming improved!
+//DP solution improved
 int numTrees(int n) {
-    int* cache = new int[n+1];
-    fill_n(cache, n+1, 0);
-    
-    for (int i = 0; i <= n; ++i)
+    vector<int> cache(n+1, 0);
+    cache[0] = 1;
+    for (int i = 1; i <= n; ++i)
     {
-        if (i == 0 || i == 1)
-            cache[i] = 1;
-        else {
-            for (int j = 0; j < i; ++j)
-                cache[i] += cache[j] * cache[i-j-1];
+        for (int j = 0; j < i; ++j)
+        {
+            cache[i] += cache[j] * cache[i-1-j];
         }
     }
-    int result = cache[n];
-    delete[] cache;
-    return result;
+    
+    return cache[n];
 }
 
 

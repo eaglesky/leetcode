@@ -83,6 +83,38 @@ vector<TreeNode *> generateTrees(int n) {
     return result;
 }
 
+//Another implementation without cache
+vector<TreeNode* > generateTreeRec(int start, int end)
+{
+    vector<TreeNode* > result;
+    for (int i = start; i <= end; ++i)
+    {
+        vector<TreeNode* > leftSubs = generateTreeRec(start, i-1);
+        vector<TreeNode* > rightSubs = generateTreeRec(i+1, end);
+        for (int l = 0; l < leftSubs.size(); ++l)
+        {
+            for (int r = 0; r < rightSubs.size(); ++r)
+            {
+                TreeNode* root = new TreeNode(i);
+                root->left = leftSubs[l];
+                root->right = rightSubs[r];
+                result.push_back(root);
+            }
+        }
+        
+    }
+    
+    if (start > end) {
+        result.push_back(NULL);
+    }
+    return result;
+}
+
+vector<TreeNode *> generateTrees(int n) {
+    
+    return generateTreeRec(1, n);
+}
+
 
 int main(int argc, char** argv)
 {

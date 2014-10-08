@@ -26,7 +26,6 @@ TreeNode *sortedArrayToBST(vector<int> &num) {
     return sortedArray2BSTRec(num, 0, num.size()-1);
 }
 
-//Improved solution
 vector<vector<int> > levelOrder(TreeNode *root) {
     deque<TreeNode*> q;
     vector<vector<int> > result;
