@@ -23,10 +23,37 @@ void dfs(TreeNode* root, int curNum, int& sum)
     dfs(root->right, curNum, sum);
 }
 
-int sumNumbers(TreeNode *root) {
+int sumNumbers0(TreeNode *root) {
     int sum = 0;
     dfs(root, 0, sum);
     return sum;
+}
+
+//Iterative solution
+int sumNumbers(TreeNode *root) {
+    int totalSum = 0;
+    if (!root)
+        return totalSum;
+        
+    vector<pair<TreeNode*, int> > stack{make_pair(root, root->val)};
+    while (!stack.empty()) {
+        pair<TreeNode*, int> curPair = stack.back();
+        TreeNode* curNode = curPair.first;
+        int curSum = curPair.second;
+        stack.pop_back();
+        
+        if (!curNode->left && !curNode->right) {
+            totalSum += curSum;
+        }
+        
+        if (curNode->right) 
+            stack.push_back(make_pair(curNode->right, 10*curSum + curNode->right->val));
+        if (curNode->left)
+            stack.push_back(make_pair(curNode->left, 10*curSum + curNode->left->val));
+            
+    }
+    
+    return totalSum;
 }
 
 int main(int argc, char** argv)

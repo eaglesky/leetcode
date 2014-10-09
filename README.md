@@ -24,4 +24,6 @@ MultiplyStrings.cc : Big number multiplication
 DivideIntegers.cc: Throw an exception in a function; Judge signs of two numbers
 
 MaxPoints.cc : Unordered map use double as key; numeric
-limits<double>::infinity() 
+limits<double>::infinity()
+
+SumNumbers.cc :Usage of pair
