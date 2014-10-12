@@ -28,6 +28,36 @@ vector<string> letterCombinations0(string digits) {
     return result;
 }
 
+//dfs improved
+ void dfsLetterCombinations(string* map, string& digits, int start, string curStr, vector<string>& result)
+    {
+        if (start == digits.size()) {
+            result.push_back(curStr);
+            return;
+        }
+        
+        int dig = digits[start] - '0';
+        
+        for (int i = 0; i < map[dig].size(); ++i)
+        {
+            string newStr = curStr + map[dig][i];
+            dfsLetterCombinations(map, digits, start+1, newStr, result);
+            
+        }
+        
+        if (map[dig].size() == 0)
+            dfsLetterCombinations(map, digits, start+1, curStr, result);
+    }
+    
+    vector<string> letterCombinations2(string digits) {
+        string map[10] = {" ", "",  "abc", "def", "ghi", "jkl", 
+    "mno", "pqrs", "tuv", "wxyz"};
+        string curStr = "";
+        vector<string> result;
+        dfsLetterCombinations(map, digits, 0, curStr, result);
+        return result;
+    }
+
 // Return true if ids is increased to maximum
 bool increase(int* ids, int* limits, int n)
 {
