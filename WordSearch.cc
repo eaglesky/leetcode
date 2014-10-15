@@ -12,7 +12,7 @@ using namespace std;
 // Note that iterative verstion of DFS is non-trivial, since in each state
 // there must be a structure storing the visited information, which in this
 // case, is same size of the board.
-bool dfsWord(vector<vector<char> >&board, int len, pair<int, int>& pos, string& word, vector<vector<bool> >& visited)
+bool dfsWord0(vector<vector<char> >&board, int len, pair<int, int>& pos, string& word, vector<vector<bool> >& visited)
 {
     int w = pos.first;
     int l = pos.second;
@@ -34,7 +34,7 @@ bool dfsWord(vector<vector<char> >&board, int len, pair<int, int>& pos, string& 
         pair<int, int> cur = adjs[i];
         if ((cur.first >= 0) && (cur.first < wmax) && (cur.second >= 0) && (cur.second < lmax)
                  && !visited[cur.first][cur.second]) {
-           if (dfsWord(board, len+1, cur, word, visited))
+           if (dfsWord0(board, len+1, cur, word, visited))
                return true;
         }
     }
@@ -61,11 +61,65 @@ bool exist0(vector<vector<char> > &board, string word) {
     return false;
 }
 
+//Without additional array
+bool dfsExist(vector<vector<char> >& board, string& word, int idWord, int rBoard, int cBoard)
+{
+    int nr = board.size();
+    int nc = board[0].size();
+    pair<int, int> adjs[4] = {{rBoard, cBoard+1}, {rBoard, cBoard-1}, {rBoard+1, cBoard}, {rBoard-1, cBoard}};
+    
+  
+        
+    if (word[idWord] != board[rBoard][cBoard])
+        return false;
+ 
+    if (idWord == word.size() - 1) 
+        return true;
+    char c = board[rBoard][cBoard];
+    board[rBoard][cBoard] = '#';
+    
+    for (int i = 0; i < 4; ++i)
+    {
+        int r = adjs[i].first;
+        int c = adjs[i].second;
+        if ((r >= 0) && (r < nr) && (c >= 0) && (c < nc)) {
+         
+            if (dfsExist(board, word, idWord+1, r, c))
+                return true;
+        
+        }
+    }
+    
+    board[rBoard][cBoard] = c;
+    
+    return false;
+}
+
+bool exist(vector<vector<char> > &board, string word) {
+    int nr = board.size();
+    if (nr == 0)
+        return false;
+    int nc = board[0].size();
+    if (nc == 0)
+        return false;
+        
+    for (int i = 0; i < nr; ++i)
+    {
+        for (int j = 0; j < nc; ++j)
+        {
+            if (dfsExist(board, word, 0, i, j))
+                return true;
+        }
+    }
+    
+    return false;
+}
+
 // BFS is not good for this problem. 
 // 1. Board = AA
 //            AA,  word = "AAAA", BFS won't work.
 // And to make it work, we need to modify the judging repetition part.
-// 2. Not easy to store the visited points. Cannot using board to store them.
+// 2. Not easy to store the visited points. Cannot use board to store them.
 
 
 int main(int argc, char** argv)

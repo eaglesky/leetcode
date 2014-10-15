@@ -87,6 +87,76 @@ vector<vector<string>> findLadders(string start, string end, unordered_set<strin
     return result;
 }
 
+//Another similar solution using indices instead of strings
+    void dfsPath(string& curStr, unordered_map<string, pair<vector<int>, int> >& used, vector<string>& q, vector<string>& path, vector<vector<string> >& result)
+    {
+        int n = used[curStr].first.size();
+        path.push_back(curStr);
+        if (n == 0) {
+            result.push_back(path);
+            reverse(result.back().begin(), result.back().end());
+        
+        }
+        
+     
+        for (int i = 0; i < n; ++i)
+        {
+            string curParen = q[used[curStr].first[i]];
+            dfsPath(curParen, used, q, path, result);
+        }
+        
+        path.pop_back();
+    }
+    
+    vector<vector<string>> findLadders(string start, string end, unordered_set<string> &dict) {
+        unordered_map<string, pair<vector<int>, int> > used;
+        vector<int> v;
+        used[start] = make_pair(v, 1);
+        vector<string> q{start};
+        
+        int front = 0;
+      
+        while (front < q.size()) {
+           
+                
+                string cur = q[front];
+                if (cur == end)
+                    break;
+                int curLev = used[cur].second;
+                
+                for (int j = 0; j < cur.size(); ++j)
+                {
+                    string cur2 = cur;
+                    for (char c = 'a'; c <= 'z'; ++c)
+                    {
+                        
+                        cur2[j] = c;
+                        
+                        if ((used.find(cur2) != used.end()) && (used[cur2].second == (curLev + 1))) {
+                            used[cur2].first.push_back(front);
+                        }
+                        
+                        if (((cur2 == end) || (dict.find(cur2) != dict.end())) && (used.find(cur2) == used.end())) {
+                            q.push_back(cur2);
+                            vector<int> vcur2{front};
+                            used[cur2] = make_pair(vcur2, curLev+1);
+                        }
+                    }
+                }
+                
+                front++;
+            
+        }
+        
+        vector<string> path;
+        vector<vector<string> > result;
+        
+        if (used.find(end) != used.end())
+            dfsPath(end, used, q, path, result );
+            
+        return result;
+    }
+
 int main(int argc, char** argv)
 {
     unordered_set<string> dict = {"hot", "dot", "dog", "lot", "log"};

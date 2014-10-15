@@ -4,7 +4,7 @@
 #include <vector>
 using namespace std;
 
-int ladderLength(string start, string end, unordered_set<string> &dict) {
+int ladderLength0(string start, string end, unordered_set<string> &dict) {
     deque<string> q;
     unordered_set<string> used;
     q.push_back(start);
@@ -39,6 +39,47 @@ int ladderLength(string start, string end, unordered_set<string> &dict) {
         }
         level++;
     }
+    return 0;
+}
+
+//Slightly improved solution
+int ladderLength(string start, string end, unordered_set<string> &dict) {
+   
+    deque<string> q{start};
+    int len = 1;
+    if (end == start)
+        return len;
+        
+    while (!q.empty()) {
+        
+        int sz = q.size();
+        
+        for (int j = 0; j < sz; ++j)
+        {
+            string cur = q.front();
+            q.pop_front();
+        
+            for (int i = 0; i < cur.size(); ++i)
+            {
+                string cur2 = cur;
+                for (char c = 'a'; c <= 'z'; ++c)
+                {
+                    cur2[i] = c;
+                    if (cur2 == end)
+                        return len+1;
+                    
+                    if (dict.find(cur2) != dict.end()) {
+                        q.push_back(cur2);
+                        dict.erase(cur2);
+                    }
+                }
+            }
+        }
+       
+        
+        len++;
+    }
+    
     return 0;
 }
 

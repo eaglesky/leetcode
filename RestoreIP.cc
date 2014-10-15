@@ -44,6 +44,51 @@ vector<string> restoreIpAddresses0(string s) {
     return result;
 }
 
+//With cutting-branches process added
+void dfsRestoreIP1(string& s, int start, vector<int>& curAddrNums, vector<string>& result)
+{
+    int n = s.size();
+    int m = curAddrNums.size();
+    
+    if (((n - start) < (4 - m)) || ((n-start) > (3*(4-m))))
+        return;
+    
+    if ((start >= n) && (m == 4)) {
+        string curStr = to_string(curAddrNums[0]);
+        for (int i = 1; i < 4; ++i)
+        {
+            curStr += ".";
+            curStr += to_string(curAddrNums[i]);
+        }
+        
+        result.push_back(curStr);
+    }
+    
+    for (int i = 0; (start+i < n) && (i < 3); ++i)
+    {
+        string curStr = s.substr(start, i+1);
+        int ip = stoi(curStr);
+        if (ip > 255)
+            break;
+        
+        curAddrNums.push_back(ip);
+        
+        dfsRestoreIP1(s, start+i+1, curAddrNums, result);
+        
+        curAddrNums.pop_back();
+        if (s[start] == '0')
+            break;
+    }
+}
+
+vector<string> restoreIpAddresses1(string s) {
+    vector<string> result;
+    vector<int> curAddrNums;
+    dfsRestoreIP(s, 0, curAddrNums, result);
+    return result;
+    
+}
+
 //An iterative solution using three loops exists
 bool isValid(string s) {
     if (s.size() > 1 && s[0] == '0')

@@ -15,11 +15,11 @@ bool isOnBoarder(pair<int, int>& pos, vector<vector<char> >& board)
 
 void solve0(vector<vector<char> > &board) {
     int width = board.size();
-    if (width == 0)//Add this to prevent run-time error!
+    if (width == 0)//Add this to prevent run-time error!
         return;
         
     int length = board[0].size();
-    if (length == 0) //Add this to prevent run-tine error!
+    if (length == 0) //Add this to prevent run-tine error!
         return;
         
     bool** visited = new bool*[width];

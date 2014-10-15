@@ -36,27 +36,29 @@ int minCut0(string s) {
     return subMins[len-1];
 }
 
-//Improved DP solution. O(n^2) time and space
+//Improved DP solution. O(n^2) time and O(n^2) space
 int minCut1(string s) {
-    int len = s.size();
-    if (len == 0)
+    int n = s.size();
+    if (n == 0)
         return 0;
+        
+    vector<vector<bool> > isValid(n, vector<bool>(n, false));
+    vector<int> mins(n+1, INT_MAX);
+    mins[n] = -1;
     
-    vector<int> subMins(len+1);
-    vector<vector<bool> > isPalin(len, vector<bool>(len, false));
-    for (int i = 0; i <= len; ++i)
-        subMins[i] = len - i - 1; //Min cut of sub-string from i to the end(included)
-
-    for (int i = len - 1; i >= 0; --i)
-        for (int j = i; j < len; ++j)
+    for (int i = n-1; i >= 0; --i)
+    {
+        for (int j = i; j < n; ++j)
         {
-            if ((s[i] == s[j]) && ((j-i < 2) || (isPalin[i+1][j-1]))) {
-                isPalin[i][j] = true;
-                if (subMins[j+1]+1 < subMins[i])
-                    subMins[i] = subMins[j+1]+1;
+            isValid[i][j] = (s[i] == s[j]) && ((j-i <= 1) || isValid[i+1][j-1]);
+            
+            if (isValid[i][j]) {
+                mins[i] = min(mins[i], mins[j+1] + 1);
             }
         }
-    return subMins[0];
+    }
+    
+    return mins[0];
 }
 
 //Another DP solution. O(n^2) time and O(n) space!
