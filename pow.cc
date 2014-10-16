@@ -41,6 +41,8 @@ double power(double x, int n)
 
 // Iterative solution (n >= 0)
 // O(logn) time and O(1) space
+// The idea is: represent n using binary form, for example, n = 18 = 10010
+// Then result^n = result^(10000) * result^(10)
 double power1(double x, int n) {
     double result = 1;
     double cur = x;
