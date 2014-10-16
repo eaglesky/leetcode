@@ -4,7 +4,7 @@ using namespace std;
 
 //Greedy algorithm
 //O(n) time and O(1) space
-int maxProfit(vector<int> &prices) {
+int maxProfit0(vector<int> &prices) {
     int maxProfit = 0;
     int n = prices.size();
     if (n < 2)
@@ -15,6 +15,20 @@ int maxProfit(vector<int> &prices) {
         if (diff > 0)
             maxProfit += diff;
     }
+    return maxProfit;
+}
+
+//Simplified version of the above solution
+int maxProfit(vector<int> &prices) {
+    
+    int maxProfit = 0;
+    
+    for (int i = 1; i < prices.size(); ++i)
+    {
+        if (prices[i] > prices[i-1])
+            maxProfit += prices[i] - prices[i-1];
+    }
+    
     return maxProfit;
 }
 
