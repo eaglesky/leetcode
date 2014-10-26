@@ -41,7 +41,7 @@ vector<Interval> insert0(vector<Interval> &intervals, Interval newInterval) {
 }
 
 //Take into account the assumption that intervals are non-overlapping
-vector<Interval> insert(vector<Interval> &intervals, Interval newInterval) {
+vector<Interval> insert1(vector<Interval> &intervals, Interval newInterval) {
     vector<Interval> result;
 
     int i;
@@ -62,6 +62,35 @@ vector<Interval> insert(vector<Interval> &intervals, Interval newInterval) {
     for (; i < intervals.size(); ++i)
         result.push_back(intervals[i]);
 
+    return result;
+}
+
+// More elegant logic
+vector<Interval> insert(vector<Interval> &intervals, Interval newInterval) {
+    
+    vector<Interval> result;
+    
+    int i = 0;
+    for (; (i < intervals.size()) && (intervals[i].start < newInterval.start); ++i)
+    {
+       result.push_back(intervals[i]);
+    }
+    
+    if (result.empty() || (newInterval.start > result.back().end)) {
+        result.push_back(newInterval);
+    } else {
+        result.back().end = max(result.back().end, newInterval.end);
+    }
+    
+    for (; i < intervals.size(); ++i)
+    {
+        if (intervals[i].start > result.back().end)
+            result.push_back(intervals[i]);
+        else {
+            result.back().end = max(result.back().end, intervals[i].end);
+        }
+    }
+    
     return result;
 }
 

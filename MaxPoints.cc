@@ -13,7 +13,7 @@ struct Point {
 
 //Pay attention to the coincident point
 //O(n^2) time and O(n) space
-int maxPoints(vector<Point> &points) {
+int maxPoints0(vector<Point> &points) {
     
    int n = points.size();
    if (n < 3)
@@ -54,6 +54,37 @@ int maxPoints(vector<Point> &points) {
    }
 
    return result;
+}
+
+//Improved version of the above solution
+ int maxPoints(vector<Point> &points) {
+      int n = points.size();
+      int maxNum = 0;
+      for (int i = 0; i < n; ++i)
+      {
+          unordered_map<double, int> counts;
+          int coincidentNum = 0;
+          for (int j = i; j < n; ++j)
+          {
+              if ((points[i].x == points[j].x) && (points[i].y == points[j].y))
+                  coincidentNum++;
+              else if (points[i].x == points[j].x) {
+                  counts[numeric_limits<double>::infinity()]++;
+              } else {
+                  counts[(double)(points[j].y-points[i].y)/(points[j].x-points[i].x)]++;
+              }
+          }
+          
+          if (counts.empty())
+              maxNum = max(maxNum, coincidentNum);
+              
+          for (auto count : counts)
+          {
+              maxNum = max(maxNum, count.second + coincidentNum);
+          }
+      }
+      
+      return maxNum;
 }
 
 // Another possible approach is store the pair(a, b)/gcd(a,b) instead of (a/b)

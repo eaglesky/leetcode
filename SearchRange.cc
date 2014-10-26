@@ -19,7 +19,7 @@ using namespace std;
         return (A[left] == target) ? left : -1;
     }
     
-    int searchRightBoundary(int A[], int n, int target)
+    int searchRightBoundary0(int A[], int n, int target)
     {
         int left = 0;
         int right = n-1;
@@ -39,6 +39,23 @@ using namespace std;
         else
             return -1;
     }
+
+    //Better implementationg of the above function
+    int searchRightBoundary(int A[], int n, int target)
+    {
+        int start = 0;
+        int end = n - 1;
+        while (start < end) {
+            int mid = start + (end - start + 1) / 2;
+            if (target < A[mid]) 
+                end = mid - 1;
+            else
+                start = mid;
+        }
+        
+        return (A[start] == target) ? start : -1;
+    }
+
     
     vector<int> searchRange(int A[], int n, int target) {
 

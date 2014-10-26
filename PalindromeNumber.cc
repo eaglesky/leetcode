@@ -25,6 +25,26 @@ bool isPalindrome0(int x) {
 
 }
 
+// Another implementation of the above solution
+bool isPalindrome1(int x) {
+    int reversed = 0;
+    int original = x;
+    if (x < 0)
+        return false;
+        
+    while (x != 0) {
+        int dig = x % 10;
+        reversed = reversed * 10 + dig;
+        x /= 10;
+        
+        if ((((reversed > INT_MAX / 10) && (x != 0)) || ((reversed == INT_MAX / 10) && (x % 10 > 7))))
+            return false;
+    }
+    
+    return (reversed == original);
+    
+}
+
 //Traditional way
 //O(log(10)n) time and O(1) space
 bool isPalindrome(int x) {

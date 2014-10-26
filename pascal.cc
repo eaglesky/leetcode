@@ -24,6 +24,7 @@ vector<vector<int> > generate(int numRows) {
     return result;
 }
 
+//Another implementation is on the book, which is better
 int main(int argc, char** argv)
 {
     int n = atoi(argv[1]);
@@ -35,5 +36,7 @@ int main(int argc, char** argv)
             cout << result[i][j] << ", ";
         cout << endl;
     }
+
+
     return 0;
 }

@@ -49,7 +49,7 @@ void justifyOneLine(vector<string>& words, int start, int end, int numSpaces, ve
     result.push_back(curStr);
 }
 
-vector<string> fullJustify(vector<string> &words, int L) {
+vector<string> fullJustify0(vector<string> &words, int L) {
 
     vector<string> result;
     if (words.size() == 0)
@@ -72,6 +72,89 @@ vector<string> fullJustify(vector<string> &words, int L) {
 
     return result;
 }
+
+
+//Another implementation
+vector<string> fullJustify1(vector<string> &words, int L) {
+    vector<string> result;
+
+    int end = 0;
+    for (int i = 0; i < words.size(); i = end)
+    {
+        string curStr = "";
+        int count = words[i].size();
+        end = i + 1;
+        for (; (end < words.size()) && (count+1+words[end].size() <= L); count += 1 + words[end].size(), ++end);
+        int numWords = end - i;
+        int spaceLeft = L - count;
+        curStr += words[i];
+        if ((end == words.size()) || (end == i + 1)) {
+            int j = i+1;
+            for (; j < end; ++j)
+            {
+                curStr += ' ';
+                curStr += words[j];
+            }
+            for (; spaceLeft > 0; spaceLeft--)
+                curStr += ' ';
+        } else {
+            int spaceBlock = numWords - 1;
+            int spaceLeftOneBlock = spaceLeft / spaceBlock;
+            int remain = spaceLeft % spaceBlock;
+            for (int j = i + 1; j < end; ++j)
+            {
+                int curSpaceNum = (j - i <= remain) ? (2 + spaceLeftOneBlock) : (1 + spaceLeftOneBlock);
+                string spaces = "";
+                for (int s = 0; s < curSpaceNum; ++s)
+                    spaces += ' ';
+                curStr += spaces;
+                curStr += words[j];
+            }
+        }
+        
+        result.push_back(curStr);
+    }
+    
+    return result;
+}
+
+//Improved version of the above solution
+vector<string> fullJustify(vector<string> &words, int L) {
+    vector<string> result;
+
+    int end = 0;
+    for (int i = 0; i < words.size(); i = end)
+    {
+        string curStr = "";
+        int count = words[i].size();
+        end = i + 1;
+        for (; (end < words.size()) && (count+1+words[end].size() <= L); count += 1 + words[end].size(), ++end);
+        int numWords = end - i;
+        int spaceLeft = L - count;
+        curStr += words[i];
+        
+       
+        for (int j = i + 1; j < end; ++j)
+        {
+            int curSpaceNum = 1;
+            if (end < words.size()) {
+                 int spaceBlock = numWords - 1;
+                 int spaceLeftOneBlock = (L-count) / spaceBlock;
+                 int remain = (L-count) % spaceBlock;
+                curSpaceNum = (j - i <= remain) ? (2 + spaceLeftOneBlock) : (1 + spaceLeftOneBlock);
+            }
+            spaceLeft -= curSpaceNum-1;
+            curStr += string(curSpaceNum, ' ');
+            curStr += words[j];
+        }
+        curStr += string(spaceLeft, ' ');
+
+        result.push_back(curStr);
+    }
+    
+    return result;
+}
+
 
 int main(int argc, char** argv)
 {

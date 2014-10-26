@@ -4,7 +4,7 @@ using namespace std;
 
 //Be careful about the last value of i/j when the for loop is finished
 //Also pay attention to the matrix of one row/column
-vector<int> spiralOrder(vector<vector<int> > &matrix) {
+vector<int> spiralOrder0(vector<vector<int> > &matrix) {
 
     vector<int> result;
     int w = matrix.size();
@@ -56,12 +56,17 @@ vector<int> spiralOrder(vector<vector<int> > &matrix) {
     return result;
 }
 
+
+
 int main(int argc, char** argv)
 {
-    vector<vector<int> > mat = {
+  /*  vector<vector<int> > mat = {
         {1, 2, 3},
         {4, 5, 6},
         {7, 8, 9}
+    };*/
+    vector<vector<int> > mat = {
+        {2, 3}
     };
 
     vector<int> result = spiralOrder(mat);

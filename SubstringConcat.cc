@@ -90,7 +90,7 @@ vector<int> findSubstring1(string S, vector<string> &L) {
 }
 
 //Improved solution
-vector<int> findSubstring(string S, vector<string> &L) {
+vector<int> findSubstring2(string S, vector<string> &L) {
     vector<int> result;
 
     if (L.size() == 0)
@@ -134,6 +134,52 @@ vector<int> findSubstring(string S, vector<string> &L) {
     }
 }
 
+//Another implementation of above solution
+vector<int> findSubstring(string S, vector<string> &L) {
+    
+    vector<int> result;
+    if (L.size() == 0)
+        return result;
+    int sLen = S.size();
+    int wordLen = L[0].size();
+    int LCharsNum = wordLen * L.size();
+    unordered_map<string, int> needToFindCount;
+
+    for (int i = 0; i < L.size(); ++i)
+        needToFindCount[L[i]]++;
+        
+    for (int i = 0; i < wordLen; ++i)
+    {
+        int prev = i;
+        unordered_map<string, int> remainCounts = needToFindCount;
+        for (int j = i; prev <= sLen-LCharsNum; )
+        {
+            string curStr = S.substr(j, wordLen);
+            if (remainCounts.find(curStr) != remainCounts.end()) {
+                remainCounts[curStr]--;
+                if (remainCounts[curStr] == 0)
+                    remainCounts.erase(curStr);
+                if (remainCounts.empty()) {
+                    result.push_back(prev);
+                    remainCounts[S.substr(prev, wordLen)]++;
+                    prev += wordLen;
+                 
+                }
+                j += wordLen;
+            } else if (needToFindCount.find(curStr) == needToFindCount.end()){
+                prev = j + wordLen;
+                remainCounts = needToFindCount;
+                j += wordLen;
+            } else {
+                remainCounts[S.substr(prev, wordLen)]++;
+                prev += wordLen;
+            }
+        }
+    }
+    
+    return result;
+}
+
 int main(int argc, char** argv)
 {
 //    string S = "barfoothefoobarman";
@@ -152,6 +198,12 @@ int main(int argc, char** argv)
     vector<string> L = {
         "ab", "ba", "ab", "ba"
     };
+ /*   string S = "mississippi";
+    vector<string> L = {
+        "mississippis"
+    };*/
+
+
     vector<int> result = findSubstring(S, L);
     for (int i = 0; i < result.size(); ++i)
         cout << result[i] << endl;

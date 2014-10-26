@@ -16,7 +16,7 @@ bool cmpIntervals(const Interval& interval1, const Interval& interval2)
 }
 
 //Non-in-place version
-vector<Interval> merge(vector<Interval> &intervals) {
+vector<Interval> merge0(vector<Interval> &intervals) {
     vector<Interval> sortedIntervals = intervals;
     sort(sortedIntervals.begin(), sortedIntervals.end(), cmpIntervals);
     vector<Interval> result;
@@ -35,6 +35,24 @@ vector<Interval> merge(vector<Interval> &intervals) {
 
 //See here: https://oj.leetcode.com/discuss/7415/do-you-have-a-better-solution
 //for in-place version
+vector<Interval> merge(vector<Interval> &intervals) {
+    sort(intervals.begin(), intervals.end(), cmpIntervals);
+    int t = 0;
+    for (int i = 1; i < intervals.size(); ++i)
+    {
+        if (intervals[i].start > intervals[t].end) {
+            intervals[++t] = intervals[i];
+        } else {
+            intervals[t].end = max(intervals[t].end, intervals[i].end);
+        }
+    }
+    
+    if (!intervals.empty())
+        intervals.erase(intervals.begin()+t+1, intervals.end());
+        
+    return intervals;
+        
+}
 
 int main(int argc, char** argv)
 {

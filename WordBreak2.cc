@@ -76,7 +76,7 @@ bool dfsWordBreak(string& s, unordered_set<string>& dict, int start, vector<bool
     return cache[start];
 }
 
-vector<string> wordBreak(string s, unordered_set<string> &dict) {
+vector<string> wordBreak1(string s, unordered_set<string> &dict) {
     int l = s.size();
     vector<string> result;
     if (l == 0) {
@@ -91,6 +91,45 @@ vector<string> wordBreak(string s, unordered_set<string> &dict) {
     dfsWordBreak(s, dict, 0, cache, curStrings, result);
     return result;
     
+}
+
+//Correct Memoriazation
+vector<string> dfsFindWordBreak(string& s, int start, unordered_set<string>& dict, unordered_map<int, vector<string> >& cache)
+{
+    if (cache.find(start) != cache.end()) {
+        return cache[start];
+    
+    }
+    vector<string> result;
+    if (start == s.size()) {
+        result.push_back("");
+    }
+    
+    for (int i = start; i < s.size(); ++i)
+    {
+        string curStr = s.substr(start, i-start+1);
+        if (dict.find(curStr) != dict.end()) {
+            vector<string> subResult = dfsFindWordBreak(s, i+1, dict, cache);
+            if (!subResult.empty()) {
+                for (int j = 0; j < subResult.size(); ++j)
+                {
+                    string temp = curStr;
+                    if (subResult[j] != "")
+                        temp += " ";
+                    result.push_back(temp + subResult[j]);
+                }
+            }
+        }    
+    }
+    
+    cache[start] = result;
+    return result;
+}
+
+vector<string> wordBreak(string s, unordered_set<string> &dict) {
+    unordered_map<int, vector<string> > cache;
+    vector<string> result = dfsFindWordBreak(s, 0, dict, cache);
+    return result;
 }
 
 int main(int argc ,char** argv)

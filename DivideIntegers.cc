@@ -50,7 +50,7 @@ int divide(int dividend, int divisor) {
         }
     }
 
-    return ((dividend ^ divisor) >> (sizeof(int)*8-1)) ?  -posResult : posResult;
+    return ((dividend ^ divisor) < 0) ?  -posResult : posResult;
 }
 
 int main(int argc, char** argv)

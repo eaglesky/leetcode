@@ -68,7 +68,7 @@ string minWindow0(string S, string T) {
 }
 
 
-string minWindow(string S, string T) {
+string minWindow1(string S, string T) {
     unordered_map<char, int> counts;
     unordered_map<char, int> tchars;
     deque<int> q;
@@ -138,6 +138,59 @@ string minWindow(string S, string T) {
     return (minSize == -1) ? "" : S.substr(minStart, minSize);
 }
 
+//Another implementation
+string minWindow(string S, string T) {
+    
+    unordered_map<char, int> mapT;
+    unordered_map<char, int> mapS;
+    
+    
+    for (int i = 0; i < T.size(); ++i)
+    {
+        mapT[T[i]]++;
+        mapS[T[i]] = 0;
+    }
+    
+    int start = 0;
+    int end = 0;
+    int minLen = INT_MAX;
+    int minStart = 0;
+    int remainCount = T.size();
+    
+    for (;end < S.size(); end++) {
+        if (mapS.find(S[end]) != mapS.end()) {
+            if (mapS[S[end]] < mapT[S[end]])
+                remainCount--;
+            mapS[S[end]]++;
+            if (remainCount == 0) {
+                if (end-start+1 < minLen) {
+                    minStart = start;
+                    minLen = end-start+1;
+                }
+                
+                for(; start <= end; ++start)
+                {
+                    if (end-start+1 < minLen) {
+                            minStart = start;
+                            minLen = end-start+1;
+                    }
+                    if (mapS.find(S[start]) != mapS.end()) {
+                        mapS[S[start]]--;
+                        if (mapS[S[start]] < mapT[S[start]]) {
+                            remainCount++;
+                            start++;
+                            break;
+                        }
+                        
+                       
+                    }
+                }
+            }
+        }
+    }
+    
+    return (minLen < INT_MAX) ? S.substr(minStart, minLen) : "";
+}
 
 int main(int argc, char** argv)
 {

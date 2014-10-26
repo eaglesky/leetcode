@@ -61,6 +61,33 @@ string convert(string s, int nRows) {
     return result;
 }
 
+//Another implementation of the above solution
+string convert(string s, int nRows) {
+    string result = "";
+    int n = s.size();
+    for (int i = 0; i < nRows; ++i)
+    {
+        int diff1 = (nRows == 1) ? 1 : 2*nRows - 2*i - 2;
+        int diff2 =  2*i;
+        bool choose2 = false;
+        for (int j = i; j < n;)
+        {
+            result += s[j];
+            if (i == 0)
+                j += diff1;
+            else if (i == nRows- 1)
+                j += diff2;
+            else {
+                j = choose2 ? (j + diff2) : (j + diff1);
+                choose2 = !choose2;
+            }
+        }
+        
+    }
+    
+    return result;
+}
+
 int main(int argc, char** argv)
 {
     string s = "PAYPALISHIRING";

@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
 
-int search(int A[], int n, int target) {
+int search0(int A[], int n, int target) {
         int left = 0;
         int right = n - 1;
         while (left <= right) {
@@ -24,6 +24,31 @@ int search(int A[], int n, int target) {
         }
         return -1;
     }
+
+//Better algorithm
+int search(int A[], int n, int target) {
+    int start = 0;
+    int end = n - 1;
+    while (start <= end) {
+        int mid = start + (end - start) / 2;
+        if (target == A[mid])
+            return mid;
+            
+        if (A[start] <= A[mid]) {
+            if ((A[start] <= target) && (target <= A[mid]))
+                end = mid;
+            else
+                start = mid + 1;
+        } else {
+            if ((A[mid] < target) && (target <= A[end]))
+                start = mid + 1;
+            else
+                end = mid;
+        }
+    }
+    
+    return -1;
+}
 
 int main(int argc, char** argv)
 {
