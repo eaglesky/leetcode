@@ -19,6 +19,7 @@ vector<vector<int> > fourSum0(vector<int> &num, int target) {
        if ((first > 0) && (num[first] == num[first-1]))
            continue;
    
+   //  for (int last = first + 3; last < n; ++last) is OK too!
        for (int last = n - 1; last >= first + 3; --last)
        {
            if ((last < n-1) && (num[last] == num[last+1]))

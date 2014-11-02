@@ -10,7 +10,7 @@ struct TreeNode {
 };
 
 //Iterative solution, O(n) time and O(n) space
-vector<int> postorderTraversal(TreeNode *root) {
+vector<int> postorderTraversal0(TreeNode *root) {
     vector<int> result;
     vector<TreeNode*> stack;
     TreeNode* cur = root;
@@ -38,7 +38,7 @@ vector<int> postorderTraversal(TreeNode *root) {
 }
 
 //Iterative solution improved
-vector<int> postorderTraversal(TreeNode *root) {
+vector<int> postorderTraversal1(TreeNode *root) {
         
         vector<TreeNode*> stack{root};
         
@@ -68,6 +68,32 @@ vector<int> postorderTraversal(TreeNode *root) {
         
         return result;
     }
+
+vector<int> postorderTraversal(TreeNode *root) {
+    vector<int> result;
+    vector<TreeNode*> stack{root};
+    if (!root)
+        return result;
+        
+  
+    TreeNode* prev = new TreeNode(-1);
+    while (!stack.empty()) {
+        TreeNode* cur = stack.back();
+        
+        if (cur->left && (cur->left != prev) && (!cur->right || (cur->right != prev))) {
+            stack.push_back(cur->left);
+        } else if (cur->right && (cur->right != prev) && (!cur->left || (cur->left == prev))) {
+            stack.push_back(cur->right);
+        } else {
+            prev = cur;
+            result.push_back(cur->val);
+            stack.pop_back();
+        }
+
+    }
+    
+    return result;
+}
 
 int main(int argc, char** argv)
 {

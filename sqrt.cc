@@ -21,7 +21,7 @@ int mysqrt0(int x) {
     return start;
 }
 
-  int mysqrt(int x) {
+  int mysqrt1(int x) {
         
         if (x < 0)
             return -1;
@@ -41,6 +41,25 @@ int mysqrt0(int x) {
         }
         
         return (right <= x / right) ? right : left;
+    }
+
+
+    int mysqrt(int x) {
+        if (x <= 0)
+            return 0;
+            
+        int start = 1;
+        int end = x;
+        
+        while (start < end) {
+            int mid = start + (end - start + 1) / 2;
+            if (mid > x / mid) {
+                end = mid - 1;
+            } else
+                start = mid;
+        }
+        
+        return start;
     }
 
 int main(int argc, char** argv)
