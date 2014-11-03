@@ -2,7 +2,7 @@
 #include <iostream>
 using namespace std;
 
-bool isPalindrome(string s) {
+bool isPalindrome0(string s) {
 
         int end = s.size() - 1;
         int start = 0;
@@ -23,6 +23,28 @@ bool isPalindrome(string s) {
         return true;
 
 }
+
+//Another implementation
+bool isPalindrome(string s) {
+    int start = 0;
+    int end = s.size() - 1;
+    while (start < end) {
+        if (isalnum(s[start]) && isalnum(s[end])) {
+            if ((isalpha(s[start]) && isalpha(s[end]) && tolower(s[start]) != tolower(s[end]))
+            || ((isdigit(s[start]) || isdigit(s[end])) && (s[start] != s[end])))
+                return false;
+            else {
+                start++;
+                end--;
+            }
+        } else if (!isalnum(s[start]))
+            start++;
+        else
+            end--;
+    }
+    return true;
+}
+
 
 int main(int argc, char** argv)
 {

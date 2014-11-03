@@ -22,7 +22,7 @@ char *strStr0(char *haystack, char *needle) {
         
     }
 
- char *strStr(char *haystack, char *needle) {
+ char *strStr1(char *haystack, char *needle) {
         
         char* s = haystack;
         for (; ; s++)
@@ -38,6 +38,30 @@ char *strStr0(char *haystack, char *needle) {
                 break;   
         }
         return NULL;
+}
+
+//Easier Implementation
+int strStr(char *haystack, char *needle) {
+    int nh = strlen(haystack);
+    int nn = strlen(needle);
+    if (!needle)
+        return -1;
+        
+    for (int i = 0; i <= nh - nn; ++i)
+    {
+        int ph = i;
+        int pn = 0;
+        for (; pn < nn; ++pn, ++ph)
+        {
+            if (haystack[ph] != needle[pn])
+                break;
+        }
+        
+        if (pn == nn)
+            return i;
+    }
+    
+    return -1;
 }
 
 int main(int argc, char** argv)
