@@ -57,7 +57,7 @@ using namespace std;
     }
 
 //DP, TLE. O(Ns * Np) time, O(Np) space
- bool isMatch(const char *s, const char *p) {
+ bool isMatch2(const char *s, const char *p) {
         int ns = strlen(s);
         int np = strlen(p);
         
@@ -89,12 +89,39 @@ using namespace std;
         return result;
     }
 
-// O(Ns^2) time and O(1) space
+//DP TLE O(ns) space
+bool isMatch3(const char *s, const char *p) {
+    int ns = strlen(s);
+    int np = strlen(p);
+    vector<bool> cache(ns+1, false);
+    cache[ns] = true;
+    for (int i = np-1; i >= 0; --i)
+    {
+        bool prevOld = true;
+        for (int j = ns; j >= 0; --j)
+        {
+            bool curOld = cache[j];
+            if (p[i] == '*') {
+                cache[j] = curOld || ((j < ns) && cache[j+1]);
+            } else {
+                cache[j] = (j < ns) && prevOld && ((p[i] == '?') || (p[i] == s[j]));
+            }
+            prevOld = curOld;
+        }
+    }
+    
+    return cache[0];
+}
+
+// O(Ns*Np) time and O(1) space
 // This is essentially a backtracking algorithm.
 // The key is that when you backtrack, you go to the last star positions, not
 // the first one. Since the strings before the last star are already matched,
 // and also the matched substring of s is the shortest one, so you should start
 // from the next position after that.
+// Worst case is when for each char in s, s pointer always marches forward and then
+// go back. Since for each positin in s, the longest distance pointer s can go
+// is equal to Np, the worst time complexity is O(Ns * Np)
  bool isMatch(const char *s, const char *p) {
         
         const char* preStar = NULL;

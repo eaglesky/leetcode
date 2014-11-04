@@ -29,7 +29,7 @@ string simplifyPath0(string path) {
     return stack.empty() ? "/" : result;
 }
 
-string simplifyPath(string path) {
+string simplifyPath1(string path) {
         vector<string> stack;
         string result;
         for (int i = 0; i < path.size();)
@@ -57,6 +57,8 @@ string simplifyPath(string path) {
         
         return result.empty() ? "/" : result;
     }
+
+
 
 
 int main(int argc, char** argv)

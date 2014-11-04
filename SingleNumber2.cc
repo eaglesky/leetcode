@@ -45,7 +45,7 @@ int singleNumber2(int A[], int n) {
 }
 
 //Using high and low to represent the status of each bit.
-   int singleNumber(int A[], int n) {
+   int singleNumber3(int A[], int n) {
 
        int low = 0;
        int high = 0;
@@ -59,6 +59,21 @@ int singleNumber2(int A[], int n) {
        }
        
        return (~high) & low;
+    }
+
+//Another implementation of the above solution
+    int singleNumber(int A[], int n) {
+        int low = 0;
+        int high = 0;
+        for (int i = 0; i < n; ++i)
+        {
+            int highNext = (~high & low & A[i]) | (high & ~low & ~A[i]);
+            int lowNext = (~high & ~low & A[i]) | (~high & low & ~A[i]);
+            low = lowNext;
+            high = highNext;
+        }
+        
+        return low | high;
     }
 
 void printBin(int n)
