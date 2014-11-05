@@ -30,12 +30,43 @@ int dfs(TreeNode* root, int& maxSum)
    return retSum;
 }
 
-int maxPathSum(TreeNode *root) {
+int maxPathSum0(TreeNode *root) {
     int result = INT_MIN;
     if (!root)
         return 0;
     dfs(root, result);
     return result;
+}
+
+//Another implementation
+  void maxPathSumRec(TreeNode* root, int& maxStraightSum, int& maxSum)
+{
+    int maxStraightSumLeft = 0;
+    int maxStraightSumRight = 0;
+    if (!root) {
+        maxStraightSum = 0;
+        
+        return;
+    }
+        
+    maxPathSumRec(root->left, maxStraightSumLeft, maxSum);
+    maxPathSumRec(root->right, maxStraightSumRight, maxSum);
+    maxStraightSum = max(root->val, root->val + maxStraightSumLeft);
+    maxStraightSum = max(maxStraightSum, root->val + maxStraightSumRight);
+    int curMaxSum = root->val;
+    if (maxStraightSumLeft > 0)
+        curMaxSum += maxStraightSumLeft;
+    if (maxStraightSumRight > 0)
+        curMaxSum += maxStraightSumRight;
+    maxSum = max(maxSum, curMaxSum);
+    
+}
+
+int maxPathSum(TreeNode *root) {
+    int maxStraightSum = 0;
+    int maxSum = INT_MIN;
+    maxPathSumRec(root, maxStraightSum, maxSum);
+    return maxSum;
 }
 
 int main(int argc, char** argv)

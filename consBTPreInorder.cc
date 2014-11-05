@@ -67,7 +67,7 @@ TreeNode *buildTree(vector<int> &preorder, vector<int> &inorder) {
 }*/
 
 //Another implementation of recursive solution
- TreeNode* buildTreeRec(vector<int> &preorder,unordered_map<int, int>& inorderHash, int& preRoot, int inStart, int inEnd)
+ TreeNode* buildTreeRec1(vector<int> &preorder,unordered_map<int, int>& inorderHash, int& preRoot, int inStart, int inEnd)
     {
         int n = preorder.size();
         
@@ -83,11 +83,11 @@ TreeNode *buildTree(vector<int> &preorder, vector<int> &inorder) {
             
       
         if ((inRootNext < inRoot) && (inRootNext >= inStart))
-            rootNode->left = buildTreeRec(preorder, inorderHash, ++preRoot, inStart, inRoot-1);
+            rootNode->left = buildTreeRec1(preorder, inorderHash, ++preRoot, inStart, inRoot-1);
        
         inRootNext = inorderHash[preorder[preRoot+1]];
         if ((inRootNext > inRoot) && (inRootNext <= inEnd)) {
-            rootNode->right = buildTreeRec(preorder, inorderHash, ++preRoot, inRoot + 1, inEnd);
+            rootNode->right = buildTreeRec1(preorder, inorderHash, ++preRoot, inRoot + 1, inEnd);
         } 
        
         
@@ -95,7 +95,7 @@ TreeNode *buildTree(vector<int> &preorder, vector<int> &inorder) {
         
     }
     
-    TreeNode *buildTree(vector<int> &preorder, vector<int> &inorder) {
+    TreeNode *buildTree0(vector<int> &preorder, vector<int> &inorder) {
         unordered_map<int, int> map;
         int n = inorder.size();
         if (n == 0)
@@ -110,6 +110,33 @@ TreeNode *buildTree(vector<int> &preorder, vector<int> &inorder) {
         
     }
 
+//More concise implementation
+    TreeNode* buildTreeRec(vector<int>& preorder, int& preId, unordered_map<int, int>& inorderMap, int inStart, int inEnd)
+    {
+        TreeNode* root = new TreeNode(preorder[preId]);
+        int inRootId = inorderMap[preorder[preId]];
+        preId++;
+        if (inRootId > inStart)
+            root->left = buildTreeRec(preorder, preId, inorderMap, inStart, inRootId-1);
+        
+        if (inRootId < inEnd)
+            root->right = buildTreeRec(preorder, preId, inorderMap, inRootId+1, inEnd);
+            
+        return root;
+    }
+    
+    TreeNode *buildTree(vector<int> &preorder, vector<int> &inorder) {
+        unordered_map<int, int> inorderMap;
+        for (int i = 0; i < inorder.size(); ++i)
+            inorderMap[inorder[i]] = i;
+            
+        int preId = 0;
+        if (preorder.size() == 0)
+            return NULL;
+            
+        return buildTreeRec(preorder, preId, inorderMap, 0, inorder.size()-1);
+        
+    }
 
 int main(int argc, char** argv)
 {
