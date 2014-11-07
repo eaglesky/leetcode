@@ -7,6 +7,50 @@ struct ListNode {
     ListNode(int x):val(x), next(NULL) {}
 };
 
+    ListNode* merge2Lists(ListNode* p1, ListNode* p2)
+{
+    ListNode dummy(-1);
+    ListNode* prev = &dummy;
+    while (p1 && p2) {
+        if (p1->val < p2->val) {
+            prev->next = p1;
+            p1 = p1->next;
+        } else {
+            prev->next = p2;
+            p2 = p2->next;
+        }
+        prev = prev->next;
+    }
+    prev->next = p1 ? p1 : p2;
+  
+    return dummy.next;
+}
+
+ListNode* sortListRec(ListNode* head)
+{
+    ListNode* slow = head;
+    ListNode* fast = head;
+    for (; fast && fast->next && fast->next->next ; fast = fast->next->next, slow = slow->next);
+    if (!slow || !slow->next) {
+        return head;
+    }
+    ListNode* p2 = slow->next;
+    slow->next = NULL;
+    ListNode* p1 = head;
+    ListNode* head1 = sortListRec(p1);
+    ListNode* head2 = sortListRec(p2);
+  
+    return merge2Lists(head1, head2);
+}
+
+//Recursive solution
+ListNode* sortList(ListNode* head) {
+    
+        
+    ListNode* tail = NULL;
+    return sortListRec(head);
+}
+
 void merge(ListNode* l1,  ListNode* l2, ListNode*& head, ListNode*& tail)
 {
     ListNode dummy(-1);
@@ -30,7 +74,7 @@ void merge(ListNode* l1,  ListNode* l2, ListNode*& head, ListNode*& tail)
     tail->next = NULL;
 }
 
-ListNode *sortList(ListNode *head) {
+ListNode *sortList0(ListNode *head) {
     int k = 1;
     ListNode dummy(-1);
     dummy.next = head;
@@ -84,10 +128,9 @@ ListNode *sortList(ListNode *head) {
 
 int main(int argc, char** argv)
 {
-    ListNode* test = new ListNode(5);
-    test->next = new ListNode(4);
-    test->next->next = new ListNode(3);
-    test->next->next->next = new ListNode(8);
+    ListNode* test = new ListNode(2);
+    test->next = new ListNode(1);
+   
     ListNode* res = sortList(test);
     while (res) {
         cout << res->val << ", ";
