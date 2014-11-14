@@ -26,7 +26,7 @@ void getPaths(unordered_map<string, pair<vector<string>, int> >& map,
 }
 
 //Can be improved by replacing strings with their indices
-vector<vector<string>> findLadders(string start, string end, unordered_set<string> &dict) {
+vector<vector<string>> findLadders0(string start, string end, unordered_set<string> &dict) {
     deque<string> strs;
 
     //map: string -> (indices of parents, level)
@@ -88,7 +88,7 @@ vector<vector<string>> findLadders(string start, string end, unordered_set<strin
 }
 
 //Another similar solution using indices instead of strings
-    void dfsPath(string& curStr, unordered_map<string, pair<vector<int>, int> >& used, vector<string>& q, vector<string>& path, vector<vector<string> >& result)
+    void dfsPath0(string& curStr, unordered_map<string, pair<vector<int>, int> >& used, vector<string>& q, vector<string>& path, vector<vector<string> >& result)
     {
         int n = used[curStr].first.size();
         path.push_back(curStr);
@@ -102,13 +102,13 @@ vector<vector<string>> findLadders(string start, string end, unordered_set<strin
         for (int i = 0; i < n; ++i)
         {
             string curParen = q[used[curStr].first[i]];
-            dfsPath(curParen, used, q, path, result);
+            dfsPath0(curParen, used, q, path, result);
         }
         
         path.pop_back();
     }
     
-    vector<vector<string>> findLadders(string start, string end, unordered_set<string> &dict) {
+    vector<vector<string>> findLadders1(string start, string end, unordered_set<string> &dict) {
         unordered_map<string, pair<vector<int>, int> > used;
         vector<int> v;
         used[start] = make_pair(v, 1);
@@ -152,16 +152,93 @@ vector<vector<string>> findLadders(string start, string end, unordered_set<strin
         vector<vector<string> > result;
         
         if (used.find(end) != used.end())
-            dfsPath(end, used, q, path, result );
+            dfsPath0(end, used, q, path, result );
             
         return result;
     }
 
+//Simple implementation using map of strings
+void dfsPaths(unordered_map<string, vector<string> >& parents, string& cur, vector<string>& curPath, vector<vector<string> >& result)
+{
+    vector<string> parentStrs = parents[cur];
+    curPath.push_back(cur);
+    
+    if (parentStrs.empty()) {
+        result.push_back(curPath);
+        reverse(result.back().begin(), result.back().end());
+        return;
+    }
+    
+    for (int i = 0; i < parentStrs.size(); ++i)
+    {
+        dfsPaths(parents, parentStrs[i], curPath, result);
+        curPath.pop_back();
+    }
+}
+
+vector<vector<string>> findLadders(string start, string end, unordered_set<string> &dict) {
+    vector<vector<string> > result;
+    unordered_map<string, int> strLevs{{start, 0}};
+    deque<string> q{start};
+    unordered_map<string, vector<string> > parents;
+    vector<string> init;
+    parents[start] = init;
+    
+    int level = 0;
+    for (; !q.empty() && (q.front() != end);)
+    {
+        int curSz = q.size();
+        level++;
+        for (int i = 0; i < curSz; ++i)
+        {
+            string cur = q.front();
+            if (cur == end)
+                break;
+                
+            q.pop_front();
+            for (int j = 0; j < cur.size(); ++j)
+            {
+                string temp = cur;
+                for (char c = 'a'; c <= 'z'; ++c)
+                {
+                    if (cur[j] == c)
+                        continue;
+                        
+                    temp[j] = c;
+                    if ((dict.find(temp) != dict.end()) || (temp == end)) {
+                        if (strLevs.find(temp) == strLevs.end()) {
+                            q.push_back(temp);
+                            strLevs[temp] = level;
+                            parents[temp].push_back(cur);
+                        } else {
+                            int lastLev = strLevs[temp];
+                            if (lastLev == level) {
+                                parents[temp].push_back(cur);
+                            }
+                        }
+                    }
+                  
+                }
+            }
+        }
+        
+       
+    }
+    
+    if (q.empty())
+        return result;
+    
+    vector<string> curPath;
+    dfsPaths(parents, end, curPath, result);
+    return result;
+    
+}
+
 int main(int argc, char** argv)
 {
-    unordered_set<string> dict = {"hot", "dot", "dog", "lot", "log"};
-    string start = "hit";
-    string end = "cog";
+    unordered_set<string> dict = {"hot","cog","dog","tot","hog","hop","pot","dot"};
+    string start = "hot";
+    string end = "dog";
     vector<vector<string> > result = findLadders(start, end, dict);
     for (int i = 0; i < result.size(); ++i)
     {
