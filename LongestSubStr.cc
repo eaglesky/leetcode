@@ -2,7 +2,7 @@
 #include <unordered_map>
 using namespace std;
 
-//O(n) time and O(n) space
+//O(n) time and O(n) space, DP solution
 int lengthOfLongestSubstring(string s) {
     unordered_map<char, int> map;
 

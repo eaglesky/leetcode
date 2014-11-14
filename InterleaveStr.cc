@@ -8,7 +8,7 @@ using namespace std;
 // cache[i][j] represents whether s3[0, i+j) is formed by the interleaving of
 // s1[0, i) and s2[0, j)
 // O(l1*l2) time and O(l2) space
-bool isInterleave(string s1, string s2, string s3) {
+bool isInterleave0(string s1, string s2, string s3) {
     int l1 = s1.size();
     int l2 = s2.size();
     int l3 = s3.size();
@@ -38,6 +38,34 @@ bool isInterleave(string s1, string s2, string s3) {
     }
     return cache[l2];
 
+}
+
+//Better implementation
+bool isInterleave(string s1, string s2, string s3) {
+    int n1 = s1.size();
+    int n2 = s2.size();
+    int n3 = s3.size();
+    if (n3 != n1 + n2)
+        return false;
+    
+    vector<bool> cache(n2+1, false);
+    cache[0] = true;
+    
+    for (int i = 0; i <= n1; ++i)
+    {
+        for (int j = 0; j <= n2; ++j)
+        {
+            bool check1 = (j > 0) ? cache[j-1] && (s2[j-1] == s3[i+j-1]) : false;
+            bool check2 = (i > 0) ? cache[j] && (s1[i-1] == s3[i+j-1]) : false;
+            
+            if (i == 0 && j == 0)
+                cache[j] = true;
+            else
+                cache[j] = check1 || check2;
+        }
+    }
+    
+    return cache[n2];
 }
 
 int main(int argc, char** argv)
