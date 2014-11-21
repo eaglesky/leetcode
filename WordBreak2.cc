@@ -126,10 +126,38 @@ vector<string> dfsFindWordBreak(string& s, int start, unordered_set<string>& dic
     return result;
 }
 
-vector<string> wordBreak(string s, unordered_set<string> &dict) {
+vector<string> wordBreak2(string s, unordered_set<string> &dict) {
     unordered_map<int, vector<string> > cache;
     vector<string> result = dfsFindWordBreak(s, 0, dict, cache);
     return result;
+}
+
+//DP solution
+vector<string> wordBreak(string s, unordered_set<string> &dict) {
+    int n = s.size();
+    vector<vector<string> > strs(n+1, vector<string>());
+    
+    for (int i = n-1; i >= 0; i--)
+    {
+        vector<string> curStrs;
+        for (int j = i; j < n; ++j)
+        {
+            string cur = s.substr(i, j-i+1);
+            if (dict.find(cur) != dict.end()) {
+                vector<string> subStrs = strs[j+1];
+                if (subStrs.empty() && (j == n - 1)) {
+                    curStrs.push_back(cur);
+                }
+                
+                for (string substr : subStrs) {
+                    curStrs.push_back(cur + " " + substr);
+                }
+            }
+        }
+        strs[i] = curStrs;
+    }
+    
+    return strs[0];
 }
 
 int main(int argc ,char** argv)

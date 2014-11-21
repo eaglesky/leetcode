@@ -139,7 +139,7 @@ string minWindow1(string S, string T) {
 }
 
 //Another implementation
-string minWindow(string S, string T) {
+string minWindow2(string S, string T) {
     
     unordered_map<char, int> mapT;
     unordered_map<char, int> mapS;
@@ -191,6 +191,56 @@ string minWindow(string S, string T) {
     
     return (minLen < INT_MAX) ? S.substr(minStart, minLen) : "";
 }
+
+//Better implementation
+string minWindow(string S, string T) {
+    unordered_map<char, int> tchars;
+    int tCount = T.size();
+    for (int i = 0; i < tCount; ++i)
+        tchars[T[i]]++;
+    
+    int start = 0;
+    int end = 0;
+    int minStart = 0;
+    int minLen = 0;
+    unordered_map<char, int> used;
+    int countLeft = tCount;
+    while (end < S.size()) {
+        if (tchars.find(S[end]) != tchars.end()) {
+            used[S[end]]++;
+            if (used[S[end]] <= tchars[S[end]])
+                countLeft--;
+         
+            
+            if (countLeft == 0) {
+                for (; start <= end; ++start)
+                {
+                    if (tchars.find(S[start])!=tchars.end()) {
+                        if (used[S[start]] >= tchars[S[start]])
+                            used[S[start]]--;
+                        if (used[S[start]] < tchars[S[start]]) {
+                            countLeft++;
+                            break;
+                        }
+                    }
+                }
+                
+                if ((minLen == 0) || (end-start+1 < minLen)) {
+                    minStart = start;
+                    minLen = end - start + 1;
+                }
+              
+                start++;
+            }
+            
+        }
+        end++;
+    }
+    
+    return S.substr(minStart, minLen);
+    
+}
+
 
 int main(int argc, char** argv)
 {
