@@ -119,7 +119,7 @@ vector<string> fullJustify1(vector<string> &words, int L) {
 }
 
 //Improved version of the above solution
-vector<string> fullJustify(vector<string> &words, int L) {
+vector<string> fullJustify2(vector<string> &words, int L) {
     vector<string> result;
 
     int end = 0;
@@ -155,6 +155,64 @@ vector<string> fullJustify(vector<string> &words, int L) {
     return result;
 }
 
+//Implementation using additional vectors
+vector<string> fullJustify(vector<string> &words, int L) {
+    vector<string> result;
+
+    for (int i = 0; i < words.size();)
+    {
+        int left = L;
+        vector<string> curLineStrs;
+        vector<string> blanks;
+        string curStr = "";
+        for (; (i < words.size()) && (words[i].size() <= left); ++i)
+        {
+            curLineStrs.push_back(words[i]);
+            left -= words[i].size();
+            if (left > 0) {
+                blanks.push_back(" ");
+                left--;
+            }
+        }
+        
+        if (blanks.size() == curLineStrs.size()) {
+            blanks.pop_back();
+            left++;
+        }
+
+        if (i < words.size()) {
+            if (curLineStrs.size() > 1) {
+               
+                int blankNum = curLineStrs.size() - 1;
+        
+                
+                int addPerBlank = left / blankNum;
+                int remain = left % blankNum;
+                for (int j = 0; j < blankNum; ++j)
+                {
+                    if (j < remain)
+                        blanks[j] += string(addPerBlank+1, ' ');
+                    else
+                        blanks[j] += string(addPerBlank, ' ');
+                }
+                
+            }
+        }
+        
+        for (int j = 0; j < curLineStrs.size(); ++j)
+        {
+            curStr += curLineStrs[j];
+            if (j < blanks.size())
+                curStr += blanks[j];
+        }
+        
+        int leftChars = L - curStr.size();
+        curStr += string(leftChars, ' ');
+        result.push_back(curStr);
+    }
+    
+    return result;
+}
 
 int main(int argc, char** argv)
 {
@@ -176,6 +234,7 @@ int main(int argc, char** argv)
         "a","b","c","d","e"
     };
     int L = 1;*/
+
 
     vector<string> words = {
         "Listen","to","many,","speak","to","a","few."

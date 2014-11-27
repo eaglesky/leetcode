@@ -57,7 +57,7 @@ int maxPoints0(vector<Point> &points) {
 }
 
 //Improved version of the above solution
- int maxPoints(vector<Point> &points) {
+ int maxPoints1(vector<Point> &points) {
       int n = points.size();
       int maxNum = 0;
       for (int i = 0; i < n; ++i)
@@ -85,6 +85,37 @@ int maxPoints0(vector<Point> &points) {
       }
       
       return maxNum;
+}
+
+//More improved implementation
+int maxPoints(vector<Point> &points) {
+    int result = 0;
+    
+    for (int i = 0; i < points.size(); ++i)
+    {
+        unordered_map<double, int> slopeCounts;
+        int coincidentNum = 1;
+        int curMax = 0;
+        for (int j = i+1; j < points.size(); ++j)
+        {
+            double k;
+            if ((points[i].x == points[j].x) && (points[i].y == points[j].y)) {
+                coincidentNum++;
+            } else {
+            if (points[i].x == points[j].x)
+                k = numeric_limits<double>::infinity();
+            else
+                k = (double)(points[i].y - points[j].y) / (double)(points[i].x - points[j].x);
+            slopeCounts[k]++;
+            curMax = max(curMax, slopeCounts[k]);
+            }
+            
+        }
+        
+        result = max(result, curMax + coincidentNum);
+    }
+    
+    return result;
 }
 
 // Another possible approach is store the pair(a, b)/gcd(a,b) instead of (a/b)

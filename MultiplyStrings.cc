@@ -89,7 +89,7 @@ vector<int> multiplyBigInts(const vector<int>& bigInt1, const vector<int>& bigIn
 }
 
 //Use one int to store RADIX digits 
-string multiply(string num1, string num2) {
+string multiply1(string num1, string num2) {
     vector<int> bigInt1 = str2BigInt(num1);
     vector<int> bigInt2 = str2BigInt(num2);
 
@@ -118,6 +118,36 @@ string multiply(string num1, string num2) {
     return result;
 
 }
+
+//Solution without additional space
+string multiply(string num1, string num2) {
+    int n1 = num1.size();
+    int n2 = num2.size();
+    if (n1 == 0 || n2 == 0)
+        return "";
+    
+    string result(n1+n2, '0');
+    for (int i = 0; i < n2; ++i)
+    {
+     
+        for (int j = 0; j < n1; ++j)
+        {
+            int dig1 = num1[n1-1-j] - '0';
+            int dig2 = num2[n2-1-i] - '0';
+            int prev = result[n1+n2-1-i-j] - '0';
+            result[n1+n2-1-i-j] = '0' + (dig1 * dig2  + prev) % 10;
+            int next = result[n1+n2-2-i-j] - '0';
+            result[n1+n2-2-i-j] = '0' + (next + (dig1 * dig2 + prev) / 10);
+        }
+
+    }
+    
+    int i = 0;
+    for (; (i < result.size()) && (result[i] == '0'); ++i);
+    
+    return (i == result.size()) ? "0" : result.substr(i);
+}
+    
 
 int main(int argc, char** argv)
 {
