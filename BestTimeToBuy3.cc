@@ -89,6 +89,8 @@ int maxProfit(vector<int> &prices) {
     return curMaxProfit;
 }
 
+// Another solution using DP which can be generalized to k transactions can be found here:
+// https://oj.leetcode.com/discuss/15153/a-clean-dp-solution-which-generalizes-to-k-transactions
 int main(int argc, char** argv)
 {
     vector<int> test = {2, 4, 1};
