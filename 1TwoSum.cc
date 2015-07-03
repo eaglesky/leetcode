@@ -79,19 +79,19 @@ vector<int> twoSum1(vector<int> &numbers, int target) {
     
 //Best version!
 //O(n) time and O(n) space
-    vector<int> twoSum(vector<int> &numbers, int target) {
-        unordered_map<int, int> map;
-        vector<int> result;
-        for (int i = 0; i < numbers.size(); ++i)
-        {
-            if (map.find(target-numbers[i]) != map.end()) {
-                result.push_back(map[target-numbers[i]]+1);
-                result.push_back(i+1);
-            }
-            map[numbers[i]] = i;
+vector<int> twoSum(vector<int> &numbers, int target) {
+    unordered_map<int, int> map;
+    vector<int> result;
+    for (int i = 0; i < numbers.size(); ++i)
+    {
+        if (map.find(target-numbers[i]) != map.end()) {
+            result.push_back(map[target-numbers[i]]+1);
+            result.push_back(i+1);
         }
-        return result;
+        map[numbers[i]] = i;
     }
+    return result;
+}
 
 int main(int argc, char** argv)
 {
