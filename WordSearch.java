@@ -43,10 +43,10 @@ public class WordSearch {
             return true;
         }
         char character = board[r][c];
-        board[r][c] = '#';
+        board[r][c] = '#'; // another simpler way: board[r][c] ^= 256;
         boolean exist = dfs(board, r-1, c, word, i+1) || dfs(board, r, c+1, word, i+1)
          || dfs(board, r+1, c, word, i+1) || dfs(board, r, c-1, word, i+1);
-        board[r][c] = character;
+        board[r][c] = character; // board[r][c] ^= 256
         return exist;
     }
     
