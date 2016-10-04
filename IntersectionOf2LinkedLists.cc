@@ -66,11 +66,7 @@ ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
         
         if (aEnd && bEnd && (aEnd != bEnd))
             return NULL;
-        
-        
-        
     }
-    
     return pa;
 }
 
