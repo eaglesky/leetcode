@@ -81,4 +81,48 @@ public class BinaryTreePostorderTraversal {
         }
         return result;
     }
+
+    // Morris traversal, O(n) time and O(1) space
+    private static void reverseVisit(TreeNode root, List<Integer> result) {
+        TreeNode newHead = null;
+        TreeNode cur = root;
+        for(; cur != null;) {
+            TreeNode next = cur.right;
+            cur.right = newHead;
+            newHead = cur;
+            cur = next;
+        }
+        cur = newHead;
+        newHead = null;
+        for (; cur != null;) {
+            result.add(cur.val);
+            TreeNode next = cur.right;
+            cur.right = newHead;
+            newHead = cur;
+            cur = next;
+        }
+    }
+
+    public List<Integer> postorderTraversal(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+        TreeNode dummy = new TreeNode(-1);
+        dummy.left = root;
+        for(TreeNode cur = dummy; cur != null;) {
+            if (cur.left == null) {
+                cur = cur.right;
+            } else {
+                TreeNode next = cur.left;
+                for(; (next.right != null) && (next.right != cur); next = next.right);
+                if (next.right == null) {
+                    next.right = cur;
+                    cur = cur.left;
+                } else {
+                    next.right = null;
+                    reverseVisit(cur.left, result);
+                    cur = cur.right;
+                }
+            }
+        }
+        return result;
+    }
 }
