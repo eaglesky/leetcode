@@ -62,4 +62,27 @@ public class BinaryTreePreorderTraversal {
         }
         return result;
     }
+
+    // Morris traversal. O(n) time and O(1) space
+    public List<Integer> preorderTraversal(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+        for(TreeNode cur = root; cur != null;) {
+            if (cur.left == null) {
+                result.add(cur.val);
+                cur = cur.right;
+            } else {
+                TreeNode next = cur.left;
+                for(; (next.right != null) && (next.right != cur); next = next.right);
+                if (next.right == null) {
+                    next.right = cur;
+                    result.add(cur.val);
+                    cur = cur.left;
+                } else {
+                    next.right = null;
+                    cur = cur.right;
+                }
+            }
+        }
+        return result;
+    }
 }

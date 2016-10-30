@@ -62,4 +62,27 @@ public class BinaryTreeInorderTraversal {
         }
         return result;
     }
+
+    // Morris traversal. O(n) time and O(1) space
+    public List<Integer> inorderTraversal(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+        for(TreeNode cur = root; cur != null;) {
+            if (cur.left == null) {
+                result.add(cur.val);
+                cur = cur.right;
+            } else {
+                TreeNode next = cur.left;
+                for(; (next.right != null) && (next.right != cur); next = next.right);
+                if (next.right == null) {
+                    next.right = cur;
+                    cur = cur.left;
+                } else {
+                    next.right = null;
+                    result.add(cur.val);
+                    cur = cur.right;
+                }
+            }
+        }
+        return result;
+    }
 }
