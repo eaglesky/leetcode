@@ -4,11 +4,11 @@ class TrieNode {
     private int val;
     
     //Can use array too
-    public final Map<Character, TrieNode> charToNode;
+    public final Map<Character, TrieNode> next;
 
     public TrieNode() {
         val = -1;
-        charToNode = new HashMap<>();
+        next = new HashMap<>();
     }
     
     public int getVal() {
@@ -34,7 +34,7 @@ public class Trie {
         TrieNode curNode = root;
         for(int i = 0; i < word.length(); ++i) {
             Character c = word.charAt(i);
-            TrieNode nextNode = curNode.charToNode.get(c);
+            TrieNode nextNode = curNode.next.get(c);
             if (nextNode == null) {
                 return null;
             }
@@ -48,10 +48,10 @@ public class Trie {
         TrieNode curNode = root;
         for(int i = 0; i < word.length(); ++i) {
             Character c = word.charAt(i);
-            TrieNode nextNode = curNode.charToNode.get(c);
+            TrieNode nextNode = curNode.next.get(c);
             if (nextNode == null) {
                 nextNode = new TrieNode();
-                curNode.charToNode.put(c, nextNode);
+                curNode.next.put(c, nextNode);
             }
             curNode = nextNode;
         }
@@ -79,7 +79,7 @@ public class Trie {
         if (curNode.getVal() >= 0) {
             result.add(prefix);
         }
-        for(Map.Entry<Character, TrieNode> entry : curNode.charToNode.entrySet()) {
+        for(Map.Entry<Character, TrieNode> entry : curNode.next.entrySet()) {
             char c = entry.getKey();
             TrieNode nextNode = entry.getValue();
             collectStrings(nextNode, prefix + c, result);
@@ -101,7 +101,7 @@ public class Trie {
         TrieNode curNode = root;
         for(int i = 0; i < word.length(); ++i) {
             Character c = word.charAt(i);
-            TrieNode nextNode = curNode.charToNode.get(c);
+            TrieNode nextNode = curNode.next.get(c);
             if (nextNode == null) {
                 break;
             }
@@ -119,7 +119,7 @@ public class Trie {
         TrieNode curNode = root;
         for(int i = 0; i < word.length(); ++i) {
             Character c = word.charAt(i);
-            TrieNode nextNode = curNode.charToNode. get(c);
+            TrieNode nextNode = curNode.next. get(c);
             if (nextNode == null) {
                 return;
             }
@@ -131,10 +131,10 @@ public class Trie {
             TrieNode preNode = curNode;
             for(int i = word.length() - 1; i >= 0 && !stack.isEmpty(); --i) {
                 curNode = stack.pop();
-                if (preNode != null && preNode.charToNode.size() > 0) {
+                if (preNode != null && preNode.next.size() > 0) {
                     return;
                 }
-                curNode.charToNode.remove(word.charAt(i));
+                curNode.next.remove(word.charAt(i));
                 preNode = curNode;
             }
         }
