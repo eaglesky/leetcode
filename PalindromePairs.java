@@ -116,7 +116,7 @@ public class PalindromePairs {
     //      O(k^2), if search word is longer than matched word in the tree;
     //      O(k^2) + O(number of palindromes in the last node), if otherwise.
     // So the total time is O(n*k^2) + O(number of solutions)
-    public List<List<Integer>> palindromePairs(String[] words) {
+    public List<List<Integer>> palindromePairs0(String[] words) {
         List<List<Integer>> result = new ArrayList<>();
         Trie trie = new Trie();
         for(String word : words) {
@@ -131,6 +131,38 @@ public class PalindromePairs {
                     pair.add(j);
                     pair.add(i);
                     result.add(pair);             
+                }
+            }
+        }
+        return result;
+    }
+
+    //Hashmap approach, O(n*k^2) + O(number of solutions) time
+    public List<List<Integer>> palindromePairs(String[] words) {
+        List<List<Integer>> result = new ArrayList<>();
+        Map<String, Integer> wordsMap = new HashMap<>();
+        for(int i = 0; i < words.length; ++i) {
+            wordsMap.put(new StringBuilder(words[i]).reverse().toString(), i);
+        }
+        Integer emptyId = wordsMap.get("");
+        for(int i = 0; i < words.length; ++i) {
+            String word = words[i];
+            if (!word.isEmpty()) {
+                for(int j = 1; j <= word.length(); ++j) {
+                    String left = word.substring(0, j);
+                    String right = word.substring(j);
+                    Integer leftId = wordsMap.get(left);
+                    Integer rightId = wordsMap.get(right);
+                    if (leftId != null && i != leftId && isPalindrome(right)) {
+                        result.add(Arrays.asList(i, leftId));
+                    }
+                    if (rightId != null && j < word.length() && isPalindrome(left)) {
+                        result.add(Arrays.asList(rightId, i));
+                    }
+                }
+                if (emptyId != null && isPalindrome(word)) {
+                    result.add(Arrays.asList(i, emptyId));
+                    result.add(Arrays.asList(emptyId, i));
                 }
             }
         }
