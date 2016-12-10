@@ -48,5 +48,5 @@ public class Solution {
         return preCombinations;
     }
     
-//Another iterative using permutation on bit vector takes O(n*Cnk) time and O(n) space(See the book)
+//Another iterative solution using permutation on bit vector takes O(n*Cnk) time and O(n) space(See the book)
 }
