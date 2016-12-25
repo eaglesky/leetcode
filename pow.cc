@@ -19,7 +19,7 @@ double power0(double x, int n) {
 
 // Iterative solution (n >= 0)
 // Stack simulation
-// O(lognn) time and O(logn) space
+// O(logn) time and O(logn) space
 double power(double x, int n)
 {
     vector<double> stack;
