@@ -29,7 +29,7 @@ int divide0(int dividend, int divisor) {
 //Pay attention to the possible overflow in negation when the dividend is INT_MIN
 //and the divisor is -1
 //Also pay attention to the possible overflow in shifting operations
-int divide(int dividend, int divisor) {
+int divide1(int dividend, int divisor) {
     if (divisor == 0)
         throw invalid_argument("Received zero divisor!");
 
@@ -53,13 +53,34 @@ int divide(int dividend, int divisor) {
     return ((dividend ^ divisor) < 0) ?  -posResult : posResult;
 }
 
+//Jianchao Li's answer
+//https://discuss.leetcode.com/topic/15568/detailed-explained-8ms-c-solution
+int divide(int dividend, int divisor) {
+    if (!divisor || (dividend == INT_MIN && divisor == -1))
+        return INT_MAX;
+    int sign = ((dividend < 0) ^ (divisor < 0)) ? -1 : 1;
+    long long dvd = labs(dividend);
+    long long dvs = labs(divisor);
+    int res = 0;
+    while (dvd >= dvs) { 
+        long long temp = dvs, multiple = 1;
+        while (dvd >= (temp << 1)) {
+            temp <<= 1;
+            multiple <<= 1;
+        }
+        dvd -= temp;
+        res += multiple;
+    }
+    return sign == 1 ? res : -res; 
+}
+
 int main(int argc, char** argv)
 {
     int dividend = atoi(argv[1]);
     int divisor = atoi(argv[2]);
     cout << dividend << " / " << divisor << " = " << divide(dividend, divisor) << endl;
     
-    cout << "Answer = " << dividend / divisor << endl;
+    cout << "True Answer = " << dividend / divisor << endl;
 
     return 0;
 }
