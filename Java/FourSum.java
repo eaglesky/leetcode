@@ -48,6 +48,9 @@ public class FourSum {
     // O(n^3) time and O(n^2) space
     public List<List<Integer>> fourSum(int[] nums, int target) {
         Set<List<Integer>> solutionSet = new HashSet<>();
+        //Sort the array first, so that when comparing a solution to be added
+        //with one in the HashSet, comparing two Lists are enough to decide
+        //if they are the same solution.
         Arrays.sort(nums);
         Map<Integer, List<int[]>> sumToPairs = new HashMap<>();
         for (int i = 0; i < nums.length; ++i) {
