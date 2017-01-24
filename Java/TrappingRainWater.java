@@ -24,7 +24,7 @@ public class TrappingRainWater {
         return result;
     }
 
-    //Better algorithm:
+    //Two pointers approach. Tricky!
     public int trap(int[] height) {
         int left = 0;
         int right = height.length - 1;
