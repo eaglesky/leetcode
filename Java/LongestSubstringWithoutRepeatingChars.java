@@ -25,6 +25,7 @@ public class LongestSubstringWithoutRepeatingChars {
     }
     
     // Improved vervsion
+    // O(n) time and O(n) space
     public int lengthOfLongestSubstring(String s) {
         int maxLen = 0;
         Map<Character, Integer> charToPos = new HashMap<>();

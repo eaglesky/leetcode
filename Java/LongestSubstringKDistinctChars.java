@@ -7,7 +7,7 @@ import java.util.*;
 
 public class LongestSubstringKDistinctChars {
 
-    public static int lengthOfLongestSubstring(String s, int k) {
+    public static int lengthOfLongestSubstring0(String s, int k) {
         int maxLen = 0;
         Map<Character, Integer> charToPos = new HashMap<>();
         int start = 0;
@@ -28,8 +28,35 @@ public class LongestSubstringKDistinctChars {
         return (maxLen > i - start) ? maxLen : i - start;
     }
 
-// Another solution is simply use charToCounts instead of charToPos.
-// Both solutions run in O(n) time and O(1) space
+    // Another solution is simply use charToCounts instead of charToPos.
+    // Both solutions run in O(n) time and O(n) space
+    public static int lengthOfLongestSubstring(String s, int k) {
+        Map<Character, Integer> charCounts = new HashMap<>();
+        int start = 0;
+        int maxLen = 0;
+        for (int i = 0; i < s.length();) {
+            char c = s.charAt(i);
+            if (charCounts.size() < k || ((charCounts.size() == k) && charCounts.containsKey(c))) {
+                int count = charCounts.getOrDefault(c, 0);
+                charCounts.put(c, count + 1);
+                maxLen = Math.max(maxLen, i - start + 1);
+                ++i;
+            } else {
+                char preChar = s.charAt(start);
+                int count = charCounts.get(preChar);
+                if (count == 1) {
+                    charCounts.remove(preChar);
+                } else {
+                    charCounts.put(preChar, count - 1);
+                }
+                start++;
+            }
+        }
+        return maxLen;
+    }
+
+    //Or with inner loop:
+    //https://discuss.leetcode.com/topic/41671/15-lines-java-solution-using-slide-window/3
     
     private static void test(String s, int k, int truth) {
         System.out.println("String: " + s);
