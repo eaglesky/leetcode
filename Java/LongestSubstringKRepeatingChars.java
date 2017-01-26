@@ -5,7 +5,7 @@ public class LongestSubstringKRepeatingChars {
     //n is the length of the string.
     //The idea is to find out the longest substring that contains
     //exactly nUnique characters, where nUnique ranges from 1 to N.
-    public int longestSubstring(String s, int k) {
+    public int longestSubstring0(String s, int k) {
         if (s.length() < k) {
             return 0;
         }
@@ -44,5 +44,41 @@ public class LongestSubstringKRepeatingChars {
             }
         }
         return maxLen;
+    }
+
+    //Recursive solution. Should be faster than O(n^2)
+    private int longestSubstringRec(String s, int k, int start, int end) {
+        if (end - start + 1 < k) {
+            return 0;
+        }
+        Map<Character, Integer> counts = new HashMap<>();
+        int nNoLessThanK = 0;
+        for (int i = start; i <= end; ++i) {
+            char c = s.charAt(i);
+            int count = counts.getOrDefault(c, 0);
+            counts.put(c, ++count);
+            if (count == k) {
+                nNoLessThanK++;
+            }
+        }
+        if (nNoLessThanK == 0) {
+            return 0;
+        } else if (nNoLessThanK == counts.size()) {
+            return end - start + 1;
+        }
+        int prevSepId = start - 1;
+        int maxLen = 0;
+        for (int i = start; i <= end; ++i) {
+            char c = s.charAt(i);
+            if (counts.get(c) < k) {
+                maxLen = Math.max(maxLen, longestSubstringRec(s, k, prevSepId + 1, i - 1));
+                prevSepId = i;
+            }
+        }
+        return Math.max(maxLen, longestSubstringRec(s, k, prevSepId + 1, end));
+    }
+    
+    public int longestSubstring(String s, int k) {
+        return longestSubstringRec(s, k, 0, s.length() - 1);
     }
 }
