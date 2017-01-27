@@ -23,9 +23,47 @@ public class LongestSubstringWithoutRepeatingChars {
         }
         return maxSubStrLen;
     }
+
+    //Another naive solution using one loop
+    public int lengthOfLongestSubstring1(String s) {
+        Set<Character> chars = new HashSet<>();
+        int start = 0;
+        int maxLen = 0;
+        for (int i = 0; i < s.length();) {
+            char c = s.charAt(i);
+            if (chars.contains(c)) {
+                chars.remove(s.charAt(start));
+                start++;
+            } else {
+                chars.add(c);
+                maxLen = Math.max(maxLen, i - start + 1);
+                ++i;
+            }
+        }
+        return maxLen;
+    }
     
-    // Improved vervsion
-    // O(n) time and O(n) space
+    //Modified from above:
+    public int lengthOfLongestSubstring(String s) {
+        Map<Character, Integer> charPos = new HashMap<>();
+        int start = 0;
+        int maxLen = 0;
+        for (int i = 0; i < s.length();) {
+            char c = s.charAt(i);
+            int prevPos = charPos.getOrDefault(c, -1);
+            if (prevPos >= start) {
+                start = prevPos + 1;
+            } else {
+                charPos.put(c, i);
+                maxLen = Math.max(maxLen, i - start + 1);
+                ++i;
+            }
+        }
+        return maxLen;
+    }
+
+    // Another similar one
+    // All of the above solutions are O(n) time and O(n) space
     public int lengthOfLongestSubstring(String s) {
         int maxLen = 0;
         Map<Character, Integer> charToPos = new HashMap<>();

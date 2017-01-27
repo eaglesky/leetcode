@@ -30,7 +30,7 @@ public class LongestSubstringKDistinctChars {
 
     // Another solution is simply use charToCounts instead of charToPos.
     // Both solutions run in O(n) time and O(n) space
-    public static int lengthOfLongestSubstring(String s, int k) {
+    public static int lengthOfLongestSubstring1(String s, int k) {
         Map<Character, Integer> charCounts = new HashMap<>();
         int start = 0;
         int maxLen = 0;
@@ -57,7 +57,29 @@ public class LongestSubstringKDistinctChars {
 
     //Or with inner loop:
     //https://discuss.leetcode.com/topic/41671/15-lines-java-solution-using-slide-window/3
-    
+    public static int lengthOfLongestSubstring(String s, int k) {
+        Map<Character, Integer> charCounts = new HashMap<>();
+        int start = 0;
+        int maxLen = 0;
+        for (int i = 0; i < s.length(); ++i) {
+            char c = s.charAt(i);
+            int count = charCounts.getOrDefault(c, 0);
+            charCounts.put(c, ++count);   
+            for (; charCounts.size() > k; ++start) {
+                char pre = s.charAt(start);
+                int preCount = charCounts.get(pre);
+                if (--preCount == 0) {
+                    charCounts.remove(pre);
+                } else {
+                    charCounts.put(pre, preCount);
+                }
+            }
+            maxLen = Math.max(maxLen, i - start + 1);
+        }
+        return maxLen;        
+    }
+
+
     private static void test(String s, int k, int truth) {
         System.out.println("String: " + s);
         System.out.println("k = " + k);
