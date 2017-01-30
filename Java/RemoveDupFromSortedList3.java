@@ -1,3 +1,5 @@
+import java.util.*;
+
 public class RemoveDupFromSortedList3 {
 
     public static class ListNode {
@@ -6,7 +8,7 @@ public class RemoveDupFromSortedList3 {
         ListNode(int x) { val = x; }
     }
 
-    public static ListNode deleteDuplicatesLeaveK(ListNode head, int k) {
+    public static ListNode deleteDuplicatesLeaveK0(ListNode head, int k) {
         if (head == null || head.next == null) {
             return head;
         }
@@ -32,6 +34,36 @@ public class RemoveDupFromSortedList3 {
         return dummy.next;
     }
 
+    //Better implementation than above
+    public static ListNode deleteDuplicatesLeaveK(ListNode head, int k) {
+        if (k < 0) {
+            return head;
+        } else if (k == 0) {
+            return null;
+        }
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+        int count = 0;
+        ListNode prev = dummy;
+        for(ListNode cur = prev.next; cur != null;) {
+            if (prev == dummy || cur.val != prev.val) {
+                count = 1;
+            } else {
+                count++;
+            }
+            if (count == k) {
+                ListNode post = cur;
+                for(; post.next != null && post.next.val == post.val; post = post.next);
+                if (post != cur) {
+                    cur.next = post.next;
+                }
+            }
+            prev = cur;
+            cur = cur.next;      
+        }
+        return dummy.next;
+    }
+
     private static void printLinkedList(ListNode head) {
         if (head == null) {
             return;
@@ -42,20 +74,32 @@ public class RemoveDupFromSortedList3 {
         System.out.println("");
     }
 
-    public static void main(String[] args) {
-        int k = 3;
+    private static ListNode createNodeFromArray(int[] myArgs) {
         ListNode dummy = new ListNode(-1);
         ListNode tail = dummy;
-        for (String arg: args) {
-            ListNode curNode = new ListNode(Integer.parseInt(arg));
+        for (int arg: myArgs) {
+            ListNode curNode = new ListNode(arg);
             tail.next = curNode;
             tail = curNode;
         }
-        System.out.println("Input linked list: ");
-        printLinkedList(dummy.next);
+        return dummy.next;
+    }
 
-        System.out.println("After removing duplicates:");
-        printLinkedList(deleteDuplicatesLeaveK(dummy.next, k));
-
+    public static void main(String[] args) {
+        int[][] tests = new int[][]{
+            {1, 1, 1, 1, 3, 4, 4, 4, 4, 5, 5, 5, 6},
+            {1, 2, 3, 3, 3, 3, 4, 4, 4},
+            {2},
+            {}
+        };
+        for (int[] test : tests) {
+            System.out.println("Input linked list: " + Arrays.toString(test));
+            for (int k = 0; k <= 4; ++k) {
+                ListNode head = createNodeFromArray(test);
+                System.out.println("k = " + k);
+                printLinkedList(deleteDuplicatesLeaveK(head, k));                
+            }
+            System.out.println("");
+        }
     }
 }

@@ -10,6 +10,15 @@
  * }
  */
 public class LinkedListCycle2 {
+
+    //When the slow pointer and the fast pointer first meet,
+    //let the distance that the slow pointer has gone through be h,
+    //then the distance that the fast pointer has gone through is 2h,
+    //and let the circumference be c, then 2h - h = kc, k is a positive
+    //integer. So h = kc. So if one slow pointer starts again
+    //from the origin, and another slow pointer starts from the meeting
+    //point, they should finally meet at the meeting point. And the 
+    //first point they meed is where the cycle begins.
     public ListNode detectCycle(ListNode head) {
         ListNode dummy = new ListNode(-1);
         dummy.next = head;

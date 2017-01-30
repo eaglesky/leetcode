@@ -7,7 +7,7 @@
  * }
  */
 public class RemoveDupFromSortedList2 {
-    public ListNode deleteDuplicates(ListNode head) {
+    public ListNode deleteDuplicates0(ListNode head) {
         if (head == null) {
             return head;
         }
@@ -23,6 +23,24 @@ public class RemoveDupFromSortedList2 {
                 pre = pre.next;
             }
             cur = cur.next;
+        }
+        return dummy.next;
+    }
+
+    //Second try
+    public ListNode deleteDuplicates(ListNode head) {
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+        ListNode prev = dummy;
+        for(; prev.next != null;) {
+            ListNode cur = prev.next;
+            for(; cur.next != null && cur.next.val == cur.val; cur = cur.next);
+            if (cur != prev.next) {
+                prev.next = cur.next;
+                cur.next = null;
+            } else {
+                prev = prev.next;
+            }
         }
         return dummy.next;
     }
