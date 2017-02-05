@@ -61,6 +61,9 @@ public class KthSmallestElementInBST {
     }
     
     //Another way of indexing, O(n) time
+    //Store the node number of left subtree of each node.
+    //Though this way is no faster than the previous way, it is more efficient
+    //when inserting or deleting a node.
     private static int rankRecursive(TreeNode root, Map<TreeNode, Integer> indexed) {
         if (root == null) {
             return 0;

@@ -62,6 +62,7 @@ public class DeleteNodeInBST {
     }
 
     //Better and simpler solution, O(h) time and O(1) space
+    //https://discuss.leetcode.com/topic/67962/iterative-solution-in-java-o-h-time-and-o-1-space/2
     private TreeNode deleteRootNode(TreeNode root) {
         if (root == null) {
             return null;

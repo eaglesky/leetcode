@@ -138,6 +138,7 @@ public class PalindromePairs {
     }
 
     //Hashmap approach, O(n*k^2) + O(number of solutions) time
+    //For each word, compare it with those shorter or equal to it.
     public List<List<Integer>> palindromePairs(String[] words) {
         List<List<Integer>> result = new ArrayList<>();
         Map<String, Integer> wordsMap = new HashMap<>();
