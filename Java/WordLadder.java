@@ -74,6 +74,43 @@ public class WordLadder {
         return 0;
     }
     
+    //Updated version, the wordList has changed to List instead of Set
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+        if (beginWord.length() != endWord.length() || wordList.isEmpty()) {
+            return 0;
+        }
+        Set<String> wordSet = new HashSet<>(wordList);
+        Deque<String> q = new ArrayDeque<>();
+        q.offer(beginWord);
+        wordSet.remove(beginWord);
+        int level = 1;
+        for (;!q.isEmpty(); ++level) {
+            int size = q.size();
+            for (int i = 0; i < size; ++i) {
+                String curWord = q.poll();
+                char[] curWordChars = curWord.toCharArray();
+                for (int j = 0; j < curWordChars.length; ++j) {
+                    char c = curWordChars[j];
+                    for (char newC = 'a'; newC <= 'z'; ++newC) {
+                        if (newC != c) {
+                            curWordChars[j] = newC;
+                            String adjWord = new String(curWordChars);
+                            if (wordSet.contains(adjWord)) {
+                                if (adjWord.equals(endWord)) {
+                                    return level + 1;
+                                }
+                                q.offer(adjWord);
+                                wordSet.remove(adjWord);
+                            }
+                        }
+                    }
+                    curWordChars[j] = c;
+                }                
+            }
+        }
+        return 0;
+    }
+    
     //Bidirectional BFS
     public int ladderLength(String beginWord, String endWord, Set<String> wordList) {
         if (wordList.isEmpty()) {
