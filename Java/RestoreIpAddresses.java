@@ -31,5 +31,41 @@ public class RestoreIpAddresses {
         return result;
     }
 
+    //Another implementation:
+    private static boolean isValid(String ipStr) {
+        if ((ipStr.charAt(0) == '0' && ipStr.length() > 1)
+            || ipStr.length() > 3) {
+            return false;
+        }
+        int ip = Integer.parseInt(ipStr);
+        return ip >= 0 && ip <= 255;
+    }
+    
+    private static void dfs(String s, int start, List<String> curIp, List<String> allIps) {
+        if (curIp.size() == 4) {
+            if (start >= s.length()) {
+                allIps.add(String.join(".", curIp));
+            }
+            return;
+        }
+        int minStart = Math.max(start, s.length() - 12 + 3*curIp.size());
+        int maxStart = s.length() - 4 + curIp.size();
+        for (int i = minStart; i <= maxStart; ++i) {
+            String curStr = s.substring(start, i+1);
+            if (isValid(curStr)) {
+                curIp.add(curStr);
+                dfs(s, i+1, curIp, allIps);
+                curIp.remove(curIp.size()-1);
+            } else {
+                break;
+            }
+        }
+    }
+    
+    public List<String> restoreIpAddresses(String s) {
+        List<String> result = new ArrayList<>();
+        dfs(s, 0, new ArrayList<String>(), result);
+        return result;
+    }
     //See c++ solution for the iterative approach, not recommended.
 }
