@@ -65,6 +65,7 @@ public class Permutations {
     //However due to the frequent list copy, I don't think this solution is very efficient.
     
     //Iterative solution using Next Permutation. O(n*n!) time and O(1) extra space
+    //Works even if nums has duplicates!
     private boolean nextPermutation(int[] nums) {
         int i = nums.length - 2;
         for(; i >= 0 && nums[i] > nums[i+1]; --i);
