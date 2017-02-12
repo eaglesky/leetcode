@@ -1,6 +1,3 @@
-
-
- 
 public class SortList {
 	 public static class ListNode {
 	     int val;

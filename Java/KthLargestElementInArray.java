@@ -55,6 +55,7 @@ public class KthLargestElementInArray {
 
 	private static Random rand = new Random();
 	
+    //Sort them from largest to smallest(descending)
     private int partition(int[] nums, int low, int high) {
         if (low >= high) {
 			return low;
