@@ -25,6 +25,28 @@ public class DivideTwoIntegers {
         return isNegative ? (int)(-quotient) : (int)quotient;
     }
 
+    //Second try, better implementation
+    public int divide(int dividend, int divisor) {
+        boolean isNegative = (dividend ^ divisor) < 0;
+        if (divisor == 0) {
+            return isNegative ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+        }
+        if (dividend == Integer.MIN_VALUE && divisor == -1) {
+            return Integer.MAX_VALUE;
+        }
+        long absDividend = Math.abs((long)dividend);
+        long absDivisor = Math.abs((long)divisor);
+        int quotient = 0; //Quotient won't overlow in this case
+        for(; absDividend >= absDivisor;) {
+            long add = absDivisor;
+            for (int count = 1; absDividend >= add; add = add << 1, count = count << 1) {
+                absDividend -= add;
+                quotient += count;
+            }
+        }
+        return isNegative ? -quotient : quotient;
+    }
+
     public static void main(String[] args) {
         DivideTwoIntegers dti = new DivideTwoIntegers();
 
