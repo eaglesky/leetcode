@@ -1,6 +1,8 @@
 public class BestTimeToBuyAndSellStock2 {
     
     //Greedy algorithm. O(n) time and O(1) space
+    //This can be proved by thinking about the sell time and buy time of last transaction,
+    //and do the same to all other transactions.
     public int maxProfit(int[] prices) {
         if (prices.length <= 1) {
             return 0;
