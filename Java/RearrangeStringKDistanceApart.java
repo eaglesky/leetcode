@@ -59,7 +59,7 @@ public class RearrangeStringKDistanceApart {
 
 	//Brute force using DFS. If n is the length of string and m is the number of
 	//unique characters, the time complexity is O(m^n). Space is O(m+n)
-    public static String rearrangeString(String str, int k) {
+    public static String rearrangeString0(String str, int k) {
     	Map<Character, Integer> charCounts = new HashMap<>();
     	for (int i = 0; i < str.length(); ++i) {
     		char c = str.charAt(i);
@@ -74,6 +74,66 @@ public class RearrangeStringKDistanceApart {
     	return found ? sb.toString() : "";
     }
 
+    private static class Pair implements Comparable<Pair> {
+    	final char c;
+    	int count;
+    	Pair(char c, int count) {
+    		this.c = c;
+    		this.count = count;
+    	}
+
+    	//Use natrual order
+    	public int compareTo(Pair other) {
+    		if (this.count == other.count) {
+    			return Character.compare(this.c, other.c);
+    		}
+    		return Integer.compare(this.count, other.count);
+    	}
+    }
+
+    //More efficient solution based on greedy selection.
+    //Cannot prove the correctness of it.
+    //https://discuss.leetcode.com/topic/48091/c-unordered_map-priority_queue-solution-using-cache
+    //O(nlogm) time and O(n + m) space
+	public static String rearrangeString(String str, int k) {
+		Map<Character, Integer> charCounts = new HashMap<>();
+    	for (int i = 0; i < str.length(); ++i) {
+    		char c = str.charAt(i);
+    		int prevCount = charCounts.getOrDefault(c, 0);
+    		charCounts.put(c, prevCount + 1);
+    	}
+    	PriorityQueue<Pair> heap = new PriorityQueue<>(charCounts.size(),
+    		Collections.reverseOrder());
+    	for (Map.Entry<Character, Integer> charCount : charCounts.entrySet()) {
+    		Pair pair = new Pair(charCount.getKey(), charCount.getValue());
+    		heap.offer(pair);
+    	}
+    	int numLeft = str.length();
+    	Deque<Pair> usedPairs = new ArrayDeque<>();
+    	StringBuilder result = new StringBuilder();
+    	for (; numLeft > 0; ) {
+    		int numChars = Math.min(k, numLeft);
+    		for (int i = 0; i < numChars; ++i) {
+    			if (heap.isEmpty()) {
+    				return "";
+    			}
+    			usedPairs.offer(heap.poll());
+    			numLeft--;
+    		}
+    		while(!usedPairs.isEmpty()) {
+    			Pair pair = usedPairs.poll();
+    			result.append(pair.c);
+    			if (--pair.count > 0) {
+    				heap.offer(pair);	
+    			}
+    		}
+    	}
+    	return result.toString();
+	}
+
+	//Another implementation without using heap. O(nm) time
+	//https://discuss.leetcode.com/topic/48260/java-15ms-solution-with-two-auxiliary-array-o-n-time
+	
     public static void main(String[] args) {
     	String[] tests = new String[] {
     		"aabbcc",
