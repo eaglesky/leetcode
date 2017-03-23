@@ -13,22 +13,19 @@ public class MedianFinder {
     //Always make sure that the size of two heaps differ no more than 1,
     //and the max of maxHeap is no larger than the min of minHeap
     public void addNum(int num) {
+        int toBeAdded = num;
         if (minHeap.size() >= maxHeap.size()) {
-            if (minHeap.isEmpty() || minHeap.peek() > num) {
-                maxHeap.offer(num);
-            } else {
-                int minInMinHeap = minHeap.poll();
+            if (!minHeap.isEmpty() && minHeap.peek() < num) {
+                toBeAdded = minHeap.poll();
                 minHeap.offer(num);
-                maxHeap.offer(minInMinHeap);
             }
+            maxHeap.offer(toBeAdded);
         } else {
-            if (maxHeap.peek() < num) {
-                minHeap.offer(num);
-            } else {
-                int maxInMaxHeap = maxHeap.poll();
+            if (maxHeap.peek() > num) {
+                toBeAdded = maxHeap.poll();
                 maxHeap.offer(num);
-                minHeap.offer(maxInMaxHeap);
             }
+            minHeap.offer(toBeAdded);
         }
     }
     
@@ -39,7 +36,8 @@ public class MedianFinder {
         } else if (minHeap.size() < maxHeap.size()) {
             return maxHeap.peek();
         } else {
-            return (maxHeap.peek() + minHeap.peek()) * 0.5;
+            return maxHeap.isEmpty() ? 0.0
+            : ((double)maxHeap.peek() + (double)minHeap.peek()) * 0.5;
         }
     }
 

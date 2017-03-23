@@ -15,7 +15,10 @@ public class SlidingWindowMedian {
         return (count >= 0) ? count : null;
     }
     
-    public double[] medianSlidingWindow(int[] nums, int k) {
+    //Using two BSTs. Similar idea from "Find Median From Data Stream"
+    //https://discuss.leetcode.com/topic/74874/easy-to-understand-o-nlogk-java-solution-using-treemap
+    //O(nlogk) time and O(k) space(not including the result)
+    public double[] medianSlidingWindow0(int[] nums, int k) {
         if (nums.length == 0) {
             return new double[0];
         }
@@ -67,4 +70,89 @@ public class SlidingWindowMedian {
         }
         return result;
     }
+
+    //Another implementation of the above idea. Very similar logic, except that I use 
+    //a customized class MyNum and TreeSet to handle duplicates instead of TreeMap.
+    //This is preferable in interview since the implementation of MyNum can be skipped.
+    private static class MyNum implements Comparable<MyNum> {
+        final int num;
+        final int id;
+        MyNum(int num, int id) {
+            this.num = num;
+            this.id = id;
+        }
+        public boolean equals(Object other) {
+            if (this == other) {
+                return true;
+            }
+            if (!(other instanceof MyNum)) {
+                return false;
+            }
+            MyNum that = (MyNum)other;
+            return this.num == that.num && this.id == that.id;
+        }
+        public int hashCode() {
+            int result = 0;
+            result = 31 * result + num;
+            result = 31 * result + id;
+            return result;
+        }
+        public int compareTo(MyNum other) {
+            if (this.num == other.num) {
+                return Integer.compare(this.id, other.id);
+            }
+            return Integer.compare(this.num, other.num);
+        }
+    }
+    
+    public double[] medianSlidingWindow(int[] nums, int k) {
+        if (nums.length == 0) {
+            return new double[0];
+        }
+        double[] result = new double[nums.length - k + 1];
+        TreeSet<MyNum> largerHalf = new TreeSet<>();
+        TreeSet<MyNum> smallerHalf = new TreeSet<>();
+        for (int i = 0; i < nums.length; ++i) {
+            MyNum curNum = new MyNum(nums[i], i);
+            if (i >= k) {
+                MyNum prevNum = new MyNum(nums[i-k], i-k);
+                boolean removed = largerHalf.remove(prevNum) || smallerHalf.remove(prevNum);
+            }
+            MyNum toBeAdded = curNum;
+            if (largerHalf.size() >= smallerHalf.size()) {
+                MyNum smallestInLarger = largerHalf.isEmpty() ? null : largerHalf.first();
+                if (smallestInLarger != null && (curNum.compareTo(smallestInLarger) > 0)) {
+                    largerHalf.remove(smallestInLarger);
+                    toBeAdded = smallestInLarger;
+                    largerHalf.add(curNum);
+                }
+                smallerHalf.add(toBeAdded);
+            } else {
+                MyNum largestInSmaller = smallerHalf.last();
+                if (curNum.compareTo(largestInSmaller) < 0) {            
+                    smallerHalf.remove(largestInSmaller);
+                    toBeAdded = largestInSmaller;
+                    smallerHalf.add(curNum);
+                }
+                largerHalf.add(toBeAdded);
+            }
+            if (i >= k - 1) {
+                if (largerHalf.size() > smallerHalf.size()) {
+                    result[i - k + 1] = largerHalf.first().num;
+                } else if (largerHalf.size() < smallerHalf.size()) {
+                    result[i - k + 1] = smallerHalf.last().num;
+                } else {
+                    result[i-k+1] = ((double)largerHalf.first().num + (double)smallerHalf.last().num) * 0.5;
+                }
+            }
+        }
+        return result;
+    }
+
+
+    //Using two heaps takes O(nk) time since the remove takes O(k) time.
+    //https://discuss.leetcode.com/topic/79642/short-and-clear-o-nlogk-java-solutions
+
+    //Using sorted list apparently takes O(nk) time too.
+    //https://discuss.leetcode.com/topic/79167/java-beats-97-used-sorts-list/2
 }
