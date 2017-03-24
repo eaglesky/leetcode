@@ -1,3 +1,13 @@
+/*
+The API: int read4(char *buf) reads 4 characters at a time from a file.
+The return value is the actual number of characters read. For example, it returns 3 if there is only 3 characters left in the file.
+By using the read4 API, implement the function int read(char *buf, int n) that reads n characters from the file.
+Note:
+I: The read function will only be called once for each test case.
+
+II: The read function may be called multiple times.
+*/
+
 public class  ReadNCharactersGivenRead4 {
 	private String file;
 	private int filePointer;
@@ -34,6 +44,7 @@ public class  ReadNCharactersGivenRead4 {
 		}
 		return i;
 	}
+//---------------------------------------------------------------------------------------
 
 	//Similar to https://discuss.leetcode.com/topic/18289/another-accepted-java-solution
 	public int read(char[] buf, int n) {
@@ -52,11 +63,39 @@ public class  ReadNCharactersGivenRead4 {
 		return bufId;
 	}
 
+	private char[] bufReader = new char[4];
+	int bufStart = 0;
+	int bufEnd = 0;
+
+	//Read function that could be called multiple times
+	public int readMulti(char[] buf, int n) {
+		int numRead = Math.min(buf.length, n);
+		int bufId = 0;
+		while (bufId < numRead) {
+			if (bufStart < bufEnd) {
+				buf[bufId++] = bufReader[bufStart++];
+			} else {
+				int curCount = read4(bufReader);
+				if (curCount == 0) {
+					break;
+				}
+				int numCopied = Math.min(numRead - bufId, curCount);
+				System.arraycopy(bufReader, 0, buf, bufId, numCopied);
+				bufId += numCopied;
+				bufStart = numCopied;
+				bufEnd = curCount;
+			}
+		}
+		return bufId;
+	}
+
+//-------------------------------------------------------------------------------------
 	private void testRead(char[] buf, int n) {
 		restart();
-		read(buf, n);
+		int num = read(buf, n);
 		System.out.println("buf size = " + buf.length + ", n = " + n);
 		System.out.println("Result = " + new String(buf) + "#");
+		System.out.println("Num read = " + num);
 	} 
 
 	public static void main(String[] args) {
@@ -91,5 +130,15 @@ public class  ReadNCharactersGivenRead4 {
 		reader.testRead(buf3, n1);
 		buf2 = new char[56];
 		reader.testRead(buf2, n1);
+
+		reader.open(file1);
+		for(count = 0; (curCount = reader.readMulti(buf, 10)) > 0; count += curCount);
+		System.out.println("Number of characters read using readMulti = " + count);
+		System.out.println("Expected = " + file1.length());//Should be 107
+
+		reader.open("Haha, hahaha\nGreat");
+		curCount = reader.readMulti(buf3, 50);
+		System.out.println("Number of characters read using readMulti = " + curCount);
+		System.out.println(new String(buf3));
 	}
 }
