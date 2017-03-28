@@ -49,15 +49,14 @@ public class RemoveInvalidParentheses {
         if (rLeftParen > rRightParen || rLeftParen < 0 || rRightParen < 0) {
             return;
         }
-        if (rLeftParen == 0 && rRightParen == 0) {
-            String curStr = sb.toString();
-            if (!visited.contains(curStr)) {
-                result.add(curStr);
-                visited.add(curStr);
-            }
-            return;
-        }
         if (id >= s.length()) {
+            if (rLeftParen == 0 && rRightParen == 0) {
+                String curStr = sb.toString();
+                if (!visited.contains(curStr)) {
+                    result.add(curStr);
+                    visited.add(curStr);
+                }
+            }
         	return;
         }
         int len = sb.length();
@@ -99,7 +98,8 @@ public class RemoveInvalidParentheses {
 			")(",
 			")",
 			"(",
-			"((()()("
+			"((()()(",
+			"abc"
     	};
     	RemoveInvalidParentheses solution = new RemoveInvalidParentheses();
     	for (String test : tests) {
