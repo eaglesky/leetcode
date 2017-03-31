@@ -1,4 +1,4 @@
-public class Skyline {
+public class SkylineProblem {
     
     private static class Rectangle implements Comparable<Rectangle> {
         int l;
@@ -50,12 +50,31 @@ public class Skyline {
             this.x = x;
             this.rec = rec;
         }
+        //Sort the key points by x if x is different, otherwise
+        //the starting point is higher than ending point, and the height is 
+        //compared in natural order if they are all starting points
+        //This makes sure that when several edges overlaps, some of which 
+        //are dropping edges and rising edges, the final computed height(the highest
+        //height of rising edges) is still the same as previous height, the new keypoint
+        //won't be added.
+        public int compareTo(KeyPoint other) {
+            if (this.x == other.x) {
+                int sign = (x - rec.r < 0) ? -1 : 1;
+                int sign2 = (other.x - other.rec.r < 0) ? -1 : 1;
+                return Integer.compare(this.rec.h * sign, other.rec.h * sign2);
+            }
+            return Integer.compare(this.x, other.x);
+        }
     }
     
     //BST solution
     //O(nlogn) time and O(n) space
+    //https://briangordon.github.io/2014/08/the-skyline-problem.html
+    //https://www.youtube.com/watch?v=GSBLe8cKu0s(correct implementation of above)
     public List<int[]> getSkyline(int[][] buildings) {
         List<int[]> result = new ArrayList<>();
+
+        //Can also use TreeMap<Height, Count> here to implement multi-map
         TreeSet<Rectangle> bst = new TreeSet<>();
         List<KeyPoint> sortedKeyPoints = new ArrayList<>();
         for (int i = 0; i < buildings.length; ++i) {
@@ -63,11 +82,7 @@ public class Skyline {
             sortedKeyPoints.add(new KeyPoint(rec.l, rec));
             sortedKeyPoints.add(new KeyPoint(rec.r, rec));
         }
-        sortedKeyPoints.sort(new Comparator<KeyPoint>() {
-            public int compare(KeyPoint kp1, KeyPoint kp2) {
-                return Integer.compare(kp1.x, kp2.x);
-            }
-        });
+        sortedKeyPoints.sort(null);
         for (int i = 0; i < sortedKeyPoints.size(); ++i) {
             int x = sortedKeyPoints.get(i).x;
             Rectangle rec = sortedKeyPoints.get(i).rec;
@@ -83,13 +98,6 @@ public class Skyline {
                 int[] prePoint = result.get(result.size()-1);
                 if (prePoint[0] == curPoint[0]) {
                     prePoint[1] = curPoint[1];
-                    if (result.size() >= 2) {
-                        curPoint = result.get(result.size()-1);
-                        prePoint = result.get(result.size()-2);
-                        if (curPoint[1] == prePoint[1]) {
-                            result.remove(result.size()-1);
-                        }
-                    }
                 } else if (prePoint[1] != curPoint[1]) {
                     result.add(curPoint);
                 }
