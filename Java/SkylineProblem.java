@@ -71,6 +71,7 @@ public class SkylineProblem {
     //O(nlogn) time and O(n) space
     //https://briangordon.github.io/2014/08/the-skyline-problem.html
     //https://www.youtube.com/watch?v=GSBLe8cKu0s(correct implementation of above)
+    //https://discuss.leetcode.com/topic/22482/short-java-solution/28
     public List<int[]> getSkyline(int[][] buildings) {
         List<int[]> result = new ArrayList<>();
 
@@ -104,5 +105,67 @@ public class SkylineProblem {
             }
         }
         return result;
+    }
+
+    //Divide and conquer solution. O(nlogn) time and O(n) space
+    //Faster than BST solution, but harder to come up with.
+    private static List<int[]> getSkyLineRecur(int[][] buildings, int start, int end) {
+        List<int[]> result = new ArrayList<>();
+        if (start == end) {
+            int[] building = buildings[start];
+            result.add(new int[]{building[0], building[2]});
+            result.add(new int[]{building[1], 0});
+            return result;
+        }
+        int mid = start + (end - start) / 2;
+        List<int[]> leftPoints = getSkyLineRecur(buildings, start, mid);
+        List<int[]> rightPoints = getSkyLineRecur(buildings, mid + 1, end);
+        int prevLeftHeight = 0, prevRightHeight = 0;
+        int prevHeight = 0;
+        int l = 0, r = 0;
+        for(; l < leftPoints.size() && r < rightPoints.size();) {
+            int[] leftPoint = leftPoints.get(l);
+            int[] rightPoint = rightPoints.get(r);
+            if (leftPoint[0] < rightPoint[0]) {
+                int newHeight = Math.max(leftPoint[1], prevRightHeight);
+                if (newHeight != prevHeight) {
+                    result.add(new int[]{leftPoint[0], newHeight});
+                    prevHeight = newHeight;
+                }
+                prevLeftHeight = leftPoint[1];
+                l++;
+            } else if (leftPoint[0] > rightPoint[0]) {
+                int newHeight = Math.max(rightPoint[1], prevLeftHeight);
+                if (newHeight != prevHeight) {
+                    result.add(new int[]{rightPoint[0], newHeight});
+                    prevHeight = newHeight;
+                }
+                prevRightHeight = rightPoint[1];
+                r++;
+            } else {
+                int newHeight = Math.max(leftPoint[1], rightPoint[1]);
+                if (newHeight != prevHeight) {
+                    result.add(new int[]{leftPoint[0], newHeight});
+                    prevHeight = newHeight;
+                }
+                prevLeftHeight = leftPoint[1];
+                prevRightHeight = rightPoint[1];
+                l++;
+                r++;
+            }
+        }
+        List<int[]> rest = (l == leftPoints.size()) ? rightPoints : leftPoints;
+        int i = (l == leftPoints.size()) ? r : l;
+        for (; i < rest.size(); ++i) {
+            result.add(rest.get(i));
+        }
+        return result;
+    }
+    
+    public List<int[]> getSkyline(int[][] buildings) {
+        if (buildings.length == 0) {
+            return new ArrayList<int[]>();
+        }
+        return getSkyLineRecur(buildings, 0, buildings.length - 1);
     }
 }
