@@ -21,15 +21,14 @@ public class Flatten2DVector implements Iterator<Integer> {
     
     @Override
     public Integer next() {
-        try {
-            Integer ret = sublistIterator.next();
-            if (!sublistIterator.hasNext()) {
-                advanceListIterator();
-            }
-            return ret;
-        } catch (Exception e) {
+        if (!hasNext()) {
             throw new java.util.NoSuchElementException();
         }
+        Integer ret = sublistIterator.next();
+        if (!sublistIterator.hasNext()) {
+            advanceListIterator();
+        }
+        return ret;
     }
 
     @Override
