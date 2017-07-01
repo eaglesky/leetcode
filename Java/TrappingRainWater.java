@@ -47,4 +47,28 @@ public class TrappingRainWater {
         }
         return result;
     }
+
+    //My two pointers approach which is more natural
+    //Pay attention to the end condition!
+    public int trap(int[] height) {
+        int highestLeft = 0;
+        int highestRight = 0;
+        int result = 0;
+        for (int start = 0, end = height.length - 1; start <= end;) {
+            if (highestLeft > highestRight) {
+                if (highestRight > height[end]) {
+                    result += highestRight - height[end];
+                }
+                highestRight = Math.max(highestRight, height[end]);
+                end--;
+            } else {
+                if (highestLeft > height[start]) {
+                    result += highestLeft - height[start];
+                }
+                highestLeft = Math.max(highestLeft, height[start]);
+                start++;
+            }
+        }
+        return result;
+    }
 }

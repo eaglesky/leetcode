@@ -8,4 +8,15 @@ public class RemoveDupSortedArray {
         }
         return (nums.length == 0) ? 0 : i+1;
     }
+
+    //This is preferred
+    public int removeDuplicates(int[] nums) {
+        int id = 0;
+        for (int i = 0; i < nums.length; ++i) {
+            if (i == 0 || nums[i] > nums[i-1]) {
+                nums[id++] = nums[i];
+            }
+        }
+        return id;
+    }
 }
