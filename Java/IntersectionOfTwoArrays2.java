@@ -34,7 +34,8 @@ public class IntersectionOfTwoArrays2 {
         return result;
     }
     
-    //Two pointers solution when the input arrays are sorted.
+    //Two pointers solution when the input arrays are sorted(1st follow-up)
+    //Easier than the one for problem I, just remove the duplicate checks
     public int[] intersect(int[] nums1, int[] nums2) {
         Arrays.sort(nums1);
         Arrays.sort(nums2);

@@ -47,5 +47,37 @@ public class Solution {
         return result;
     }
     
+    //Second try
+    public int[] intersection(int[] nums1, int[] nums2) {
+        Arrays.sort(nums1);
+        Arrays.sort(nums2);
+        List<Integer> result = new ArrayList<>();
+        for (int i1 = 0, i2 = 0; i1 < nums1.length && i2 < nums2.length;) {
+            if (i1 < nums1.length - 1 && nums1[i1] == nums1[i1+1]) {
+                i1++;
+                continue;
+            }
+            if (i2 < nums2.length - 1 && nums2[i2] == nums2[i2+1]) {
+                i2++;
+                continue;
+            }
+            if (nums1[i1] < nums2[i2]) {
+                i1++;
+            } else if (nums1[i1] > nums2[i2]) {
+                i2++;
+            } else {
+                result.add(nums1[i1]);
+                i1++;
+                i2++;
+            }
+        }
+        int[] nums = new int[result.size()];
+        int i = 0;
+        for (int num : result) {
+            nums[i++] = num;
+        }
+        return nums;
+    }
+
     //Third solution is using binary search for each element of nums2 in nums1.
 }
