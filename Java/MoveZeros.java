@@ -15,6 +15,8 @@ public class MoveZeros {
     }
     
     //Better version
+    //Less assignment operations than above if there are more non-zero elements
+    //Two assignments for non-zero elements and 1 assignments for zeros.
     public void moveZeroes(int[] nums) {
         int id = 0;
         for (int i = 0; i < nums.length; ++i) {
