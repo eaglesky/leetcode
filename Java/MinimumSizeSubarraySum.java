@@ -15,6 +15,24 @@ public class MinimumSizeSubarraySum {
         return minLen == Integer.MAX_VALUE ? 0 : minLen + 1;
     }
 
+    //Better version of above. minLen should be 0 initially,
+    //since the size of nums could be Integer.MAX_VALUE
+    //and s is equal to the sum of all the elements.
+    public int minSubArrayLen(int s, int[] nums) {
+        int minLen = 0;
+        int curSum = 0;
+        int start = 0;
+        for (int i = 0; i < nums.length; ++i) {
+            curSum += nums[i];
+            for(; curSum >= s; start++) {
+                int curLen = i - start + 1;
+                minLen = (minLen == 0 || minLen > curLen) ? curLen : minLen;
+                curSum -= nums[start];
+            }
+        }
+        return minLen;
+    }
+
     //Binary search solution:
     //First get accumulative sum for each element. 
     //Then iterate the sum array, find the largest element

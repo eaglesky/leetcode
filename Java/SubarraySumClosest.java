@@ -31,6 +31,9 @@ public class SubarraySumClosest {
     //TreeMap is essentially a balanced BST, so floorKey, ceilingKey runs in O(logn).
     //So the total time is O(nlogn), space is O(n)
     //More: https://rafal.io/posts/subsequence-closest-to-t.html
+    //If the questions asks for the minium length of subarray that has sum closest
+    //to k, we can add a map of diff to minLen, and also maintain the minDiff,
+    //and after the loop finishes, we can use the minDiff to get the minLen.
     public int[] subarraySumClosest(int[] nums, int k) {
         int[] result = new int[2];
         TreeMap<Integer, Integer> numToId = new TreeMap<>();
