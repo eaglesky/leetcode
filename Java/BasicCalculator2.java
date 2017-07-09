@@ -61,9 +61,8 @@ public class BasicCalculator2 {
             char c = s.charAt(i);
             if (Character.isDigit(c)) {
                 int num = 0;
-                int j = i;
-                for (; j < s.length() && Character.isDigit(s.charAt(j)); ++j) {
-                    num = 10 * num + (s.charAt(j) - '0');
+                for (; i < s.length() && Character.isDigit(s.charAt(i)); ++i) {
+                    num = 10 * num + (s.charAt(i) - '0');
                 }
                 switch (preOperator) {
                     case '+': result += temp;
@@ -77,7 +76,6 @@ public class BasicCalculator2 {
                     case '/': temp /= num;
                               break;
                 }
-                i = j;
                 continue;
             } else if (c == '+' || c == '-' || c == '*' || c == '/') {
                 preOperator = c;
