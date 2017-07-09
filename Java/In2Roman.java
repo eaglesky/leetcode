@@ -15,4 +15,7 @@ public class Int2Roman {
         }
         return sb.toString();
     }
+
+    //Another implementation is using TreeMap to store the mapping of integer to Roman strings.
+    //But it is harder to initialize.
 }

@@ -56,6 +56,8 @@ public class Integer2EnglishWords {
         return sb.append(dict.get(num - remainder)).append(dict.get(remainder));
     }
     
+    //This is an efficient implementation using StringBuilder
+    //However to be more scalable, we should scan num from right to left.
     public String numberToWords(int num) {
         if (num == 0) {
             return "Zero";
@@ -76,5 +78,45 @@ public class Integer2EnglishWords {
         }
         sb.setLength(sb.length() - 1);
         return sb.toString();
+    }
+
+    //Similar solution to above, but scan the num from right to left
+    private String translateThreeDigits(int num, Map<Integer, String> dict) {
+        StringBuilder sb = new StringBuilder();
+        int hundred = num / 100;
+        if (hundred > 0) {
+            sb.append(dict.get(hundred));
+            sb.append(dict.get(100));
+            num = num % 100;
+        }
+        String curStr = dict.get(num);
+        if (curStr != null) {
+            sb.append(curStr);
+            return sb.toString();
+        }
+        int single = num % 10;
+        int decade = num - single;
+        sb.append(dict.get(decade));
+        sb.append(dict.get(single));
+        return sb.toString();
+    }
+    
+    public String numberToWords(int num) {
+        Map<Integer, String> dict = createDict();
+        String result = "";
+        int base = 1;
+        while (num > 0) {
+            int threeDigits = num % 1000;
+            String threeDigitsStr = translateThreeDigits(threeDigits, dict);
+            if (!threeDigitsStr.isEmpty()) {
+                if (base > 1) {
+                    threeDigitsStr += dict.get(base);
+                }
+                result = threeDigitsStr + result;
+            }
+            num /= 1000;
+            base *= 1000;
+        }
+        return result.isEmpty() ? "Zero" : result.trim();
     }
 }
