@@ -47,6 +47,7 @@ public class LongestSubstringKRepeatingChars {
     }
 
     //Recursive solution. Should be faster than O(n^2)
+    //O(n^2) space?
     private int longestSubstringRec(String s, int k, int start, int end) {
         if (end - start + 1 < k) {
             return 0;

@@ -57,6 +57,7 @@ public class LongestSubstringKDistinctChars {
 
     //Or with inner loop:
     //https://discuss.leetcode.com/topic/41671/15-lines-java-solution-using-slide-window/3
+    //Easy to come up with in interview
     public static int lengthOfLongestSubstring(String s, int k) {
         Map<Character, Integer> charCounts = new HashMap<>();
         int start = 0;
