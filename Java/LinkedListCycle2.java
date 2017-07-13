@@ -18,7 +18,17 @@ public class LinkedListCycle2 {
     //integer. So h = kc. So if one slow pointer starts again
     //from the origin, and another slow pointer starts from the meeting
     //point, they should finally meet at the meeting point. And the 
-    //first point they meed is where the cycle begins.
+    //first point they meet is where the cycle begins.
+
+    //Better thought: let d0 be the distance from the head to the cycle starting
+    //point. x be the distance from the cycle starting point to the first meeting
+    //point of slow and fast pointers. Then 2*(d0 + x) = d0 + x + k*c, k is a
+    //positive integer. Then we have d0 = k*c - x = (c - x) + k'*c, where k' is
+    //an non-negative integer. c is the length of the cycle, which is always a
+    //positive integer if exists. That's why we can let two pointers starting from
+    //head and the meeting point move inwards to find the cycle starting point.
+    //Adding a dummy can make it easier to deal with the case when the cycle starting
+    //poing is the head.
     public ListNode detectCycle(ListNode head) {
         ListNode dummy = new ListNode(-1);
         dummy.next = head;
