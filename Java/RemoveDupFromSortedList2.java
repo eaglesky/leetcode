@@ -44,4 +44,21 @@ public class RemoveDupFromSortedList2 {
         }
         return dummy.next;
     }
+
+    //Third try
+    public ListNode deleteDuplicates(ListNode head) {
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+        ListNode p = dummy;
+        for(; p != null;) {
+            ListNode cur = p.next;
+            for(; cur != null && (cur.next != null && cur.val == cur.next.val); cur = cur.next);
+            if (p.next != cur) {
+                p.next = cur.next;
+            } else {
+                p = p.next;
+            }
+        }
+        return dummy.next;
+    }
 }

@@ -35,7 +35,7 @@ public class RemoveDupFromSortedList3 {
     }
 
     //Better implementation than above
-    public static ListNode deleteDuplicatesLeaveK(ListNode head, int k) {
+    public static ListNode deleteDuplicatesLeaveK1(ListNode head, int k) {
         if (k < 0) {
             return head;
         } else if (k == 0) {
@@ -62,6 +62,55 @@ public class RemoveDupFromSortedList3 {
             cur = cur.next;      
         }
         return dummy.next;
+    }
+
+    //Best implementation
+    public static ListNode deleteDuplicatesLeaveK2(ListNode head, int k) {
+        if (k < 0) {
+            return head;
+        } else if (k == 0) {
+            return null;
+        }
+        ListNode p = head;
+        int counter = 0;
+        for(; p != null; p = p.next) {
+            if (counter == k - 1) {
+                ListNode cur = p.next;
+                for(; cur != null && cur.val == p.val; cur = cur.next);
+                p.next = cur;
+            }
+            if (p.next != null && p.next.val == p.val) {
+                counter++;
+            } else {
+                counter = 0;
+            }
+        }
+        return head;
+    }
+
+    //Another good implementation
+    public static ListNode deleteDuplicatesLeaveK(ListNode head, int k) {
+        if (k < 0) {
+            return head;
+        } else if (k == 0) {
+            return null;
+        }
+        ListNode p = head;
+        int counter = 0;
+        for(; p != null;) {
+            if (p.next != null && p.next.val == p.val) {
+                if (counter == k - 1) {
+                    p.next = p.next.next;
+                } else {
+                    counter++;
+                    p = p.next;
+                }
+            } else {
+                counter = 0;
+                p = p.next;
+            }
+        }
+        return head;
     }
 
     private static void printLinkedList(ListNode head) {

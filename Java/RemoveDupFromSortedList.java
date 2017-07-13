@@ -7,7 +7,7 @@
  * }
  */
 public class RemoveDupFromSortedList {
-    public ListNode deleteDuplicates(ListNode head) {
+    public ListNode deleteDuplicates0(ListNode head) {
         if (head == null || head.next == null) {
             return head;
         }
@@ -21,6 +21,19 @@ public class RemoveDupFromSortedList {
             } else {
                 pre = pre.next;
                 cur = cur.next;
+            }
+        }
+        return head;
+    }
+
+    //Best solution. Can be generalized to RemoveDupFromSortedList III.
+    public ListNode deleteDuplicates(ListNode head) {
+        ListNode p = head;
+        for(; p != null;) {
+            if (p.next != null && p.next.val == p.val) {
+                p.next = p.next.next;
+            } else {
+                p = p.next;
             }
         }
         return head;
