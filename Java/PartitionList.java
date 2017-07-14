@@ -30,4 +30,24 @@ public class PartitionList {
         }
         return dummy.next;
     }
+
+    //More robust way
+    public ListNode partition(ListNode head, int x) {
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+        ListNode newDummy = new ListNode(-1);
+        ListNode newTail = newDummy;
+        ListNode prev = dummy;
+        for(; prev.next != null;) {
+            if (prev.next.val < x) {
+                newTail.next = prev.next;
+                newTail = newTail.next;
+                prev.next = prev.next.next;
+            } else {
+                prev = prev.next;
+            }
+        }
+        newTail.next = dummy.next;
+        return newDummy.next;
+    }
 }

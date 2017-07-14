@@ -34,6 +34,7 @@ public class ReverseNodesInKGroup {
     }
 
     // Another head insertion approach
+    // Preferable in interview
     public ListNode reverseKGroup1(ListNode head, int k) {
         if (k <= 1) {
             return head;

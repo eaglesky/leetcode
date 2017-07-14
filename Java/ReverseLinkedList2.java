@@ -29,4 +29,27 @@ public class ReverseLinkedList2 {
         }
         return dummy.next;
     }
+
+    // Another implementation
+    // Insert into a temporary sublist first and then insert it back.
+    // Seems more robust
+    public ListNode reverseBetween(ListNode head, int m, int n) {
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+        ListNode p = dummy;
+        int i = 0;
+        for(; p != null && i < m - 1; ++i, p = p.next);
+        ListNode prev = p;
+        p = p.next;
+        ListNode newHead = null;
+        for(++i; i <= n; ++i) {
+            ListNode next = p.next;
+            p.next = newHead;
+            newHead = p;
+            p = next;
+        }
+        prev.next.next = p;
+        prev.next = newHead;
+        return dummy.next;
+    }
 }
