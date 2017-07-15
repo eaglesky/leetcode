@@ -14,7 +14,7 @@ class MyQueue {
     }
 
     // Get the front element.
-    // Amortized time is O(1)!
+    // Amortized time is O(1)?
     public int peek() {
         if (popStack.isEmpty()) {
             while (!pushStack.isEmpty()) {
