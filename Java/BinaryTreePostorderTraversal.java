@@ -58,8 +58,42 @@ public class BinaryTreePostorderTraversal {
         return result;
     }
     
+    //Iterative solution with stack(applicable to n-ary tree)
+    //This can be proved inductively -- for simple subtrees, it is able to 
+    //visit the nodes in a correct order, prev points to the last visited node,
+    //and all of the nodes get popped out of the stack. -- for entire tree,
+    //all of them are maintained.
+    public List<Integer> postorderTraversal2(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+        if (root == null) {
+            return result;
+        }
+        Deque<TreeNode> stack = new ArrayDeque<>();
+        stack.push(root);
+        TreeNode prev = null;
+        for(; !stack.isEmpty();) {
+            TreeNode cur = stack.peek();
+            if ((cur.left == null && cur.right == null)
+                || (prev != null && (prev == cur.left || prev ==  cur.right))) {
+                prev = stack.pop();
+                result.add(prev.val);  
+            } else {
+                if (cur.right != null) {
+                    stack.push(cur.right);
+                }
+                if (cur.left != null) {
+                    stack.push(cur.left);
+                }
+            }
+        }
+        return result;
+    }
+
     // Best iterative solution with stack
     // When cur is null, there is no hurry to move it. Keeping it as null is a good idea!
+    // This can also proved inductively like previous solution.
+    // After each subtree is visited, cur is null and all of the nodes in it are popped
+    // out of the stack. Pre node is the last visited node.
     public List<Integer> postorderTraversal(TreeNode root) {
         List<Integer> result = new ArrayList<>();
         Deque<TreeNode> stack = new ArrayDeque<>();

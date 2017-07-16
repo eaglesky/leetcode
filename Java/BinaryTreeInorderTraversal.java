@@ -47,6 +47,10 @@ public class BinaryTreeInorderTraversal {
     }
     
     // Iterative solution better version, O(n) time and O(n) space
+    // At the beginning of each iteration, the recent node in the
+    // stack is always the closest parent of cur node such that cur node
+    // is on the left subtree of that parent. If cur is null, this means
+    // the left tree has been visited and so we should visit the poped node.
     public List<Integer> inorderTraversal(TreeNode root) {
         List<Integer> result = new ArrayList<>();
         Deque<TreeNode> stack = new ArrayDeque<>();
