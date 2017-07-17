@@ -60,6 +60,33 @@ public class FindLeavesOfBinaryTree {
 		return result;
 	}
 
+	//Best implentation:
+	//The order must be correct since two nodes of same height must belong
+	//to two different branches of a certain subtree, and when we do postorder
+	//traversal on that subtree, left one is always visited before the right one.
+	private int getHeightAndLeaves(TreeNode root, List<List<Integer>> result) {
+        if (root == null) {
+            return -1;
+        }
+        int leftHeight = getHeightAndLeaves(root.left, result);
+        int rightHeight = getHeightAndLeaves(root.right, result);
+        int height = Math.max(leftHeight, rightHeight) + 1;
+        if (result.size() <= height) {
+            result.add(new ArrayList<>());
+        }
+        result.get(height).add(root.val);
+        return height;
+    }
+    
+    public List<List<Integer>> findLeaves(TreeNode root) {
+        List<List<Integer>> result = new ArrayList<>();
+        getHeightAndLeaves(root, result);
+        return result;
+    }
+
+    //We can also solve it iteratively, but would require a map of node to height.
+
+    
 	public static void main(String[] args) {
 		Integer[][] tests = new Integer[][]{
 			{1, 2, 3, 4, 5}, //Result = [[4, 5, 3], [2], [1]]
