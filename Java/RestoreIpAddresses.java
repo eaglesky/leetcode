@@ -67,5 +67,38 @@ public class RestoreIpAddresses {
         dfs(s, 0, new ArrayList<String>(), result);
         return result;
     }
+
+
+    //Easier to come up with backtracking solution:
+    private void dfs(String s, int startId, List<String> curIp, List<String> ips) {
+        if (startId == s.length() && curIp.size() == 4) {
+            ips.add(String.join(".", curIp));
+            return;
+        }
+        if (curIp.size() >= 4) {
+            return;
+        }
+        
+        int ipSeg = 0;
+        //The range of i can be further improved to be smaller
+        for (int i = startId; i < s.length(); ++i) {
+            ipSeg = ipSeg * 10 + (s.charAt(i) - '0');
+            if (ipSeg <= 255) {
+                curIp.add(String.valueOf(ipSeg));
+                dfs(s, i + 1, curIp, ips);
+                curIp.remove(curIp.size() - 1);
+            }
+            if (ipSeg == 0 || ipSeg > 255) {
+                return;
+            }
+        }
+    }
+    
+    public List<String> restoreIpAddresses(String s) {
+        List<String> result = new ArrayList<>();
+        dfs(s, 0, new ArrayList<>(), result);
+        return result;
+    }
+
     //See c++ solution for the iterative approach, not recommended.
 }

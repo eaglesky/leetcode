@@ -12,6 +12,7 @@ class UndirectedGraphNode {
 public class CloneGraph {
 
     //BFS solution. O(V+E) time, O(V) space
+    //A little bit easier to implement than DFS.
     public UndirectedGraphNode cloneGraph0(UndirectedGraphNode node) {
         if (node == null) {
             return null;
