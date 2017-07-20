@@ -43,6 +43,12 @@ public class Permutations {
         for (int i = id; i < nums.length; ++i) {
             swap(nums, id, i);
             dfs2(nums, id + 1, result);
+            //Swapping back is necessary because dfs2 should not change the 
+            //order of elements.
+            //Consider 3, 4, 5. If we don't swap it back,
+            //then we get 4, 3, 5 -> 4, 5, 3
+            //then in the first recursion, we swap the third one
+            //with the first one and get 3, 5, 4, which is duplicate
             swap(nums, id, i);
         }
     }
@@ -66,6 +72,13 @@ public class Permutations {
     
     //Iterative solution using Next Permutation. O(n*n!) time and O(1) extra space
     //Works even if nums has duplicates!
+    //Basic proof: let i be the index of first element from left that differs between
+    //the next permutation and current permutation.
+    //j be the index of first element from right that drops.
+    //i <= j must be true, since the elements after j are non-increasing and can't be
+    //increased for that part. Since next permutation should be the closest to the 
+    //current permutation, i == j, and we choose the smallest element larger than jth
+    //one to swap it, and make the rest increasing to get the next permutation.
     private boolean nextPermutation(int[] nums) {
         int i = nums.length - 2;
         for(; i >= 0 && nums[i] > nums[i+1]; --i);

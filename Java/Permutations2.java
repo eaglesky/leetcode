@@ -35,5 +35,5 @@ public class Permutations2 {
         return result;
     }
 
-    //The solutions are similar to those in Permutations I, with addtional de-duplicate operations
+    //Next permuation method can only be used here to get the iterative solution.
 }
