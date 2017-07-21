@@ -36,10 +36,6 @@ public class KthLargestElementInArray {
         if (nums.length == 0 || k < 1 || k > nums.length) {
             return -1;
         }
-        List<Integer> numList = new ArrayList<>();
-        for (int num : nums) {
-            numList.add(num);
-        }
         PriorityQueue<Integer> pq = new PriorityQueue<>(k);
         for (int i = 0; i < nums.length; ++i) {
             if (i < k) {
