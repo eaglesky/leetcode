@@ -27,7 +27,26 @@ public class SortColors {
         }
     }
     
-    //Best solution
+    //Two passes robust solution
+    //Don't see how it is worse than the following one
+    //Easier to come up with and proov
+    //O(n) time and O(1) space
+    public void sortColors(int[] nums) {
+        int i0 = 0;
+        for (int i = 0; i < nums.length; ++i) {
+            if (nums[i] == 0) {
+                swap(nums, i, i0++);
+            }
+        }
+        int i2 = nums.length - 1;
+        for (int i = nums.length - 1; i >= 0 && nums[i] != 0; --i) {
+            if (nums[i] == 2) {
+                swap(nums, i, i2--);
+            }
+        }
+    }
+
+    //One pass solution
     //O(n) time and O(1) space
     public void sortColors(int[] nums) {
         int low = 0;
