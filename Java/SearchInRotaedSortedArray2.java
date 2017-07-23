@@ -33,7 +33,7 @@ public class SearchRotatedSortedArray2 {
         return false;
     }
 
-    //Best solution, slight change from the solution of SearchInRotatedSortedArray 1
+    //Best solution, slight change from the solution of SearchInRotatedSortedArray I
     //O(n) time and O(1) space
     public boolean search(int[] nums, int target) {
         int low = 0;
