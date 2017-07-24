@@ -53,6 +53,22 @@ public class MaxSubarray {
         return result;
     }
     
+    //Slight improvement of above:
+    //Easier to come up with in interview
+    public int maxSubArray(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+        int prev = 0;
+        int maxSum = Integer.MIN_VALUE;
+        for (int num : nums) {
+            int cur = Math.max(num, num + prev);
+            maxSum = Math.max(maxSum, cur);
+            prev = cur;
+        }
+        return maxSum;
+    }
+
     //Greedy algorithm. Same performance as above.
     //sum is the max sum ending with current element.
     public int maxSubArray(int[] nums) {
