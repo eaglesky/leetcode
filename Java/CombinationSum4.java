@@ -88,9 +88,35 @@ public class CombinationSum4 {
         nums[j] = temp;
     }
 
+    //Another good backtracking solution similar to CombinationSum I.
+    //still TLE on [4,2,1], 32
+    private void dfs(int[] candidates, int target,
+                     List<Integer> curSolution, List<List<Integer>> solutions) {
+        if (target <= 0) {
+            if (target == 0) {
+                solutions.add(new ArrayList<>(curSolution));
+            }
+            return;
+        }
+        for (int i = 0; i < candidates.length && candidates[i] <= target; ++i) {
+            curSolution.add(candidates[i]);
+            dfs(candidates, target - candidates[i], curSolution, solutions);
+            curSolution.remove(curSolution.size() - 1);
+        }
+    }
+    
+    public int combinationSum4(int[] nums, int target) {
+        Arrays.sort(nums);
+        List<List<Integer>> result = new ArrayList<>();
+        dfs(nums, target, new ArrayList<>(), result);
+        return result.size();
+    }
 
     //DP solution, O(n*target) time and O(target) space
     //https://discuss.leetcode.com/topic/52302/1ms-java-dp-solution-with-detailed-explanation
+    //Let d[k] be the number of valid combinations whose sum is k.
+    //d[k] = d[k - nums[0]] + d[k - nums[1]] + ... + d[k - nums[j]]
+    //(nums[j] <= k, assuming nums is already sorted)
     public int combinationSum4(int[] nums, int target) {
         int[] count = new int[target + 1];
         count[0] = 1;
@@ -102,6 +128,18 @@ public class CombinationSum4 {
         }
         return count[target];
     }
+
+    //Using memoization can avoid unnecessary computing while using some recursion space
+    //https://discuss.leetcode.com/topic/52255/java-recursion-solution-using-hashmap-as-memory
+
+    //Follow-up: If negatives are allowed, then the length of combintation could be unlimited.
+    //E.g. nums = [-1, 1], target = 1. Then combintation could be [-1, 1, 1], or [-1, -1, 1, 1, 1],
+    //or [-1, -1, -1, 1, 1, 1, 1] ... . So there must be a constraint on the length of combinations.
+    //Say the length of each combination is no greater than k, then we can use Memoization to
+    //solve it. The cache should be (length_of_combination, target) -> number_of_combinations.
+    //https://discuss.leetcode.com/topic/52290/java-follow-up-using-recursion-and-memorization
+    //A stronger constraint could be each element cannot be used more than once. But memoization
+    //would be harder to implement in such case.
 
     public static void main(String[] args) {
     	int[] nums = new int[]{1, 5, 8};
