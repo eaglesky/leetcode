@@ -47,4 +47,32 @@ public class CombinationSum3 {
         dfs(0, new Integer[k], result, n);
         return result;
     }
+
+    //Better in interview:
+    private void dfs(int start, int k, int target, List<Integer> combination,
+                List<List<Integer>> combinations) {
+        if (target <= 0 || combination.size() >= k) {
+            if (target == 0 && combination.size() == k) {
+                combinations.add(new ArrayList<>(combination));
+            }
+            return;
+        }
+        //Pruning
+        int minNum = Math.max(start, target - 9 * (k - combination.size() - 1));
+        int maxNum = Math.min(9, target / (k - combination.size()));
+        for (int num = minNum; num <= maxNum; ++num) {
+            combination.add(num);
+            dfs(num + 1, k, target - num, combination, combinations);
+            combination.remove(combination.size()-1);
+        }
+    }
+    
+    public List<List<Integer>> combinationSum3(int k, int n) {
+        List<List<Integer>> result = new ArrayList<>();
+        if (k <= 0 || n <= 0) {
+            return result;
+        }
+        dfs(1, k, n, new ArrayList<>(k), result);
+        return result;
+    }
 }

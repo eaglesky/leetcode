@@ -23,5 +23,32 @@ public class CombinationSum {
         return result;
     }
 
-    //DP solution?
+    //Sort first is preferable.
+    //Similar implementation to above. Might be easier to write the code
+    private void dfs(int id, int[] candidates, int curSum, int target,
+                     List<Integer> curSolution, List<List<Integer>> solutions) {
+        if (curSum >= target) {
+            if (curSum == target) {
+                solutions.add(new ArrayList<>(curSolution));
+            }
+            return;
+        }
+        for (int i = id; i < candidates.length; ++i) {
+            curSolution.add(candidates[i]);
+            curSum += candidates[i];
+            dfs(i, candidates, curSum, target, curSolution, solutions);
+            curSolution.remove(curSolution.size() - 1);
+            if (curSum > target) {
+                break;
+            }
+            curSum -= candidates[i];
+        }
+    }
+    
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        List<List<Integer>> result = new ArrayList<>();
+        Arrays.sort(candidates);
+        dfs(0, candidates, 0, target, new ArrayList<>(), result);
+        return result;
+    }
 }

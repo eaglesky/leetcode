@@ -9,11 +9,12 @@ public class CombinationSum2 {
             if (i > start && candidates[i] == candidates[i-1]) {
                 continue;
             }
-            if (candidates[i] <= target) {
-                combination.add(candidates[i]);
-                dfs(candidates, i + 1, target - candidates[i], combination, result);
-                combination.remove(combination.size()-1);
+            if (candidates[i] > target) {
+                break;
             }
+            combination.add(candidates[i]);
+            dfs(candidates, i + 1, target - candidates[i], combination, result);
+            combination.remove(combination.size()-1);
         }
     }
     
