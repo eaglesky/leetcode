@@ -28,6 +28,10 @@ public class TargetSum {
     //sum_p = (S + sum_all) / 2
     //This is why this problem can be converted into finding the subset sum
     //that is equal to a positve sum_p
+    //Let dp[l][sum] be the number of subsets for the first l elements whose
+    //sum is sum. Then for the lth element nums[l-1], we could either pick it
+    //or not.
+    //dp[l][sum] = dp[l-1][sum - nums[l-1]] + dp[l-1][sum], sum >= nums[l-1]
     //Time is O(n*sum_all), space is O(sum_all).
     //https://discuss.leetcode.com/topic/76243/java-15-ms-c-3-ms-o-ns-iterative-dp-solution-using-subset-sum-with-explanation
     private static int findPositiveTarget(int[] nums, int target) {
