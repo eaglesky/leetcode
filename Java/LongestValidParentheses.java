@@ -1,4 +1,13 @@
 public class LongestValidParentheses {
+    /* The longest valid parentheses is always bounded by breaking parentheses,
+    * which could be either unmatched '(' or unmatched ')'.
+    * Stack solution can takes care of this easily using one pass since it stores
+    * any breaking parentheses.
+    * However counter solution needs two passes. 
+    * Both solutions need to update maxLen whenever a match is found.
+    */
+
+
     //Stack solution. O(n) time and O(n) space
     public int longestValidParentheses0(String s) {
         Deque<Integer> stack = new ArrayDeque<>(s.length());
@@ -56,5 +65,41 @@ public class LongestValidParentheses {
         return maxLen;
     }
     
-    //See c++ code for the DP solution
+    //Improved version of above:
+    private int scan(String s, char checkedParen) {
+        int maxLen = 0;
+        int inc = checkedParen == ')' ? 1 : -1;
+        int startId = checkedParen == ')' ? 0 : s.length() - 1;
+        int prevId = checkedParen == ')' ? -1 : s.length();
+        int parenCount = 0;
+        for (int i = startId; i >= 0 && i < s.length(); i += inc) {
+            char c = s.charAt(i);
+            if (c == checkedParen) {
+                if (parenCount > 0) {
+                    parenCount--;
+                    if (parenCount == 0) {
+                        maxLen = Math.max(maxLen, Math.abs(i - prevId));
+                    }
+                } else {
+                    prevId = i;
+                }
+            } else {
+                parenCount++;
+            }
+        }
+        return maxLen;
+    }
+    
+    public int longestValidParentheses(String s) {
+        if (s == null || s.isEmpty()) {
+            return 0;
+        }
+        int maxLen1 = scan(s, ')');
+        int maxLen2 = scan(s, '(');
+        return Math.max(maxLen1, maxLen2);
+    }
+
+
+    //See c++ code for the DP solution, not recommended since it is no better than
+    //the stack solution.
 }

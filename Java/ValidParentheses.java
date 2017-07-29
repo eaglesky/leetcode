@@ -2,6 +2,9 @@ public class ValidParentheses {
 
 	//O(n) time and O(n) space
 	//Cannot easiy solved by using counters!
+    //The stack stores the unmatched left parentheses.
+    //The incoming right parenthesis must match the one
+    //on top of the stack, not any of those below.
     public boolean isValid(String s) {
         Deque<Character> stack = new ArrayDeque<>();
         for (int i = 0; i < s.length(); ++i) {
