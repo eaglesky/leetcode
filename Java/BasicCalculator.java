@@ -38,6 +38,11 @@ public class BasicCalculator {
     //Best solution for this problem. Cannot be generalized to * and /. 
     //Good example showing how to remove the parentheses when the operators are only + and -.
     //https://discuss.leetcode.com/topic/15816/iterative-java-solution-with-stack/6
+    //Key is to find out the actual sign before each number after removing all the parentheses,
+    //which is equal to the context multiplier times the previous sign.
+    //Has to use a stack to store the context multipliers since they are related to each level,
+    //and we need to store the ones of previous levels so that they can be recovered.
+    //Also pay attention to this case: "1 - (5)". Parenthesis around a number only is also valid.
     public int calculate(String s) {
         Deque<Integer> stack = new ArrayDeque<>();
         stack.push(1);
