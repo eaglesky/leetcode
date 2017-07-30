@@ -8,7 +8,13 @@ public class SlidingWindowMaximum {
 
 	//Monotonic queue solution
 	//https://abitofcs.blogspot.com/2014/11/data-structure-sliding-window-minimum.html
-	//O(n) time and O(k) space
+    //Maintaining a two-directional queue that stores decreasing subsequence of 
+    //current sequence in the sliding window such that the first element in the 
+    //queue is the largest one in the sliding window.
+    //Though there is a inner loop, the running time is still O(n) time,
+    //since the inner loop only removes the added elements and each element is
+    //added exactly once and removed at most once.
+    //The space usage is O(k).
     public int[] maxSlidingWindow(int[] nums, int k) {
         if (nums.length == 0) {
             return new int[0];
@@ -17,6 +23,8 @@ public class SlidingWindowMaximum {
         int[] result = new int[nums.length - k + 1];
         int id = 0;
         for (int i = 0; i < nums.length; ++i) {
+            //It is natural to add the element to the window first and then
+            //remove the first one from the window.
             for (; !q.isEmpty() && q.peekLast() < nums[i]; q.pollLast());
             q.offer(nums[i]);
             if (i >= k && !q.isEmpty() && q.peek() == nums[i-k]) {

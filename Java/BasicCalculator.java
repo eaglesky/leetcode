@@ -47,8 +47,13 @@ public class BasicCalculator {
             char c = s.charAt(i);
             if (Character.isDigit(c)) {
                 int num = c - '0';
-                for(++i; i < s.length() && Character.isDigit(c = s.charAt(i)); ++i) {
-                    num = 10 * num + (c - '0');
+                for(++i; i < s.length(); ++i) {
+                    c = s.charAt(i);
+                    if (Character.isDigit(c)) {
+                        num = num * 10 + (c - '0');
+                    } else if (!Character.isWhitespace(c)) {
+                        break;
+                    }
                 }
                 result += num * stack.peek() * prevSign;
             }
@@ -58,7 +63,7 @@ public class BasicCalculator {
                 prevSign = -1;
             } else if (c == '(') {
                 stack.push(stack.peek() * prevSign);
-                prevSign = 1;
+                prevSign = 1; //Easy to forget this!
             } else if (c == ')') {
                 stack.pop();
             }
