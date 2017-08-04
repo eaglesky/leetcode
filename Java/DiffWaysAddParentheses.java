@@ -38,4 +38,58 @@ public class DiffWaysAddParentheses {
     public List<Integer> diffWaysToCompute(String input) {
         return computeRecur(input, 0, input.length() - 1);
     }
+
+    //Memoization solution.
+    private List<Integer> getResults(String s, List<Integer> ids, Map<List<Integer>, List<Integer>> cache) {
+        List<Integer> result = cache.get(ids);
+        if (result != null) {
+            return result;
+        }
+        result = new ArrayList<>();
+        boolean hasOperator = false;
+        for (int i = ids.get(0); i <= ids.get(1); ++i) {
+            char c = s.charAt(i);
+            if (isOperator(c)) {
+                hasOperator = true;
+                List<Integer> leftIds = new ArrayList<>(ids);
+                leftIds.set(1, i - 1);
+                List<Integer> leftResult = getResults(s, leftIds, cache);
+                List<Integer> rightIds = new ArrayList<>(ids);
+                rightIds.set(0, i + 1);
+                List<Integer> rightResult = getResults(s, rightIds, cache); 
+                for (int l = 0; l < leftResult.size(); ++l) {
+                    for (int r = 0; r < rightResult.size(); ++r) {
+                        if (c == '+') {
+                            result.add(leftResult.get(l) + rightResult.get(r));
+                        } else if (c == '-') {
+                            result.add(leftResult.get(l) - rightResult.get(r));
+                        } else if (c == '*') {
+                            result.add(leftResult.get(l) * rightResult.get(r));
+                        }
+                    }
+                }
+            }
+        }
+        if (!hasOperator) {
+            int num = 0;
+            for (int i = ids.get(0); i <= ids.get(1); ++i) {
+                char c = s.charAt(i);
+                if (Character.isDigit(c)) {
+                    num = num * 10 + (c - '0');
+                } else if (!Character.isWhitespace(c)) {
+                    break;
+                }
+            }
+            result.add(num);
+        }
+        cache.put(ids, result);
+        return result;
+    }
+    
+    public List<Integer> diffWaysToCompute(String input) {
+        List<Integer> ids = new ArrayList<>();
+        ids.add(0);
+        ids.add(input.length() - 1);
+        return input.isEmpty() ? new ArrayList<>() : getResults(input, ids, new HashMap<>());
+    }
 }
