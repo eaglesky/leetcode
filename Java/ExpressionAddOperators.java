@@ -77,6 +77,39 @@ public class ExpressionAddOperators {
         }
     }
     
+    //Slightly improved from above
+    private static void backTrack(String num, int target, int start, long sum, long subSum,
+            StringBuilder sb, List<String> result) {
+        if (start >= num.length() || sum > Integer.MAX_VALUE || sum < Integer.MIN_VALUE
+           || subSum > Integer.MAX_VALUE) {
+            if ((sum + subSum) == target) {
+                result.add(sb.toString());
+            }
+            return;
+        }
+        long curNum = 0;
+        StringBuilder curSb = new StringBuilder();
+        int originalSbLength = sb.length();
+        for (int i = start; i < num.length(); ++i) {
+            curNum = 10 * curNum + (int)(num.charAt(i) - '0');
+            curSb.append(num.charAt(i));
+            if (start == 0) {
+                backTrack(num, target, i+1, sum + subSum, curNum, sb.append(curSb), result);
+            } else {
+                int signId = sb.length();
+                backTrack(num, target, i+1, sum + subSum, curNum, sb.append('+').append(curSb), result);
+                sb.setCharAt(signId, '-');
+                backTrack(num, target, i+1, sum + subSum, -curNum, sb, result);
+                sb.setCharAt(signId, '*');
+                backTrack(num, target, i+1, sum, subSum * curNum, sb, result);
+            }
+            sb.setLength(originalSbLength);
+            if (curNum == 0) {
+                break;
+            }
+        }
+    }
+
     //Same logic as above, but use char[] instead of StringBuilder.
     //Much faster on OJ. 
     private static void backTrack(String num, long target, int start, long sum, long subSum,
