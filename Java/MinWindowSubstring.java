@@ -106,6 +106,7 @@ public class MinWindowSubstring {
     }
 
     //Third try. Using only one hash map now.
+    //Using array instead of charCountsT can improve the running time.
     public String minWindow(String s, String t) {
         if (s.length() < t.length() || t.isEmpty()) {
             return "";
