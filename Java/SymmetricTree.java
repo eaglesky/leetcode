@@ -94,6 +94,39 @@ public class SymmetricTree {
         return true;
     }
     
+    //Better implementation of the iterative solution using LinkedList
+    //A little bit slower than ArrayDeque, but since it permits null element,
+    //the implementation is much simpler
+    public boolean isSymmetric(TreeNode root) {
+        if (root == null) {
+            return true;
+        }
+        Queue<TreeNode> levelNodes = new LinkedList<>();
+        levelNodes.offer(root.left);
+        levelNodes.offer(root.right);
+        //At the beginning of each iteration, levelNodes
+        //contains the nodes on the current level, from outermost to innermost
+        while (!levelNodes.isEmpty()) {
+            int sz = levelNodes.size();
+            for (int i = 0; i < sz; i += 2) {
+                TreeNode leftNode = levelNodes.poll();
+                TreeNode rightNode = levelNodes.poll();
+                if (leftNode != null && rightNode != null) {
+                    if (leftNode.val != rightNode.val) {
+                        return false;
+                    }
+                    levelNodes.offer(leftNode.left);
+                    levelNodes.offer(rightNode.right);
+                    levelNodes.offer(leftNode.right);
+                    levelNodes.offer(rightNode.left);
+                } else if (leftNode != rightNode) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     // Recursive solution
     private static boolean isSymmetricRecursive(TreeNode leftNode, TreeNode rightNode) {
         if (leftNode == null || rightNode == null) {
