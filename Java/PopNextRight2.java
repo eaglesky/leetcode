@@ -30,4 +30,27 @@ public class PopNextRight2 {
             cur = nextCur;
         }
     }
+
+    //Second try
+    public void connect(TreeLinkNode root) {
+        for (TreeLinkNode curNode = root; curNode != null;) {
+            TreeLinkNode nextStartNode = null;
+            TreeLinkNode preNode = null;
+            for (;curNode != null; curNode = curNode.next) {
+                if (curNode.left != null && curNode.right != null) {
+                    curNode.left.next = curNode.right;
+                } 
+                if (preNode != null && (curNode.left != null || curNode.right != null)) {
+                    preNode.next = (curNode.left != null) ? curNode.left : curNode.right;
+                }
+                if (curNode.left != null || curNode.right != null) {
+                    preNode = (curNode.right != null) ? curNode.right : curNode.left;
+                }
+                if (nextStartNode == null) {
+                    nextStartNode = (curNode.left != null) ? curNode.left : curNode.right;
+                }
+            }
+            curNode = nextStartNode;
+        }
+    }
 }
