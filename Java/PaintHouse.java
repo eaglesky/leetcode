@@ -18,4 +18,31 @@ public class PaintHouse {
         }
         return Math.min(Math.min(minRed, minBlue), minGreen);
     }
+
+    //More scalable implementation.
+    public int minCost(int[][] costs) {
+        if (costs == null || costs.length == 0 || costs[0].length == 0) {
+            return 0;
+        }
+        int numColors = costs[0].length;
+        int[] prevMinCosts = new int[numColors];
+        for (int i = 0; i < costs.length; ++i) {
+            int[] curMinCosts = new int[numColors];
+            for (int j = 0; j < curMinCosts.length; ++j) {
+                curMinCosts[j] = Integer.MAX_VALUE;
+                for (int t = 0; t < prevMinCosts.length; ++t) {
+                    if (t != j) {
+                        curMinCosts[j] = Math.min(curMinCosts[j],
+                                    costs[i][j] + prevMinCosts[t]);
+                    }
+                }
+            }
+            prevMinCosts = curMinCosts;
+        }
+        int result = Integer.MAX_VALUE;
+        for (int minCost : prevMinCosts) {
+            result = Math.min(result, minCost);
+        }
+        return result;
+    }
 }

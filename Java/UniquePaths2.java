@@ -6,7 +6,7 @@ public class UniquePaths2 {
             return 0;
         }
         int[] sums = new int[obstacleGrid[0].length];
-        sums[0] = 1;
+        sums[0] = 1; //Assuming the starting point does not have obstacle
         for (int i = 0; i < obstacleGrid.length; ++i) {
             for (int j = 0; j < obstacleGrid[0].length; ++j) {
                 if (obstacleGrid[i][j] == 1) {
