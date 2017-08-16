@@ -127,4 +127,34 @@ public class BoundaryOfBinaryTree {
         dfsSubTree(root.right, false, true, result);
         return result;
     }
+
+    //A small variable of above:
+    private void traverseSubTree(TreeNode root, boolean isLeftBoundary, boolean isRightBoundary, List<Integer> result) {
+        if (root == null) {
+            return;
+        }    
+        if (root.left == null && root.right == null) {
+            result.add(root.val);
+        } else {
+            if (isLeftBoundary) {
+                result.add(root.val);
+            }
+            traverseSubTree(root.left, isLeftBoundary, isRightBoundary && root.right == null, result);
+            traverseSubTree(root.right, isLeftBoundary && root.left == null, isRightBoundary, result);
+            if (isRightBoundary) {
+                result.add(root.val);
+            }
+        }
+    }
+    
+    public List<Integer> boundaryOfBinaryTree(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+        if (root == null) {
+            return result;
+        }
+        result.add(root.val);
+        traverseSubTree(root.left, true, false, result);
+        traverseSubTree(root.right, false, true, result);
+        return result;
+    }
 }
