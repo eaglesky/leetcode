@@ -39,6 +39,45 @@ public class PaintHouse2 {
         return prevCosts[findMinId(prevCosts, -1)];
     }
     
+    //Another implementation of above. Very easy to improve from n^2 space to n.
+    //O(nk) time and O(k) space
+    public int minCostII(int[][] costs) {
+        if (costs == null || costs.length == 0 || costs[0].length == 0) {
+            return 0;
+        }
+        int k = costs[0].length;
+        if (k == 1) {
+            return costs.length > 1 ? 0 : costs[0][0];
+        }
+        int[][] dp = new int[2][k];
+        int pre = 0;
+        int cur = 1;
+        for (int l = 1; l <= costs.length; ++l) {
+            int minId0 = -1, minId1 = -1;
+            for (int i = 0; i < k; ++i) {
+                if (minId1 < 0 || dp[pre][i] < dp[pre][minId1]) {
+                    minId1 = i;
+                    if (minId0 < 0 || dp[pre][minId1] < dp[pre][minId0]) {
+                        int temp = minId0;
+                        minId0 = minId1;
+                        minId1 = temp;
+                    }
+                }
+            }
+            for (int i = 0; i < k; ++i) {
+                dp[cur][i] = (i == minId0) ? dp[pre][minId1] + costs[l-1][i]
+                    : dp[pre][minId0] + costs[l-1][i];
+            }
+            pre = cur;
+            cur = 1 - cur;
+        }
+        int minCost = Integer.MAX_VALUE;
+        for (int i = 0; i < k; ++i) {
+            minCost = Math.min(minCost, dp[pre][i]);
+        }
+        return minCost;
+    }
+
     //O(nk) time and O(1) space
     public int minCostII(int[][] costs) {
         if (costs.length == 0 || costs[0].length == 0) {
