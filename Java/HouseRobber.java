@@ -23,6 +23,7 @@ public class Solution {
     //  dp[i][0] = Math.max(dp[i - 1][0], dp[i - 1][1]);
     //  dp[i][1] = num[i - 1] + dp[i - 1][0];
     //  dp[i][1] means we rob the current house and dp[i][0] means we don't
+    // O(n) time and O(1) space
     public int rob(int[] nums) {
         int preNo = 0;
         int preYes = 0;
