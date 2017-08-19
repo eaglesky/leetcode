@@ -1,9 +1,12 @@
 public class BestTimeToBuyAndSellStock2 {
     
     //Greedy algorithm. O(n) time and O(1) space
-    //This can be proved by looking at each transaction, the max profit
-    //can be achieved by adjusting the buy and sell time so that 
-    //they include all the increasing segements.
+    //This can be proved by looking at each transaction, and splitting it
+    //into subtransactions where each one last only 1 day. The profit of
+    //each transaction can all be maximized by excluding those subtransactions
+    //that have negative profit, which leaving those arising segments only.
+    //Therefore we can maximize the totol profit by only including those 
+    //arising segments.
     public int maxProfit(int[] prices) {
         if (prices.length <= 1) {
             return 0;
