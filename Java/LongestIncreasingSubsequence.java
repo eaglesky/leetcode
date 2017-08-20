@@ -48,12 +48,17 @@ public class LongestIncreasingSubsequence {
     //with length i + 1. So when nums[i] comes in, find the ceiling element of it at j,
     //and update d[j] with nums[i]. That's the only element that can be updated. Also j + 1
     //is the max length of the increasing subsequence ending with d[j].
+    //Why do we keep the min values? Because when target < d[i], we know for sure that the 
+    //length of LIS ending with target is smaller than i + 1. So as long as we have this 
+    //sorted array, we don't need to keep the length of LIS ending with all of the previous
+    //numbers, and are still able to tell the length of LIS ending with the new number in
+    //log(n) time.
     //This solution can not give what the LIS is, only the length. To reconstruct the LIS,
     //we need to maintain a map of current num to previous num in LIS and insert into it
     //each time we iterate a num.
     //https://discuss.leetcode.com/topic/28719/short-java-solution-using-dp-o-n-log-n/3?page=1
     //Still don't know how to come up with this solution!
-    
+
     //Find the smallest id that has num no less than target.
     private int binarySearch(int[] nums, int len, int target) {
         int low = 0;
