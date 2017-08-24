@@ -31,6 +31,42 @@ public class ScrambleString {
         }
         return b[len][0][0];
     }
+
+    //Second try of above.
+    //O(n^4) time and O(n^3) space
+    //dp[l][i][j] is if s1[i...i+l-1] is scrambled string of s2[j...j+l-1]
+    //dp[l][i][j] = Or(1 <= lx < l){dp[lx][i][j] && dp[l-lx][i+lx][j+lx]
+    //           || Or(1 <= lx < l){dp[lx][i][j+l-lx] && dp[l-lx][i+lx][j]}
+    public boolean isScramble(String s1, String s2) {
+        if (s1 == null || s2 == null || s1.length() != s2.length()) {
+            return false;
+        }
+        int len = s1.length();
+        if (len == 0) {
+            return true;
+        }
+        
+        boolean[][][] dp = new boolean[len + 1][len][len];
+        for (int i = 0; i < len; ++i) {
+            for (int j = 0; j < len; ++j) {
+                dp[1][i][j] = s1.charAt(i) == s2.charAt(j);
+            }
+        }
+        for (int l = 2; l <= len; ++l) {
+            for (int i = 0; i + l <= len; ++i) {
+                for (int j = 0; j + l <= len; ++j) {
+                    for (int lx = 1; lx < l; ++lx) {
+                        dp[l][i][j] = (dp[lx][i][j] && dp[l-lx][i+lx][j+lx])
+                                   || (dp[lx][i][j+l-lx] && dp[l-lx][i+lx][j]);
+                        if (dp[l][i][j]) {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return dp[len][0][0];
+    }
     
     private boolean fastNo(String s1, String s2, int i1, int i2, int len) {
         Map<Character, Integer> counts = new HashMap<>();
