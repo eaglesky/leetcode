@@ -9,6 +9,33 @@
  */
 public class KthSmallestElementInBST {
 
+    //Recursive solution without indexing, O(n) time and O(h) space
+    private TreeNode getKthNode(TreeNode root, int[] count) {
+        if (root == null) {
+            return null;
+        }
+        TreeNode foundNode = getKthNode(root.left, count);
+        if (foundNode != null) {
+            return foundNode;
+        }
+        count[0]--;
+        if (count[0] == 0) {
+            return root;
+        }
+        return getKthNode(root.right, count);
+    }
+    
+    public int kthSmallest(TreeNode root, int k) {
+        if (root == null) {
+            return 0;
+        }
+        TreeNode node = getKthNode(root, new int[]{k});
+        if (node == null) {
+            return 0;
+        }
+        return node.val;
+    }
+
     //Iterative solution without indexing, O(n) time and O(h) space
     public int kthSmallest0(TreeNode root, int k) {
         Deque<TreeNode> stack = new ArrayDeque<>();
@@ -63,7 +90,7 @@ public class KthSmallestElementInBST {
     //Another way of indexing, O(n) time
     //Store the node number of left subtree of each node.
     //Though this way is no faster than the previous way, it is more efficient
-    //when inserting or deleting a node.
+    //when inserting or deleting a node. -- O(h) time.
     private static int rankRecursive(TreeNode root, Map<TreeNode, Integer> indexed) {
         if (root == null) {
             return 0;
