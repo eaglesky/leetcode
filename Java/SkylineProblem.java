@@ -107,6 +107,56 @@ public class SkylineProblem {
         return result;
     }
 
+    //Better implentation of above
+    private static class Corner implements Comparable<Corner> {
+        int x;
+        int y;
+        boolean isStart;
+        Corner(int x, int y, boolean isStart) {
+            this.x = x;
+            this.y = y;
+            this.isStart = isStart;
+        }
+        public int compareTo(Corner c) {
+            return Integer.compare(this.x, c.x);
+        }
+    }
+    
+    //O(nlogn) time and O(n) space
+    //When there are overlaping corner points, we can postpone adding the key points until
+    //the last corner point, which is more intuitive to adding logic to the corner comparison.
+    public List<int[]> getSkyline(int[][] buildings) {
+        List<int[]> result = new ArrayList<>();
+        if (buildings == null || buildings.length == 0 || buildings[0].length != 3) {
+            return result;
+        }
+        List<Corner> corners = new ArrayList<>();
+        for (int[] building : buildings) {
+            corners.add(new Corner(building[0], building[2], true));
+            corners.add(new Corner(building[1], building[2], false));
+        }
+        Collections.sort(corners);
+        TreeMap<Integer, Integer> heightCounts = new TreeMap<>();
+        for (int i = 0; i < corners.size(); ++i) {
+            int count = heightCounts.getOrDefault(corners.get(i).y, 0);
+            if (corners.get(i).isStart) {
+                heightCounts.put(corners.get(i).y, count + 1);
+            } else {
+                heightCounts.put(corners.get(i).y, --count);
+                if (count == 0) {
+                    heightCounts.remove(corners.get(i).y);
+                }
+            }
+            if (i == corners.size() - 1 || corners.get(i + 1).x > corners.get(i).x) {
+                int curHeight = heightCounts.isEmpty() ? 0 : heightCounts.lastKey();
+                if (result.isEmpty() || curHeight != result.get(result.size()-1)[1]) {
+                    result.add(new int[]{corners.get(i).x, curHeight});
+                }
+            }
+        }
+        return result;
+    }
+
     //Divide and conquer solution. O(nlogn) time and O(n) space
     //Faster than BST solution, but harder to come up with.
     private static List<int[]> getSkyLineRecur(int[][] buildings, int start, int end) {
