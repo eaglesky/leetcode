@@ -137,8 +137,9 @@ public class PalindromePairs {
         return result;
     }
 
-    //Hashmap approach, O(n*k^2) + O(number of solutions) time
-    //For each word, compare it with those shorter or equal to it.
+    //Hashmap approach, O(n*k^2) time
+    //For each word, try to find out possible other parts no longer than it
+    //that can form a palindrome with it.
     public List<List<Integer>> palindromePairs(String[] words) {
         List<List<Integer>> result = new ArrayList<>();
         Map<String, Integer> wordsMap = new HashMap<>();
