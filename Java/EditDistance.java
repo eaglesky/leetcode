@@ -37,4 +37,42 @@ public class EditDistance {
         }
         return preDisArray[word2.length()];
     }
+
+    //Optimized implementation using only one array. Better thought.
+    //O(l1*l2) time and O(l2) space
+    //dp[l1][l2] is the min steps converting word1(0...l1-1) to word2(0...l2-1)
+    //No matter what you do, after conversion, word1[l1-1] == word2[l2-1].
+    //The step that achieves this could happen in the middle or the last step.
+    //Say in the middle, that step can always be moved to the last step, without
+    //changing the number of whole conversion process.
+    //This step could be either insert, replace or delete.
+    //dp[l1][l2] = min{dp_do_nothing, dp_insert, dp_replace, dp_delete}
+    //dp_do_nothing = dp[l1-1][l2-1], if word1[l1-1] == word2[l2-1]
+    //dp_insert = dp[l1][l2-1] + 1
+    //dp_replace = dp[l1-1][l2-1] + 1
+    //dp_delete = dp[l1-1][l2] + 1
+    public int minDistance(String word1, String word2) {
+        if (word1 == null || word2 == null) {
+            return 0;
+        }
+        int len1 = word1.length();
+        int len2 = word2.length();
+        int[] dp = new int[len2 + 1];
+        for (int l = 0; l <= len2; ++l) {
+            dp[l] = l;
+        }
+        for (int l1 = 1; l1 <= len1; ++l1) {
+            int prev = dp[0];
+            dp[0] = l1;
+            for (int l2 = 1; l2 <= len2; ++l2) {
+                int temp = dp[l2];
+                dp[l2] = Math.min(dp[l2], Math.min(dp[l2-1], prev)) + 1;
+                if (word1.charAt(l1-1) == word2.charAt(l2-1)) {
+                    dp[l2] = Math.min(dp[l2], prev);
+                }
+                prev = temp;
+            }
+        }
+        return dp[len2];
+    }
 }
