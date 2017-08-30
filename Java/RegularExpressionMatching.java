@@ -67,6 +67,45 @@ public class RegularExpressionMatching {
         return pre[s.length()];
     }
 
+    //O(ls * lp) time and O(lp) space, using one array.
+    //Assuming p is a valid pattern!
+    //f[l1][l2] represents if s(0...l1-1) and p(0...l2-1) are matched.
+    //f[l1][l2] = (p[l2-1]=='.' || p[l2-1]==s[l1-1]) && f[l1-1][l2-1], if p[l2-1]!='*'
+    //         or f[l1][l2-2] || ((p[l2-2]=='.' || p[l2-2] == s[l1-1]) && f[l1-1][l2])
+    //f[0][0] = true, f[x][0] = false if x >= 1. f[0][x] when x >= 1 needs to be computed
+    public boolean isMatch(String s, String p) {
+        if (s == null || p == null) {
+            return false;
+        }
+        int ls = s.length();
+        int lp = p.length();
+        boolean[] dp = new boolean[lp + 1];
+        for (int l1 = 0; l1 <= ls; ++l1) {
+            boolean prev = dp[0];
+            dp[0] = (l1 == 0);
+            for (int l2 = 1; l2 <= lp; ++l2) {
+                boolean temp = dp[l2];
+                char pc = p.charAt(l2 - 1);
+                if (pc != '*') {
+                    if (l1 == 0) {
+                        dp[l2] = false;
+                    } else {
+                        dp[l2] = (pc == '.' || pc == s.charAt(l1 - 1)) && prev;
+                    }
+                } else {
+                    if (l1 > 0) {
+                        char prevPc = p.charAt(l2 - 2);
+                        dp[l2] = (prevPc == '.' || prevPc == s.charAt(l1 - 1))
+                                && dp[l2];
+                    }
+                    dp[l2] |= dp[l2 - 2];
+                }
+                prev = temp;
+            }
+        }
+        return dp[lp];
+    }
+
     public static void main(String[] args) {
     	String s = "aa";
     	String p = "aa";
