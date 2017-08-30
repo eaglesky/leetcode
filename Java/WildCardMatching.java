@@ -24,6 +24,11 @@ public class WildCardMatching {
     
     //Backtracking solution(greedy), O(ls*lp) time and O(1) space
     //See the c++ solution for the explanation
+    //p = "p1*p2*p3", p can be seen as consisting of several substrings separated
+    //by '*'. We can try finding the first substring in s that matchs pi. When
+    //it comes to pi, p1 .. pi-1 have been matched and is is the index after
+    //pi is matched. if there is no substring in s(is...) matching pi, then
+    //pi cannot be matched in s(...is), so should return false. 
     public boolean isMatch(String s, String p) {
         int is = 0, ip = 0;
         int preS = 0;
