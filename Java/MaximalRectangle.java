@@ -32,6 +32,9 @@ public class MaximalRectangle {
 
     //No better than the above solution. Same time and space complexities
     //https://discuss.leetcode.com/topic/6650/share-my-dp-solution
+    //height counts the number of successive '1's above (plus the current one). 
+    //The value of left & right means the boundaries of the rectangle which contains
+    //the current point with a height of value height.
     //Also refer to the Local Maxima pdf.
     public int maximalRectangle(char[][] matrix) {
         if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
