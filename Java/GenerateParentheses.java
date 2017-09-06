@@ -55,6 +55,4 @@ public class GenerateParenthesis {
         }
         return result;
     }
-
-    // DP solution ?
 }
