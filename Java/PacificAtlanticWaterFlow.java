@@ -77,5 +77,69 @@ public class PacificAtlanticWaterFlow {
         return result;
     }
 
-    //BFS solution, TBD.
+    //BFS solution
+    private void bfs(Queue<int[]> q, int[][] matrix, int[][] visited, int flag, List<int[]> result) {
+        while (!q.isEmpty()) {
+            int[] pos = q.poll();
+            int[][] adjs = new int[][] {
+                {pos[0]-1, pos[1]}, {pos[0]+1, pos[1]},
+                {pos[0], pos[1]-1}, {pos[0], pos[1]+1}
+            };
+            for (int[] adj : adjs) {
+                int r = adj[0];
+                int c = adj[1];
+                if (r < 0 || r >= matrix.length || c < 0 || c >= matrix[0].length
+                    || visited[r][c] == flag || matrix[r][c] < matrix[pos[0]][pos[1]]) {
+                    continue;
+                }
+                if (visited[r][c] > 0) {
+                    result.add(adj);
+                }
+                visited[r][c] = flag;
+                q.offer(adj);
+            }
+        }
+    }
+    
+    public List<int[]> pacificAtlantic(int[][] matrix) {
+        List<int[]> result = new ArrayList<>();
+        if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
+            return result;
+        }
+        int[][] visited = new int[matrix.length][matrix[0].length];
+        Queue<int[]> q = new ArrayDeque<>();
+        for (int c = 0; c < matrix[0].length; ++c) {
+            visited[0][c] = 1;
+            q.offer(new int[]{0, c});
+        }
+        for (int r = 1; r < matrix.length; ++r) {
+            visited[r][0] = 1;
+            q.offer(new int[]{r, 0});
+        }
+        bfs(q, matrix, visited, 1, result);
+        
+        for (int c = 0; c < matrix[0].length; ++c) {
+            int r = matrix.length - 1;
+            if (visited[r][c] > 0) {
+                result.add(new int[]{r, c});
+            }
+            visited[r][c] = 2;
+            q.offer(new int[]{r, c});
+        }
+        for (int r = 0; r < matrix.length - 1; ++r) {
+            int c = matrix[r].length - 1;
+            if (visited[r][c] > 0) {
+                result.add(new int[]{r, c});
+            }
+            visited[r][c] = 2;
+            q.offer(new int[]{r, c});
+        }
+        bfs(q, matrix, visited, 2, result);
+        return result;
+    }
+
+    //An easier implementation is to use two visited arrays to store the flags
+    //for traversing from two oceans separately. However a final loop is needed
+    //to gather the result. The upside is that the result can be sorted.
+    //https://discuss.leetcode.com/topic/62379/java-bfs-dfs-from-ocean
 }
