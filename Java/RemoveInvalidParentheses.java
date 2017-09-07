@@ -39,6 +39,48 @@ public class RemoveInvalidParentheses {
         return result;
     }
 
+    //Second try, same algorithm as above:
+    private void dfs(String s, int id, int lastRemovedId, int numLeft, int numRight, 
+                     List<String> result, char[] parens) {
+        for (; id < s.length() && numLeft >= numRight; id++) {
+            char c = s.charAt(id);
+            if (c == parens[0]) {
+                numLeft++;
+            } else if (c == parens[1]) {
+                numRight++;
+            }
+        }
+        if (numRight > numLeft) {
+            for (int i = lastRemovedId; i < id; ++i) {
+                char c = s.charAt(i);
+                if (c == parens[1]) {
+                    if (i > lastRemovedId && c == s.charAt(i - 1)) {
+                        continue;
+                    }
+                    dfs(s.substring(0, i) + s.substring(i+1), id - 1, i,
+                        numLeft, numRight - 1, result, parens);
+                }
+            }
+        } else if (id == s.length()) {
+            String nextStr = parens[1] == '(' ? new StringBuilder(s).reverse().toString() : s;
+            if (numLeft == numRight) {
+                result.add(nextStr);
+            } else {
+                dfs(new StringBuilder(s).reverse().toString(), 0, 0, 0, 0, result, 
+                    new char[]{parens[1], parens[0]});
+            }
+        }
+    }
+    
+    public List<String> removeInvalidParentheses(String s) {
+        List<String> result = new ArrayList<>();
+        if (s == null) {
+            return result;
+        }
+        dfs(s, 0, 0, 0, 0, result, new char[]{'(', ')'});
+        return result;
+    }
+
    	//Another top-down approach using BFS:
    	//https://discuss.leetcode.com/topic/28827/share-my-java-bfs-solution
    	//A bit too brute-force.. memory overhead is also too large
