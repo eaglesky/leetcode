@@ -85,7 +85,9 @@ public class RemoveInvalidParentheses {
    	//https://discuss.leetcode.com/topic/28827/share-my-java-bfs-solution
    	//A bit too brute-force.. memory overhead is also too large
 
-    //Bottom-up DFS solution.
+    //Bottom-up DFS solution. Easier to implement
+    //https://discuss.leetcode.com/topic/30743/easiest-9ms-java-solution
+    //Don't know how to de-dup without using a hashset
     private static void dfs(StringBuilder sb, String s, int id, int rLeftParen, int rRightParen,
             Set<String> visited, List<String> result) {
         if (rLeftParen > rRightParen || rLeftParen < 0 || rRightParen < 0) {
