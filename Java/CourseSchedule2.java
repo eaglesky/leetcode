@@ -84,4 +84,90 @@ public class CourseSchedule2 {
         }
         return result;
     }
+
+    //------------------- Second try -----------------------------------
+
+    //DFS solution. O(numCourses + numReq) time and O(numCourses + numReq) space
+    //flag == 1 means node is being visisted, 2 means the node is done, 0 means unvisited.
+    private boolean dfs(List<List<Integer>> graph, int[] flags, int id, LinkedList<Integer> result) {
+        if (flags[id] == 1) {
+            return false;
+        } else if (flags[id] == 2) {
+            return true;
+        }
+        flags[id] = 1;
+        List<Integer> adjs = graph.get(id);
+        for (int adjId : adjs) {
+            if (!dfs(graph, flags, adjId, result)) {
+                return false;
+            }
+        }
+        flags[id] = 2;
+        result.addFirst(id);
+        return true;
+    }
+    
+    public int[] findOrder0(int numCourses, int[][] prerequisites) {
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < numCourses; ++i) {
+            graph.add(new ArrayList<>());
+        }
+        for (int[] req : prerequisites) {
+            graph.get(req[1]).add(req[0]);
+        }
+        int[] flags = new int[numCourses];
+        LinkedList<Integer> result = new LinkedList<>();
+        for (int i = 0; i < graph.size(); ++i) {
+            if (!dfs(graph, flags, i, result)) {
+                return new int[0];
+            }
+        }
+        int[] resultArray = new int[numCourses];
+        int i = 0;
+        for (int id : result) {
+            resultArray[i++] = id;
+        }
+        return resultArray;
+    }
+    
+    //BFS solution, O(numCourses + numReq) time and O(numCourses + numReq) space
+    //No need to maintain hashset.
+    //No need to remove edges.
+    //Using a list instead of queue works.
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < numCourses; ++i) {
+            graph.add(new ArrayList<>());
+        }
+        int[] inBounds = new int[numCourses];
+        for (int[] req : prerequisites) {
+            graph.get(req[1]).add(req[0]);
+            inBounds[req[0]]++;
+        }
+        List<Integer> result = new ArrayList<>();
+        for (int i = 0; i < numCourses; ++i) {
+            if (inBounds[i] == 0) {
+                result.add(i);
+            }
+        }
+        for (int i = 0; i < result.size(); ++i) {
+            int id = result.get(i);
+            List<Integer> adjs = graph.get(id);
+            for (int adj : adjs) {
+                inBounds[adj]--;
+                if (inBounds[adj] == 0) {
+                    result.add(adj);
+                }
+            }
+        }
+        if (result.size() < numCourses) {
+            return new int[0];
+        }
+        int[] resultArray = new int[numCourses];
+        int i = 0;
+        for (int id : result) {
+            resultArray[i++] = id;
+        }
+        return resultArray;
+    }
 }
