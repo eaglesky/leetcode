@@ -60,7 +60,7 @@ public class ReconstructIterary {
         return iter;
     }
     
-    //Another solution using Hierholzer's algorithm, which I don't understand why it works yet.
+    //Another solution using Fleury’s Algorithm, which I don't understand why it works yet.
     //It runs in O(E) time, using a priority queue to store the edges, and LinkedList to store the result.
     //https://discuss.leetcode.com/topic/36383/share-my-solution
     //Explaination: https://discuss.leetcode.com/topic/36370/short-ruby-python-java-c
