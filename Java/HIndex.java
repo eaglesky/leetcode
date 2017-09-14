@@ -41,10 +41,10 @@ public class HIndex {
             }
         }
         int countAbove = 0;
-        for (int i = counts.length - 1; i >= 0; --i) {
+        for (int h = counts.length - 1; h >= 0; --h) {
             countAbove += counts[i];
-            if (countAbove >= i) {
-                return i;
+            if (countAbove >= h) {
+                return h;
             }
         }
         return 0;
