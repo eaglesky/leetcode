@@ -30,4 +30,29 @@ public class InsertionSortList {
         }
         return dummy.next;
     }
+
+    //Second try
+    //The outer loop is the same as typical insertion sort,
+    //while the inner loop iterates from the beginning to the current node,
+    //following the direction of the pointers.
+    public ListNode insertionSortList(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+        for (ListNode pre = head; pre.next != null;) {
+            ListNode preRunner = dummy;
+            for (; preRunner != pre && preRunner.next.val <= pre.next.val; preRunner = preRunner.next);
+            if (preRunner != pre) {
+                ListNode cur = pre.next;
+                pre.next = cur.next;
+                cur.next = preRunner.next;
+                preRunner.next = cur;
+            } else {
+                pre = pre.next;
+            }
+        }
+        return dummy.next;
+    }
 }
