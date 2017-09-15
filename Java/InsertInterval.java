@@ -52,6 +52,42 @@ public class InsertInterval {
         return result;
     }
 
+    //Better implementation using iterator.
+    //The helper function is important.
+    
+    //result stores non-overlapping intervals sorted by their start times.
+    //The start time of newInterval is greater or equal to the last interval in result
+    private void addInterval(List<Interval> result, Interval newInterval) {
+        Interval lastInterval = (result.size() == 0) ? null : result.get(result.size() - 1);
+        if (lastInterval == null || lastInterval.end < newInterval.start) {
+            result.add(newInterval);
+        } else {
+            lastInterval.end = Math.max(lastInterval.end, newInterval.end);
+        }
+    }
+    
+    public List<Interval> insert(List<Interval> intervals, Interval newInterval) {
+        List<Interval> result = new ArrayList<>();
+        Iterator<Interval> iter = intervals.iterator();
+        boolean isInserted = false;
+        for(; iter.hasNext();) {
+            Interval curInterval = iter.next();
+            if (curInterval.start < newInterval.start) {
+                result.add(curInterval);
+            } else if (!isInserted) {
+                addInterval(result, newInterval);
+                addInterval(result, curInterval);
+                isInserted = true;
+            } else {
+                addInterval(result, curInterval);
+            }
+        }
+        if (!isInserted) {
+            addInterval(result, newInterval);
+        }
+        return result;
+    }
+
     //In place solution. O(n^2) time and O(1) space. Same algorithm as above.
     public List<Interval> insert(List<Interval> intervals, Interval newInterval) {
         ListIterator<Interval> iter = intervals.listIterator();

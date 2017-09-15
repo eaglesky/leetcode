@@ -34,4 +34,27 @@ public class MergeIntervals {
         result.add(prevInterval);
         return result;
     }
+
+    //Better implementation
+    public List<Interval> merge(List<Interval> intervals) {
+        List<Interval> result = new ArrayList<>();
+        if (intervals == null || intervals.isEmpty()) {
+            return result;
+        }
+        Collections.sort(intervals, new Comparator<Interval>() {
+                public int compare(Interval interval1, Interval interval2) {
+                    return Integer.compare(interval1.start, interval2.start);
+                }
+        });
+        for (Interval interval : intervals) {
+            if (result.isEmpty() || result.get(result.size() - 1).end < interval.start) {
+                result.add(interval);
+            } else {
+                Interval lastInterval = result.get(result.size() - 1);
+                lastInterval.end = Math.max(lastInterval.end, interval.end);
+            }
+        }
+        return result;
+    }
+
 }
