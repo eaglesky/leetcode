@@ -44,7 +44,10 @@ public class MeetingRooms2 {
 	//have y_u.start < y_u.end <= y_t.start < y_t.end. According to the greedy algorithm
 	//below, y_t.start <= x.start < x.end, so we have: y_u.start < y_u.end <= x.start < x.end,
 	//then x does not overlap y_u, and should be able to be put in the same room as y_u rather
-	//than occupying a new room, which is contradictory to our assumption.
+	//than occupying a new room, which is contradictory to our assumption. So all of the 
+    //intervals in {y_i} overlap each other, and they all overlap x, so there are n+1 intervals
+    //overlapping each other, contradictory to the assumption that there are at most n
+    //intervals overlapping each other.
 	//Therefore, m must be equal to n, using the greedy algorithm. 
 
 	//This solution can not only gives the minimum number of rooms, but also assign room number
@@ -56,11 +59,11 @@ public class MeetingRooms2 {
         Arrays.sort(intervals, 
         (Interval interval1, Interval interval2) -> Integer.compare(interval1.start, interval2.start));
         PriorityQueue<Integer> heap = new PriorityQueue<>();
-        for (int i = 0; i < intervals.length; ++i) {
-            if (heap.isEmpty() || heap.peek() <= intervals[i].start) {
+        for (Interval interval : intervals) {
+            if (!heap.isEmpty() && heap.peek() <= interval.start) {
                 heap.poll();
             }
-            heap.offer(intervals[i].end);
+            heap.offer(interval.end);
         }
         return heap.size();
     }
@@ -72,7 +75,7 @@ public class MeetingRooms2 {
     //Best implementation of greedy algorithm
     //https://discuss.leetcode.com/topic/35253/explanation-of-super-easy-java-solution-beats-98-8-from-pinkfloyda
     //However compared with the previous implementation, it is harder to asign room number
-    //to each interval
+    //to each interval, and uses more space.
     public int minMeetingRooms(Interval[] intervals) {
         if (intervals == null || intervals.length == 0) {
             return 0;
