@@ -42,7 +42,10 @@ public class SingleNumber2 {
         return result;
     }
     
-    //Based on boolean expressions of state machine
+    //We essentially want a counter for each bit, recording either the
+    //total number of 1s or the remainder mod by 3. So at least 2 bits
+    //are enough. Therefore we can use two integers x1 and x2, the ith
+    //bit (x2[i]x1[i]) forms a counter for that bit.
     //States of x2x1: 00 -> 01 -> 10 -> 00
     //State transition matrix:
     //    x2 x1          input    newX2 newX1
