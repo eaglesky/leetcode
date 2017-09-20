@@ -47,6 +47,32 @@ public class DivideTwoIntegers {
         return isNegative ? -quotient : quotient;
     }
 
+    //Third try, add more pre-processing
+    public int divide(int dividend, int divisor) {
+        if (divisor == 0) {
+            return dividend >= 0 ? Integer.MAX_VALUE : Integer.MIN_VALUE;
+        } else if (divisor == -1) {
+            return dividend == Integer.MIN_VALUE ? Integer.MAX_VALUE : -dividend;
+        } else if (divisor == 1) {
+            return dividend;
+        }
+        boolean haveSameSigns = (dividend ^ divisor) >= 0;
+        long absDividend = Math.abs((long) dividend);
+        long absDivisor = Math.abs((long) divisor);
+        int result = 0;
+        for (long dividendLeft = absDividend; dividendLeft >= absDivisor;) {
+            long count = 1;
+            long curDivisor = absDivisor;
+            for (; dividendLeft >= curDivisor;) {
+                dividendLeft -= curDivisor;
+                result += count;
+                curDivisor  = curDivisor << 1;
+                count = count << 1;
+            }
+        }
+        return haveSameSigns ? result : -result;
+    }
+
     public static void main(String[] args) {
         DivideTwoIntegers dti = new DivideTwoIntegers();
 
