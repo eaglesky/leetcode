@@ -47,6 +47,46 @@ public class MaxPointsOnLine {
         return maxNumPoints;
     }
 
+    //Same algorithm as above, but use BigDecimal to store the slope instead of Double.
+    //Using Double might miss the points when the exact values of the slopes are equal, but
+    //the Double representations are not. Using BigDecimal this won't happen, but still
+    //may cover more points when the slopes are close but not strictly equal. To only include
+    //points whose slopes are strictly equal, we have to use GCD approach. But in practice,
+    //close points should be accetable, and using BigDecimal we can have full control over
+    //the precision by specifying the scale value in the divide function. The GCD approach
+    //won't work if the input points have double coordinates, while the other approaches will
+    //still work.
+    public int maxPoints(Point[] points) {
+        if (points == null || points.length == 0) {
+            return 0;
+        }
+        int maxCount = 0;
+        for (int i = 0; i < points.length; ++i) {
+            int curMaxCount = 0;
+            int numCoincident = 1;
+            Map<BigDecimal, Integer> slopeCounts = new HashMap<>();
+            for (int j = i + 1; j < points.length; ++j) {
+                if (points[j].x == points[i].x && points[j].y == points[i].y) {
+                    numCoincident++;
+                } else {
+                    BigDecimal slope = null;
+                    if (points[j].x == points[i].x) {
+                        slope = new BigDecimal(Long.MAX_VALUE);
+                    } else {
+                        BigDecimal diffY = new BigDecimal(points[j].y - points[i].y);
+                        BigDecimal diffX = new BigDecimal(points[j].x - points[i].x);
+                        slope = diffY.divide(diffX, 20, RoundingMode.HALF_UP);
+                    }
+                    int count = slopeCounts.getOrDefault(slope, 0);
+                    slopeCounts.put(slope, ++count);
+                    curMaxCount = Math.max(curMaxCount, count);
+                }
+            }
+            maxCount = Math.max(maxCount, curMaxCount + numCoincident);
+        }
+        return maxCount;
+    }
+
     public static void main(String[] args) {
     	MaxPointsOnLine mp = new MaxPointsOnLine();
     	Point[] points = {
