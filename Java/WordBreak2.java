@@ -38,5 +38,41 @@ public class WordBreak2 {
         return strs.get(0);
     }
 
+    //Second try, better implementation
+    private List<String> dfs(String s, int id, Map<Integer, List<String>> cache, Set<String> wordSet) {
+        if (id >= s.length()) {
+            return Arrays.asList("");
+        }
+        List<String> cachedList = cache.get(id);
+        if (cachedList != null) {
+            return cachedList;
+        }
+        List<String> result = new ArrayList<>();
+        for (int i = id; i < s.length(); ++i) {
+            String firstStr = s.substring(id, i + 1);
+            if (wordSet.contains(firstStr)) {
+                List<String> otherStrs = dfs(s, i + 1, cache, wordSet);
+                if (!otherStrs.isEmpty()) {
+                    for (String otherStr : otherStrs) {
+                        String newStr = otherStr.isEmpty() ? firstStr : firstStr + " " + otherStr;
+                        result.add(newStr);
+                    }
+                }
+            }
+        }
+        cache.put(id, result);
+        return result;
+    }
+    
+    public List<String> wordBreak(String s, List<String> wordDict) {
+        List<String> result = new ArrayList<>();
+        if (s == null || s.isEmpty()) {
+            return result;
+        }
+        Set<String> wordSet = new HashSet<>(wordDict);
+        return dfs(s, 0, new HashMap<>(), wordSet);
+    }
+
+
     //See C++ solution for the DP approach
 }

@@ -40,4 +40,18 @@ public class Triangle {
         return sums[0];
     }
     
+    //Second try, better implementation of above
+    public int minimumTotal(List<List<Integer>> triangle) {
+        if (triangle == null || triangle.size() == 0) {
+            return 0;
+        }
+        int nr = triangle.size();
+        int[] d = new int[nr + 1];
+        for (int r = nr - 1; r >= 0; --r) {
+            for (int c = 0; c <= r; ++c) {
+                d[c] = Math.min(d[c], d[c + 1]) + triangle.get(r).get(c);
+            }
+        }
+        return d[0];
+    }
 }

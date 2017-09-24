@@ -45,6 +45,7 @@ public class TargetSum {
         return dp[target];
     }
     
+    //S can be negative!
     public int findTargetSumWays(int[] nums, int S) {
         int sum = 0;
         for (int num : nums) {
