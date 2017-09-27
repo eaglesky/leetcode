@@ -78,4 +78,25 @@ public class GasStation {
         }
         return totalGasLeft < 0 ? -1 : minId;
     }
+
+    //Second try of above algorithm. Simpler implementation.
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int result = 0;
+        if (gas == null || cost == null || gas.length != cost.length || gas.length == 0) {
+            return result;
+        }
+        int totalGas = 0;
+        int minGas = 0;
+        for (int i = 0; i < gas.length; ++i) {
+            if (totalGas < minGas) {
+                minGas = totalGas;
+                result = i;
+            }
+            totalGas += gas[i] - cost[i];
+        }
+        if (totalGas < 0) {
+            return -1;
+        }
+        return result;
+    }
 }
