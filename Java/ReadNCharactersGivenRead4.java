@@ -47,16 +47,23 @@ public class  ReadNCharactersGivenRead4 {
 //---------------------------------------------------------------------------------------
 
 	//Similar to https://discuss.leetcode.com/topic/18289/another-accepted-java-solution
-	public int read(char[] buf, int n) {
-		int numRead = Math.min(buf.length, n);
+    public int read(char[] buf, int n) {
+        if (buf == null || n <= 0) {
+            return 0;
+        }
+
+        //This is a crutial step. It simplify the edge cases to 2:
+        //One is file size is smaller than n,
+        //the other is file size is large than n.
+		n = Math.min(buf.length, n);
 		char[] temp = new char[4];
 		int bufId = 0;
-		while (bufId < numRead) {
+		while (bufId < n) {
 			int curCount = read4(temp);
 			if (curCount == 0) {
 				break;
 			}
-			int numCopied = Math.min(numRead - bufId, curCount);
+			int numCopied = Math.min(n - bufId, curCount);
 			System.arraycopy(temp, 0, buf, bufId, numCopied);
 			bufId += numCopied;
 		}

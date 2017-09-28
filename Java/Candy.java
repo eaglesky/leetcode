@@ -47,4 +47,39 @@ public class Candy {
         }
         return total;
     }
+
+    //Second try, O(n) time and O(1) space
+    //Iterate each element, compare with the one after to decide what
+    //candies to give to the current one.
+    public int candy(int[] ratings) {
+        int result = 0;
+        if (ratings == null || ratings.length == 0) {
+            return 0;
+        }
+        int cur = 1;
+        for (int i = 0; i < ratings.length; ++i) {
+            //At the beginning of each iteration, cur is the possible candies satisfying 
+            //left side constraint
+            if (i == ratings.length - 1 || ratings[i] <= ratings[i + 1]) {
+                result += cur;
+                if (i < ratings.length - 1 && ratings[i] < ratings[i + 1]) {
+                    cur++;
+                } else {
+                    cur = 1;
+                }
+            } else {
+                int count = 0;
+                for (; i < ratings.length - 1 && ratings[i] > ratings[i + 1]; ++i, ++count);
+                int newCur = 1 + count;
+                result += Math.max(cur, newCur);
+                result += (1 + count) * count / 2;
+                if (i < ratings.length - 1 && ratings[i] == ratings[i + 1]) {
+                    cur = 1;
+                } else {
+                    cur = 2;
+                }
+            }
+        }
+        return result;
+    }
 }
