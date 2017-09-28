@@ -96,6 +96,40 @@ public class  ReadNCharactersGivenRead4 {
 		return bufId;
 	}
 
+//----------------------- Second try, easier to come up with -------------------------//
+    private final char[] bufReader = new char[4];
+    private int bufCount = 0;
+    
+    //Always making sure that in bufReader the cached chars start from id 0.
+    public int read(char[] buf, int n) {
+        if (buf == null || buf.length == 0 || n <= 0) {
+            return 0;
+        }
+        n = Math.min(buf.length, n);
+        if (n < bufCount) {
+            System.arraycopy(bufReader, 0, buf, 0, n);
+            System.arraycopy(bufReader, n, bufReader, 0, bufCount - n);
+            bufCount -= n;
+            return n;
+        }
+        System.arraycopy(bufReader, 0, buf, 0, bufCount);
+        int bufId = bufCount;
+        int numCopied = bufCount;
+        bufCount = 0;
+        for(; bufId < n;) {
+            bufCount = read4(bufReader);
+            if (bufCount == 0) {
+                break;
+            }
+            numCopied = Math.min(bufCount, n - bufId);
+            System.arraycopy(bufReader, 0, buf, bufId, numCopied);
+            bufCount -= numCopied;
+            bufId += numCopied;
+        }
+        System.arraycopy(bufReader, numCopied, bufReader, 0, bufCount);
+        return bufId;
+    }
+
 //-------------------------------------------------------------------------------------
 	private void testRead(char[] buf, int n) {
 		restart();
