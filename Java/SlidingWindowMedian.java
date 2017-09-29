@@ -81,6 +81,8 @@ public class SlidingWindowMedian {
             this.num = num;
             this.id = id;
         }
+
+        //It's okay to skip implementing equals and hashCode for this problem
         public boolean equals(Object other) {
             if (this == other) {
                 return true;
@@ -97,6 +99,7 @@ public class SlidingWindowMedian {
             result = 31 * result + id;
             return result;
         }
+        
         public int compareTo(MyNum other) {
             if (this.num == other.num) {
                 return Integer.compare(this.id, other.id);
@@ -148,6 +151,61 @@ public class SlidingWindowMedian {
         }
         return result;
     }
+
+    //Second try, more robust implementation than above, though might be slightly slower
+    private void balance(TreeSet<MyNum> smallHalf, TreeSet<MyNum> largeHalf) {
+        if (smallHalf.size() - largeHalf.size() > 1) {
+            largeHalf.add(smallHalf.pollLast());
+        } else if (largeHalf.size() - smallHalf.size() > 1) {
+            smallHalf.add(largeHalf.pollFirst());
+        }
+    }
+    
+    public double[] medianSlidingWindow(int[] nums, int k) {
+        if (nums.length == 0 || k <= 0 || nums.length < k) {
+            return new double[0];
+        }
+        double[] result = new double[nums.length - k + 1];
+        TreeSet<MyNum> smallHalf = new TreeSet<>();
+        TreeSet<MyNum> largeHalf = new TreeSet<>();
+        for (int i = 0; i < nums.length; ++i) {
+            MyNum mn = new MyNum(nums[i], i);
+            if (largeHalf.isEmpty() || largeHalf.first().compareTo(mn) <= 0) {
+                largeHalf.add(mn);
+            } else {
+                smallHalf.add(mn);
+            }
+            if (i >= k) {
+                MyNum removed = new MyNum(nums[i - k], i - k);
+                if (smallHalf.size() > 0 && removed.compareTo(smallHalf.last()) <= 0) {
+                    smallHalf.remove(removed);
+                } else {
+                    largeHalf.remove(removed);
+                }
+            }
+            balance(smallHalf, largeHalf);
+            balance(smallHalf, largeHalf);
+            if (i >= k - 1) {
+                if (smallHalf.size() < largeHalf.size()) {
+                    result[i - k + 1] = largeHalf.first().num;
+                } else if (smallHalf.size() > largeHalf.size()) {
+                    result[i - k + 1] = smallHalf.last().num;
+                } else {
+                    //Pay attention to the possible overflow if adding the two numbers first
+                    result[i - k + 1] = largeHalf.first().num * 0.5 + smallHalf.last().num * 0.5;
+                }
+            }
+
+        }
+        return result;
+    }
+
+    //Another algorithm is to use one BST but maintain two variables storing the middle
+    //two elements. The maintainence logic is more complex and the performance is not
+    //much better.
+
+    //Or using one BST but each node stores the size of left subtree. All operations are
+    //still O(logk), but the code is still more complex.
 
 
     //Using two heaps takes O(nk) time since the remove takes O(k) time.
