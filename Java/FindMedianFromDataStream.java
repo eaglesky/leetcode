@@ -1,4 +1,4 @@
-public class MedianFinder {
+xpublic class MedianFinder {
 
     private final PriorityQueue<Integer> minHeap;
     private final PriorityQueue<Integer> maxHeap;
@@ -29,6 +29,21 @@ public class MedianFinder {
         }
     }
     
+    //Easier implementation than above, but runs always in 3*log(n) time.
+    public void addNum(int num) {
+        Integer middleHigh = minHeap.peek();
+        if (middleHigh == null || num >= middleHigh) {
+            minHeap.offer(num);
+        } else {
+            maxHeap.offer(num);
+        }
+        if (minHeap.size() - maxHeap.size() > 1) {
+            maxHeap.offer(minHeap.poll());
+        } else if (maxHeap.size() - minHeap.size() > 1) {
+            minHeap.offer(maxHeap.poll());
+        }
+    }
+
     //O(1) time
     public double findMedian() {
         if (minHeap.size() > maxHeap.size()) {
@@ -43,6 +58,9 @@ public class MedianFinder {
 
     //Other thought:
     //Use sorted array, O(n) to insert, and O(1) to get
+    //Or use lazy sort, O(1) to insert, first get takes O(nlogn) time to sort and get, 
+    //than cache the result so that the following get takes O(1) time. Next add would
+    //reset the cached reference to null.
     //Use BST like this: https://discuss.leetcode.com/topic/61789/22ms-java-solution-using-binary-tree-beats-99-82-of-submissions
     //I think the run time for insert is O(n) instead of O(logn)??
 }
