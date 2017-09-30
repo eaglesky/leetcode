@@ -98,6 +98,51 @@ public class NestedIterator implements Iterator<Integer> {
     public boolean hasNext() {
         return !stack.isEmpty();
     }
+
+    //Second try, using Iterator and cached next value:
+    private final Deque<Iterator<NestedInteger>> stack;
+    private Integer nextInteger = null;
+    
+    public NestedIterator(List<NestedInteger> nestedList) {
+        stack = new ArrayDeque<>();
+        stack.push(nestedList.iterator());
+        advanceIterator();
+    }
+
+    private void advanceIterator() {
+        if (!hasNext()) {
+            for(; !stack.isEmpty(); ) {
+                Iterator<NestedInteger> iter = stack.peek();
+                if (!iter.hasNext()) {
+                    stack.pop();
+                } else {
+                    NestedInteger ni = iter.next();
+                    Integer nint = ni.getInteger();
+                    if (nint != null) {
+                        nextInteger = nint;
+                        return;
+                    }
+                    stack.push(ni.getList().iterator());
+                }
+            }
+        }    
+    }
+    
+    @Override
+    public Integer next() {
+        if (!hasNext()) {
+            throw new java.util.NoSuchElementException();
+        }
+        Integer ret = nextInteger;
+        nextInteger = null;
+        advanceIterator();
+        return ret;
+    }
+
+    @Override
+    public boolean hasNext() {
+        return nextInteger != null;
+    }
 }
 
 /**
