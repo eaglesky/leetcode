@@ -43,4 +43,43 @@ class PeekingIterator implements Iterator<Integer> {
 	public boolean hasNext() {
 	    return hasNext;
 	}
+
+	//-------------------------Second try, simpler implementation -----------------
+	private Integer nextVal = null;
+    private final Iterator<Integer> iter;
+    
+	public PeekingIterator(Iterator<Integer> iterator) {
+	    // initialize any member here.
+	    iter = iterator;
+	}
+
+    // Returns the next element in the iteration without advancing the iterator.
+    // Throws an exception if there is no next element
+	public Integer peek() {
+        if (nextVal == null) {
+            nextVal = next();
+        }
+        return nextVal;
+	}
+
+	// hasNext() and next() should behave the same as in the Iterator interface.
+	// Override them if needed.
+	@Override
+	public Integer next() {
+	    if (!hasNext()) {
+            throw new java.util.NoSuchElementException();
+        }
+        Integer ret = nextVal;
+        if (ret == null) {
+            ret = iter.next();
+        } else {
+            nextVal = null;
+        }
+        return ret;
+	}
+
+	@Override
+	public boolean hasNext() {
+	    return nextVal != null || iter.hasNext();
+	}
 }

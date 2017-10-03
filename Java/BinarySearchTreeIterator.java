@@ -23,6 +23,9 @@ public class BSTIterator {
 
     /** @return the next smallest number */
     public int next() {
+        if (!hasNext()) {
+            throw new java.util.NoSuchElementException();
+        }
         TreeNode node = stack.pop();
         advanceToNext(node.right);
         return node.val;
