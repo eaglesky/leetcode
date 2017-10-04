@@ -1,10 +1,6 @@
 import java.util.*;
 
 //Same idea as https://discuss.leetcode.com/topic/69137/java-o-1-accept-solution-using-hashmap-doublelinkedlist-and-linkedhashset
-//Since minium count either does not change after an element reference, or increases 1 at a time,
-//we can just maintain the minium count variable, and use map of count to LinkedHashMap instead of
-//a doubly linked list.
-//https://discuss.leetcode.com/topic/70200/short-java-o-1-solution-using-linkedhashmap-and-hashmap-with-explaination
 public class LFUCache {
     
     private static class CountNode {
@@ -114,6 +110,73 @@ public class LFUCache {
         }
     }
 
+//-------------------------------------Second try ---------------
+//Since minium count either does not change after an element reference, or increases 1 at a time,
+//we can just maintain the minium count variable, and use map of count to LinkedHashMap instead of
+//a doubly linked list.
+//https://discuss.leetcode.com/topic/70200/short-java-o-1-solution-using-linkedhashmap-and-hashmap-with-explaination
+    private static class MyNode {
+        int key;
+        int val;
+        int count;
+        
+        MyNode(int key, int val) {
+            this.key = key;
+            this.val = val;
+            count = 1;
+        }
+    }
+    
+    private final Map<Integer, MyNode> numMap = new HashMap<>();
+    private final Map<Integer, Set<MyNode>> countMap = new HashMap<>();
+    private int minCount;
+    private final int capacity;
+    
+    public LFUCache(int capacity) {
+        this.capacity = capacity;
+    }
+    
+    public int get(int key) {
+        MyNode node = numMap.get(key);
+        if (node == null) {
+            return -1;
+        }
+        Set<MyNode> oldNodes = countMap.get(node.count);
+        oldNodes.remove(node);
+        if (oldNodes.isEmpty()) {
+            countMap.remove(node.count);
+        }
+        node.count++;
+        if (countMap.get(minCount) == null) {
+            minCount++;
+        }
+        countMap.computeIfAbsent(node.count, k -> new LinkedHashSet<>()).add(node);
+        return node.val;
+    }
+    
+    public void put(int key, int value) {
+        if (capacity == 0) {
+            return;
+        }
+        if (get(key) >= 0) {
+            numMap.get(key).val = value;
+            return;
+        }
+        if (numMap.size() == capacity) {
+            Set<MyNode> oldNodes = countMap.get(minCount);
+            MyNode oldestNode = oldNodes.iterator().next();
+            oldNodes.remove(oldestNode);
+            if (oldNodes.isEmpty()) {
+                countMap.remove(minCount);
+            }
+            numMap.remove(oldestNode.key);
+        }
+        MyNode newNode = new MyNode(key, value);
+        numMap.put(key, newNode);
+        countMap.computeIfAbsent(newNode.count, k -> new LinkedHashSet<>()).add(newNode);
+        minCount = 1;
+    }
+    
     public static void main(String[] args) {
     	String[] ops = new String[] {"LFUCache",
     		"put","put","put","put","put","get","put","get","get","put","get",
