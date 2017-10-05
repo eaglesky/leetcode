@@ -111,7 +111,7 @@ public class LFUCache {
     }
 
 //-------------------------------------Second try ---------------
-//Since minium count either does not change after an element reference, or increases 1 at a time,
+//Since minimum count either does not change after an element reference, or increases 1 at a time,
 //we can just maintain the minium count variable, and use map of count to LinkedHashMap instead of
 //a doubly linked list.
 //https://discuss.leetcode.com/topic/70200/short-java-o-1-solution-using-linkedhashmap-and-hashmap-with-explaination
@@ -176,6 +176,8 @@ public class LFUCache {
         countMap.computeIfAbsent(newNode.count, k -> new LinkedHashSet<>()).add(newNode);
         minCount = 1;
     }
+//If LinkedHashSet is not allowed, we can also implement it ourself. But the code is 
+//a lot more complicated
     
     public static void main(String[] args) {
     	String[] ops = new String[] {"LFUCache",
