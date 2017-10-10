@@ -45,4 +45,35 @@ public class FirstMissingPos {
         }
         return nums.length + 1;
     }
+
+    //Third try.
+    //To find out the first missing positive, we only need to maintain an array
+    //of same length as the input array, 0 ... n-1, representing if 1 ... n
+    //is included or not. Only when the input nums are unique and they are
+    //in the range of [1, n] can the first missing positive be n + 1, which is 
+    //the largest possible one. If any one of them repeats the other nums, or
+    //out of range(< 1 or > n), then the first missing posivie must be smaller than n.
+    //We can use the input array to store nums such that if nums[i] == i + 1, then
+    //i + 1 is included. 
+    public int firstMissingPositive(int[] nums) {
+        for (int i = 0; i < nums.length; ++i) {
+            int curNum = nums[i];
+            int id = i;
+            for (; curNum != id + 1;) {
+                if (curNum < 1 || curNum > nums.length) {
+                    break;
+                }
+                id = curNum - 1;
+                int temp = nums[id];
+                nums[id] = curNum;
+                curNum = temp;
+            }
+        }
+        for (int i = 0; i < nums.length; ++i) {
+            if (nums[i] != i + 1) {
+                return i + 1;
+            }
+        }
+        return nums.length + 1;
+    }
 }
