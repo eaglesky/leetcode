@@ -15,6 +15,11 @@ class RussianDollEnvelopes {
         Arrays.sort(envelopes, new Comparator<int[]>() {
             public int compare(int[] o1, int[] o2) {
                 if (o1[0] == o2[0]) {
+                    //Descend on height when widths are equal!
+                    //Both order works since only one of the envelopes with same widths
+                    //will be picked in the final LIS.
+                    //But descending order can make comparison easier, 
+                    //since if o1[1] < o2[1], then o1[0] < o2[0] must be true.
                     return Integer.compare(o2[1], o1[1]);
                 }
                 return Integer.compare(o1[0], o2[0]);
