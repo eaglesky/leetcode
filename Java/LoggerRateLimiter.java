@@ -28,7 +28,9 @@ logger.shouldPrintMessage(10,"foo"); returns false;
 logger.shouldPrintMessage(11,"foo"); returns true;
 */
 
-public class Logger {
+import java.util.*;
+
+public class LoggerRateLimiter {
     private static class TimeAndMessages {
         final int timestamp;
         final List<String> messages = new ArrayList<>();
@@ -41,7 +43,7 @@ public class Logger {
     private final Map<String, Integer> messageToLastPrintedTime = new HashMap<>();
     private final ArrayDeque<TimeAndMessages> timeToMessages = new ArrayDeque<>();
     /** Initialize your data structure here. */
-    public Logger() {
+    public LoggerRateLimiter() {
         
     }
     
@@ -80,9 +82,16 @@ public class Logger {
     //We can also make use of LinkedHashMap's removeEldestEntry, and make sure it is access-ordered.
     //https://discuss.leetcode.com/topic/50776/java-with-a-linkedhashmap-and-using-removeeldestentry
     //This is the best solution!
+    //With auto-evcition provided by LinkedHashMap, the maximum size of this map
+    //is the maximum number of different strings showing up in the last 10 seconds.
+    //If that happens, we have to store all of the different strings anyway, so the most
+    //we can do is to not storing the integers, which do not make much difference.
     private int curTimestamp;
     private final Map<String, Integer> messageToLastPrintedTime2
-            = new LinkedHashMap<String, Integer>(100, 0.8f, true) {
+                //Insertion order makes more sense than access order. E.g. the test
+                //case in the main function, get a recent message could result in
+                //no change in value but change in the order. 
+            = new LinkedHashMap<String, Integer>(100, 0.8f) {
                 protected boolean removeEldestEntry(Map.Entry<String, Integer> eldest) {
                     return curTimestamp - eldest.getValue() >= DELAY;
                 }
@@ -94,8 +103,34 @@ public class Logger {
             return false;
         }
         curTimestamp = timestamp;
+        //Must remove the old message if it exists, to make sure 
+        //the insertion order is correct!
+        messageToLastPrintedTime2.remove(message);
         messageToLastPrintedTime2.put(message, timestamp);
         return true;
+    }
+
+    public void testLogging(String str, int timestamp) {
+        boolean b = shouldPrintMessage(timestamp, str);
+        System.out.println(str + ", " + timestamp + ", " + b);
+        System.out.println(messageToLastPrintedTime2);
+        System.out.println("");
+    }
+
+    public static void main(String[] args) {
+        LoggerRateLimiter logger = new LoggerRateLimiter();
+        logger.testLogging("foo", 1); //true
+        logger.testLogging("pig", 1); //true
+        logger.testLogging("start", 1); //true
+        logger.testLogging("dee", 1); //true
+        logger.testLogging("boo", 10); //false
+        logger.testLogging("foo", 10); //false
+        logger.testLogging("pig", 10); //false
+        logger.testLogging("start", 10); //false
+        logger.testLogging("dee", 10); //false
+        logger.testLogging("bbb", 11); //true
+        logger.testLogging("pig", 11); //true
+        logger.testLogging("ttt", 20); //true
     }
 }
 
