@@ -83,6 +83,8 @@ public class HitCounter {
     //the counts within 5 mins up, and thus totalCount variable can be removed too.
     //Downside of this approach is that the methods have to be synchronized and there could be
     //an overhead. 
+    //We can also use LinkedHashMap to store timestamp to counts and evict the oldest entry
+    //every time we put a new data in it. The maximum size is still 300. 
     public int getHits0(int timestamp) {
         int expiredTimestamp = timestamp - 300;
         for (; !timeCounts.isEmpty() && timeCounts.peek().timestamp <= expiredTimestamp;) {
