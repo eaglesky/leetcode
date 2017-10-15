@@ -37,7 +37,7 @@ and same names won't exist in the same directory.
 import java.util.*;
 
 public class FileSystem {
-    /*private final Map<String, Object> fileMap = new HashMap<>();
+    private final Map<String, Object> fileMap = new HashMap<>();
     
     public FileSystem() {
         fileMap.put("/", new TreeSet<>());
@@ -233,7 +233,7 @@ public class FileSystem {
             return null;
         }
         return fn.getContent();
-    }*/
+    }
     
 // ------------------------ Another way that store linked list instead of map -------------
 
@@ -359,7 +359,7 @@ public class FileSystem {
             }
             curNode = nextNode;
         }
-        if (i == strs.length) {
+        if (i >= strs.length) {
             return curNode;
         }
         Node result = curNode.getNode(strs[i], 0);
@@ -393,10 +393,7 @@ public class FileSystem {
     
     public void addContentToFile(String filePath, String content) {
         int lastSlashId = filePath.lastIndexOf("/");
-        if (lastSlashId == 0) {
-            return;
-        }
-        String parentPath = filePath.substring(0, lastSlashId);
+        String parentPath = (lastSlashId == 0) ? "/" : filePath.substring(0, lastSlashId);
         Node parentNode = getNodeFromPath(parentPath);
         if (parentNode == null || parentNode.type != 0) {
             return;
