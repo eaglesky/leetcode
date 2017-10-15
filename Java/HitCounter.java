@@ -82,9 +82,7 @@ public class HitCounter {
     //data, which makes the running time O(1). getHits can then be changed to read-only, adding
     //the counts within 5 mins up, and thus totalCount variable can be removed too.
     //Downside of this approach is that the methods have to be synchronized and there could be
-    //an overhead. 
-    //We can also use LinkedHashMap to store timestamp to counts and evict the oldest entry
-    //every time we put a new data in it. The maximum size is still 300. 
+    //an overhead.  
     public int getHits0(int timestamp) {
         int expiredTimestamp = timestamp - 300;
         for (; !timeCounts.isEmpty() && timeCounts.peek().timestamp <= expiredTimestamp;) {
@@ -126,6 +124,47 @@ public class HitCounter {
             }
         }
         return hitCount;
+    }
+
+    //We can also use LinkedHashMap to store timestamp to counts and evict the oldest entry
+    //every time we put a new data in it. The maximum size is still 300. Similar thought
+    //to above
+    private int curTimestamp;
+    private final int delay;
+    
+    //Use insertion order rather than access order.
+    private final Map<Integer, Integer> timeToCounts = new LinkedHashMap<Integer, Integer>() {
+        protected boolean removeEldestEntry(Map.Entry<Integer, Integer> eldest) {
+            return (curTimestamp - eldest.getKey()) >= delay;
+        }
+    };
+    
+    /** Initialize your data structure here. */
+    public HitCounter() {
+        delay = 300;
+    }
+    
+    /** Record a hit.
+        @param timestamp - The current timestamp (in seconds granularity). */
+    //O(1) time
+    public void hit(int timestamp) {
+        Integer count = timeToCounts.getOrDefault(timestamp, 0);
+        curTimestamp = timestamp;
+        timeToCounts.put(timestamp, count + 1);
+    }
+    
+    /** Return the number of hits in the past 5 minutes.
+        @param timestamp - The current timestamp (in seconds granularity). */
+    //O(delay) = O(1) time
+    public int getHits(int timestamp) {
+        int totalCount = 0;
+        //Make sure to access earliest entry first. Just in case the LinkedHashMap
+        //is in access order
+        for (int t = timestamp - delay + 1; t <= timestamp; ++t) {
+            int count = timeToCounts.getOrDefault(t, 0);
+            totalCount += count;
+        }
+        return totalCount;
     }
 }
 
