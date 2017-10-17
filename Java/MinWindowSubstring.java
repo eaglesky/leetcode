@@ -111,6 +111,10 @@ public class MinWindowSubstring {
         if (s.length() < t.length() || t.isEmpty()) {
             return "";
         }
+        //This map only stores characters in t. Later logic
+        //won't populate it with other characters. This is because
+        //this map needs to be used for checking if s char is in
+        //t or not.
         Map<Character, Integer> charCountsT = new HashMap<>();
         for (int i = 0; i < t.length(); ++i) {
             char c = t.charAt(i);
@@ -124,6 +128,13 @@ public class MinWindowSubstring {
         for (int i = 0; i < s.length(); ++i) {
             char c = s.charAt(i);
             Integer countInt = charCountsT.get(c);
+            //First step, check if s char is in t or not.
+            //If it is, just decrease the count directly and
+            //check if left pointer needs to be moved later.
+            //This can make the logic of incrementing i much
+            //easier. 
+            //If it is not, for this problem we just need to
+            //move the right pointer.
             if (countInt != null) {
                 int count = countInt - 1;
                 charCountsT.put(c, count);
