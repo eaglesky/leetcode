@@ -33,12 +33,10 @@ public class Solution {
         }
     }
     
-    private boolean isValid(char[][] board, int i, int j) {
-        return (i >= 0) && (i < board.length) && (j >= 0) && (j < board[i].length)
-            && board[i][j] != '#';
-    }
-    
     private void dfs(char[][] board, int i, int j, Trie.TrieNode trieNode, List<String> foundStrings) {
+        if (i < 0 || i >= board.length || j < 0 || j >= board[i].length || board[i][j] == '#') {
+            return;
+        }
         char original = board[i][j];
         Trie.TrieNode nextNode = trieNode.next.get(original);
         if (nextNode == null) {
@@ -49,10 +47,10 @@ public class Solution {
             nextNode.str = null;
         }
         board[i][j] = '#';
-        if (isValid(board, i, j-1)) dfs(board, i, j-1, nextNode, foundStrings);
-        if (isValid(board, i, j+1)) dfs(board, i, j+1, nextNode, foundStrings);
-        if (isValid(board, i-1, j)) dfs(board, i-1, j, nextNode, foundStrings);
-        if (isValid(board, i+1, j)) dfs(board, i+1, j, nextNode, foundStrings);
+        dfs(board, i, j-1, nextNode, foundStrings);
+        dfs(board, i, j+1, nextNode, foundStrings);
+        dfs(board, i-1, j, nextNode, foundStrings);
+        dfs(board, i+1, j, nextNode, foundStrings);
         board[i][j] = original;
     }
     

@@ -51,4 +51,26 @@ public class CombinationSum {
         dfs(0, candidates, 0, target, new ArrayList<>(), result);
         return result;
     }
+
+    //Best Implementation, no sorting needed.
+    void dfs(int[] candidates, int start, int target, List<Integer> curSolution, List<List<Integer>> result) {
+        if (target <= 0) {
+            if (target == 0) {
+                result.add(new ArrayList<>(curSolution));
+            }
+            return;
+        }
+        
+        for (int i = start; i < candidates.length; ++i) {
+            curSolution.add(candidates[i]);
+            dfs(candidates, i, target - candidates[i], curSolution, result);
+            curSolution.remove(curSolution.size() - 1);
+        }
+    }
+    
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        List<List<Integer>> result = new ArrayList<>();
+        dfs(candidates, 0, target, new ArrayList<>(), result);
+        return result;
+    }
 }
