@@ -92,9 +92,11 @@ public class RearrangeStringKDistanceApart {
     }
 
     //More efficient solution based on greedy selection.
-    //Cannot prove the correctness of it.
+    //The correct proof is here:
+    //https://discuss.leetcode.com/topic/92968/java-greedy-algorithm-with-correctness-proof-using-priorityqueue-and-waiting-list
     //https://discuss.leetcode.com/topic/48091/c-unordered_map-priority_queue-solution-using-cache
-    //O(nlogm) time and O(n + m) space
+    //O(nlogm) time and O(n + m) space, n is string length, 
+    //and m is the number of distinct letters
     public String rearrangeString(String s, int k) {
         if (s == null || k < 0) {
             return "";
@@ -116,22 +118,74 @@ public class RearrangeStringKDistanceApart {
         }
         Deque<Pair> usedPairs = new ArrayDeque<>();
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < s.length(); ++i) {
-            if (usedPairs.size() >= k) {
-                Pair releasedPair = usedPairs.poll();
-                if (releasedPair.count > 0) {
-                    heap.offer(releasedPair);
-                }
-            }
-            if (heap.isEmpty()) {
-                return "";
-            }
+        for (; !heap.isEmpty();) {
             Pair curPair = heap.poll();
             sb.append(curPair.c);
             curPair.count--;
             usedPairs.offer(curPair);
+            if (usedPairs.size() == k) {
+                Pair head = usedPairs.poll();
+                if (head.count > 0) {
+                    heap.offer(head);
+                }
+            }
         }
-        return sb.toString();
+        return sb.length() == s.length() ? sb.toString() : "";
+    }
+
+    //Based on the approach in Task Scheduler.
+    //O(n + mlogm) time and O(n + m) space.
+    //Might be preferable in interview
+    public String rearrangeString(String s, int k) {
+        if (s == null || k < 0) {
+            return "";
+        } else if (k == 0) {
+            //This would make more sense: return s.length() <= 1 ? s : "";
+            return s;
+        }
+        Map<Character, Integer> charCounts = new HashMap<>();
+        for (int i = 0; i < s.length(); ++i) {
+            char c = s.charAt(i);
+            int prevCount = charCounts.getOrDefault(c, 0);
+            charCounts.put(c, prevCount + 1);
+        }
+        PriorityQueue<Pair> heap = new PriorityQueue<>(charCounts.size(),
+            Collections.reverseOrder());
+        for (Map.Entry<Character, Integer> charCount : charCounts.entrySet()) {
+            Pair pair = new Pair(charCount.getKey(), charCount.getValue());
+            heap.offer(pair);
+        }
+        int maxCount = heap.peek().count;
+        StringBuilder sb = new StringBuilder();
+        for (; !heap.isEmpty();) {
+            if (heap.peek().count == maxCount) {
+                sb.append(heap.poll().c);
+            } else {
+                break;
+            }
+        }
+        StringBuilder[] sbs = new StringBuilder[maxCount];
+        for (int i = 0; i < maxCount; ++i) {
+            sbs[i] = new StringBuilder(sb);
+        }
+        int r = 0;
+        for (; !heap.isEmpty();) {
+            Pair pair = heap.poll();
+            for (int i = 0; i < pair.count; ++i, ++r) {
+                if (r == maxCount - 1) {
+                    r = 0;
+                }
+                sbs[r].append(pair.c);
+            }
+        }
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < maxCount; ++i) {
+            if (i < maxCount - 1 && sbs[i].length() < k) {
+                return "";
+            }
+            result.append(sbs[i]);
+        }
+        return result.toString();
     }
 
 	//Another implementation without using heap. O(nm) time
