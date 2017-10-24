@@ -62,6 +62,19 @@ public class RemoveDupSortedArray2 {
         return id;
     }
 
+    //Simplying above:
+    public int removeDuplicates(int[] nums) {
+        int k = 2;
+        int len = 0;
+        for (int i = 0; i < nums.length; ++i) {
+            if (i < k || nums[i] != nums[len - k]) {
+                nums[len++] = nums[i];
+            }
+        }
+        return len;
+    }
+
+
     // Simpler solution:
     // Just imagine as if you are copying the elements to a new array
     // Compare the element in the original array with one in the "new array"
