@@ -94,6 +94,35 @@ public class RestoreIpAddresses {
         }
     }
     
+    //Add pruning:
+    private void dfs(String s, int startId, List<String> ip, List<String> result) {
+        if (ip.size() == 4 && startId == s.length()) {
+            result.add(String.join(".", ip));
+            return;
+        }
+        if (ip.size() >= 4 || startId >= s.length()) {
+            return;
+        }
+        int numCharLeft = s.length() - startId;
+        if (numCharLeft > (4 - ip.size()) * 3 || numCharLeft < (4 - ip.size())) {
+            return;
+        }
+        int curNum = 0;
+        for (int i = startId; i < s.length(); ++i) {
+            char c = s.charAt(i);
+            curNum = 10 * curNum + (c - '0');
+            if (curNum >= 256) {
+                break;
+            }
+            ip.add(String.valueOf(curNum));
+            dfs(s, i + 1, ip, result);
+            ip.remove(ip.size() - 1);
+            if (curNum == 0) {
+                break;
+            }
+        }
+    }
+
     public List<String> restoreIpAddresses(String s) {
         List<String> result = new ArrayList<>();
         dfs(s, 0, new ArrayList<>(), result);
