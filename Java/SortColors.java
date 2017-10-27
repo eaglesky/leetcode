@@ -29,7 +29,7 @@ public class SortColors {
     
     //Two passes robust solution
     //Don't see how it is worse than the following one
-    //Easier to come up with and proov
+    //Easier to come up with and proof
     //O(n) time and O(1) space
     public void sortColors(int[] nums) {
         int i0 = 0;
@@ -45,6 +45,9 @@ public class SortColors {
             }
         }
     }
+
+    //Using swap cannot keep the relative order of same elements.
+    //To make the sort stable, we have to use asignments like in "move zeros".
 
     //One pass solution
     //O(n) time and O(1) space
