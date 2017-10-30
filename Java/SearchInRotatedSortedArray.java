@@ -9,7 +9,7 @@ public class SearchInRotatedSortedArray {
             if (target == nums[mid]) {
                 return mid;
             }
-            if (nums[mid] >= nums[low]) {
+            if (nums[mid] >= nums[low]) {//Equality must be put here!
                 if (target < nums[mid] && target >= nums[low]) {
                     high = mid - 1;
                 } else {
