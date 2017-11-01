@@ -51,7 +51,8 @@ public class MeetingRooms2 {
 	//Therefore, m must be equal to n, using the greedy algorithm. 
 
 	//This solution can not only gives the minimum number of rooms, but also assign room number
-	//to each interval.
+	//to each interval, by storing room id and length in the heap. This can also help returning
+    //the actual schedule for each room
     public int minMeetingRooms0(Interval[] intervals) {
         if (intervals == null || intervals.length == 0) {
             return 0;
